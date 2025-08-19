@@ -1,31 +1,52 @@
 {
-  "name": "react-component",
-  "private": true,
-  "version": "0.0.0",
+  "name": "react-report-component",
+  "private": false,
+  "version": "1.0.17",
   "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "dev": "vite --port 6004 --host 0.0.0.0",
-    "build": "vite build",
+    "serve": "npx serve dist -l 6004",
+    "build:css": "tailwindcss-cli -i ./src/index.css -o ./dist/style.css --minify",
+    "build": "npm run build:css && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/modifiers": "^9.0.0",
+    "@dnd-kit/sortable": "^10.0.0",
     "@tailwindcss/vite": "^4.1.11",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
     "lucide-react": "^0.525.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "react-router-dom": "^7.7.0",
-    "tailwindcss": "^4.1.11"
+    "react-router-dom": "^7.7.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.30.1",
+    "@originjs/vite-plugin-federation": "^1.4.1",
+    "@tailwindcss/postcss": "^4.1.11",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react": "^4.6.0",
+    "autoprefixer": "^10.4.21",
     "eslint": "^9.30.1",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.3.0",
-    "vite": "^7.0.4"
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.11",
+    "tailwindcss-cli": "^0.1.2",
+    "vite": "^7.0.4",
+    "vite-plugin-css-injected-by-js": "^3.5.2",
+    "vite-plugin-federation": "^0.0.1"
   }
 }
