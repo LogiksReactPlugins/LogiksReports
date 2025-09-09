@@ -1,0 +1,35 @@
+
+.text-primary {
+  color: #17E5D9;
+}
+.bg-primary {
+  background-color: #17E5D9;
+  color: #ffffff;
+}
+
+.text-secondary {
+  color: #3653C6;
+}
+.bg-secondary {
+  background-color: #3653C6;
+  color: #ffffff;
+}
+
+.text-action {
+  color: #9428C8;
+}
+.bg-action {
+  background-color: #9428C8;
+  color: #ffffff;
+}
+
+.text-muted {
+  color: #6B7280;
+}
+.bg-muted {
+  background-color: #F3F4F6;
+}
+
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */

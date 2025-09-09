@@ -8,8 +8,8 @@ export const report = {
   "blocked": false,
   "rowlink": false,
   "rowsPerPage": 5,
-  "showExtraColumn": "checkbox",
-  "template": "",
+  // "showExtraColumn": "checkbox",
+  "template": "card",
   "custombar": false,
   "source": {
     "type": "sql",
@@ -22,7 +22,7 @@ export const report = {
   },
   "actions": {
     "addRecord": {
-      "label": "",
+      "label": "adddddd",
       "icon": "<i class='fa fa-plus'></i>",
        "event":{
         "click":"addButtonClick"
@@ -37,22 +37,19 @@ export const report = {
         "click":"eyeButtonClick"
       }
     },
-    "forms@test.remarks/new": {
+    "func#edit/{id}/{status}": {
       "label": "Add Remarks",
-      "icon": "fa fa-tags pull-left",
+      "icon": "fa fa-tags",
       "params": {
         "test_id": "id"
-      },
-      "event":{
-        "click":"addRemark"
       }
     }
   },
   "toolbar": {
-    "search": true,
-    "print": false,
-    "export": { "csv": "Just CSV" },
-    "email": false
+    // "search": true,
+    // "print": true,
+    // "export": { "csv": "Just CSV" },
+    // "email": true
   },
   "datagrid": {
     "id": {

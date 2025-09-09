@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom/client';
 globalThis.React = React;
 globalThis.ReactDOM = ReactDOM;
 
-import './index.css';
+import './App.css';
 import App from './App';
 
 ReactDOM.createRoot(document.getElementById('root')).render(

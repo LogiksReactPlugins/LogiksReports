@@ -1,15 +1,22 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
-import { Search, Printer, Download, Mail, Plus, Eye, Tag, Check, X, ChevronUp, ChevronDown, RotateCcw, Group, ChevronLeft, ChevronRight, Menu, Filter, MoreHorizontal, Edit, User, Ban, RefreshCw, MoreVertical, Upload, Grid, List, Calendar, Clock, MapPin, Columns } from 'lucide-react';
+import { Search, Printer, Download, Mail, Plus, Eye, Tag, Check, X, ChevronUp, ChevronDown, RotateCcw, Group, ChevronLeft, ChevronRight, Menu, Filter, MoreHorizontal, Edit, User, Ban, RefreshCw, MoreVertical, Upload, Grid, List, Calendar, Clock, MapPin, Columns, Recycle, PlusIcon, Cog, FilterIcon, Settings, Loader2 } from 'lucide-react';
 import CardView from '../CardView';
 import TableView from '../TableView';
 import KanbanView from '../KanbanView';
 import CalendarView from '../CalendarView';
 import './../../index.css'
+import axios from 'axios';
+import SettingPopup from '../SettingPopup';
+import mergeConfig from '../../helpers/mergeConfig';
+import formatCellValue from '../../helpers/formatCellValue';
+import updateLocalOverride from '../../helpers/updateLocalOverride';
+import { exportTable } from '../../helpers/exports';
+import CONSTANTS from '../../constants';
 
 // Main Reports Component
-export default function Reports({ report ,style ,methods}) {
+export default function Reports({ report: reportJSON, style, methods, data: reportdata, onButtonClick }) {
   const [config, setConfig] = useState(null);
-  const [currentView, setCurrentView] = useState('table');
+  const [currentView, setCurrentView] = useState();
   const [searchTerm, setSearchTerm] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
   const [groupBy, setGroupBy] = useState(null);
@@ -21,22 +28,46 @@ export default function Reports({ report ,style ,methods}) {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef(null);
   const [kanbanGroupBy, setKanbanGroupBy] = useState(null);
-  
+  const [data, setData] = useState([])
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [loading, setLoading] = useState(null)
+  useEffect(() => {
+    if (!currentView) return;
+    updateLocalOverride("template", currentView);
+  }, [currentView]);
 
-useEffect(() => {
-  setConfig(report);
-  if (report?.template === 'card' && (report?.cards && Object.keys(report.cards).length > 0)) {
-    setCurrentView('card');
-  }else if (report?.template === 'calendar' && (report?.calendar && Object.keys(report.calendar).length > 0)) {
-    setCurrentView('calendar');
-  } else if (report?.template === 'kanban' && (report?.kanban && Object.keys(report.kanban).length > 0)) {
-    setCurrentView('kanban');
-    const kanbanKeys = Object.keys(report.kanban?.colkeys || {});
-    if (kanbanKeys.length > 0) {
-      setKanbanGroupBy(kanbanKeys[0]);
+  useEffect(() => {
+    const localOverrides = JSON.parse(localStorage.getItem("tableOverrides")) || {};
+
+    const report = mergeConfig(reportJSON, localOverrides);
+    setConfig(report);
+
+    // 2. Restore template (view) priority:
+    // first from localStorage, else from server
+    if (localOverrides?.template) {
+      console.log([localOverrides.template])
+      setCurrentView((reportJSON[localOverrides?.template]) ? localOverrides.template : null);
+    } else if (report?.template) {
+      setCurrentView(report.template);
     }
-  }
-}, [report]);
+  }, [reportJSON]);
+
+  // useEffect(() => {
+  //   const localOverrides = JSON.parse(localStorage.getItem("tableOverrides"));
+  //   const report = mergeConfig(reportJSON, localOverrides);
+  //   setConfig(report);
+  //   // if (report?.template === 'card' && (report?.cards && Object.keys(report.cards).length > 0)) {
+  //   //   setCurrentView('card');
+  //   // } else if (report?.template === 'calendar' && (report?.calendar && Object.keys(report.calendar).length > 0)) {
+  //   //   setCurrentView('calendar');
+  //   // } else if (report?.template === 'kanban' && (report?.kanban && Object.keys(report.kanban).length > 0)) {
+  //   //   setCurrentView('kanban');
+  //   //   const kanbanKeys = Object.keys(report.kanban?.colkeys || {});
+  //   //   if (kanbanKeys.length > 0) {
+  //   //     setKanbanGroupBy(kanbanKeys[0]);
+  //   //   }
+  //   // }
+  // }, [reportJSON]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -48,10 +79,34 @@ useEffect(() => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const filteredAndSortedData = useMemo(() => {
-    if (!config?.rows) return [];
+  useEffect(() => {
+    const fetchAPI = async () => {
+      if (config?.source?.type === 'API') {
+        const axiosObject = {
+          method: config?.source?.method,
+          url: config?.source?.url,
+          headers: config?.source?.headers
+        }
+        const { data } = await axios(axiosObject)
+        console.log({ data })
+        setData(data?.data || [])
+      } else if (reportdata) {
+        setData(reportdata)
+      }
+      else if (config?.rows) {
+        setData(config?.rows || [])
+      }
+    }
+    fetchAPI()
+  }, [config])
+  useEffect(() => {
 
-    let filtered = config.rows;
+  })
+
+  const filteredAndSortedData = useMemo(() => {
+    if (!data) return [];
+
+    let filtered = data;
 
     if (searchTerm) {
       filtered = filtered.filter(row => {
@@ -67,15 +122,15 @@ useEffect(() => {
       filtered = [...filtered].sort((a, b) => {
         const aVal = a[sortConfig.key];
         const bVal = b[sortConfig.key];
-        
+
         if (aVal < bVal) return sortConfig.direction === 'asc' ? -1 : 1;
         if (aVal > bVal) return sortConfig.direction === 'asc' ? 1 : -1;
         return 0;
       });
     }
-
+    console.log({ filtered })
     return filtered;
-  }, [config, searchTerm, sortConfig]);
+  }, [config, searchTerm, sortConfig, data]);
 
   const rowsPerPage = config?.rowsPerPage || 5;
   const totalPages = Math.ceil(filteredAndSortedData.length / rowsPerPage);
@@ -152,43 +207,9 @@ useEffect(() => {
     setSelectAll(newSelection.size === currentData.length);
   };
 
-  const formatCellValue = (value, formatter) => {
-    if (!value && value !== false) return ''; 
 
-    switch (formatter) {
-      case 'checkbox':
-        return (
-          <input
-            type="checkbox"
-            checked={Boolean(value)}
-            readOnly
-            className="w-4 h-4 text-green-600 accent-green-600 cursor-default"
-          />
-        );
 
-      case 'date':
-        return new Date(value).toLocaleDateString();
 
-      case 'time':
-        return new Date(value).toLocaleTimeString();
-
-      case 'datetime':
-        return new Date(value).toLocaleString();
-
-      case 'pretty':
-        return (
-          <pre className="whitespace-pre-wrap text-sm text-gray-700 bg-gray-100 p-2 rounded">
-            {typeof value === 'object'
-              ? JSON.stringify(value, null, 2)
-              : String(value)}
-          </pre>
-        );
-
-      case 'text':
-      default:
-        return String(value);
-    }
-  };
 
   const parseStyle = (styleStr) => {
     if (!styleStr) return {};
@@ -204,13 +225,13 @@ useEffect(() => {
 
   const renderSortIcon = (key) => {
     if (!datagrid[key].sortable) return null;
-    
+
     if (sortConfig.key === key) {
-      return sortConfig.direction === 'asc' ? 
-        <ChevronUp className="w-4 h-4" /> : 
+      return sortConfig.direction === 'asc' ?
+        <ChevronUp className="w-4 h-4" /> :
         <ChevronDown className="w-4 h-4" />;
     }
-    
+
     return (
       <div className="flex flex-col">
         <ChevronUp className="w-3 h-3 text-gray-400" />
@@ -220,24 +241,28 @@ useEffect(() => {
   };
 
   const getIconComponent = (iconStr) => {
-    if (!iconStr) return null;
-    
-    if (iconStr.includes('eye')) return <Eye className="w-4 h-4" />;
-    if (iconStr.includes('pencil') ||iconStr.includes('tag') || iconStr.includes('code') || iconStr.includes('edit')) return <Edit className="w-4 h-4" />;
-    if (iconStr.includes('user')) return <User className="w-4 h-4" />;
-    if (iconStr.includes('check')) return <Check className="w-4 h-4" />;
-    if (iconStr.includes('close') || iconStr.includes('times')) return <X className="w-4 h-4" />;
-    if (iconStr.includes('exchange')) return <RefreshCw className="w-4 h-4" />;
-    if (iconStr.includes('ban')) return <Ban className="w-4 h-4" />;
-    
-    return null;
+    if (!iconStr) return <i className='fa fa-star'></i>;
+
+    // if (iconStr.includes('eye')) return <Eye className="w-4 h-4" />;
+    // if (iconStr.includes('pencil') ||iconStr.includes('tag') || iconStr.includes('code') || iconStr.includes('edit')) return <Edit className="w-4 h-4" />;
+    // if (iconStr.includes('user')) return <User className="w-4 h-4" />;
+    // if (iconStr.includes('check')) return <Check className="w-4 h-4" />;
+    // if (iconStr.includes('close') || iconStr.includes('times')) return <X className="w-4 h-4" />;
+    // if (iconStr.includes('exchange')) return <RefreshCw className="w-4 h-4" />;
+    // if (iconStr.includes('ban')) return <Ban className="w-4 h-4" />;
+    // if (iconStr.includes('add')) return <PlusIcon className="w-4 h-4" />;
+    // if (iconStr.includes('gear')) return <Cog className="w-4 h-4" />;
+
+    return <i className={`${iconStr}`}></i>;
   };
 
   const handleButtonClick = (buttonKey, button, data) => {
     // console.log(methods[button?.event?.click]?.(data?.id))
-    const resolvedParams = Object.values(button?.params || {}).map(key => data?.[key]);
-    methods[button?.event?.click]?.(...resolvedParams);
+    // const resolvedParams = Object.values(button?.params || {}).map(key => data?.[key]);
+    // methods[button?.event?.click]?.(...resolvedParams);
+    // console.log('METHOD--',methods[button?.event?.click])
     console.log('Button clicked:', buttonKey, button, data);
+    onButtonClick(buttonKey, data)
   };
 
   const toggleDropdown = (rowId) => {
@@ -254,9 +279,15 @@ useEffect(() => {
   const moreButtons = buttons?.more ? Object.entries(buttons.more) : [];
   const hasButtons = visibleButtons.length > 0 || moreButtons.length > 0;
 
-  const handleExport = (type) => {
-    setOpen(false);
+  const handleExport = async (type) => {
     console.log('Exporting as:', type);
+    try {
+      setLoading(type);
+      await exportTable(type);
+    } finally {
+      setOpen(false);
+      setLoading(null);
+    }
   };
 
   // Sample data for demonstration
@@ -273,136 +304,72 @@ useEffect(() => {
 
   return (
     <div className="bg-white min-h-screen">
-      <div className="border-b border-gray-200 px-4 sm:px-6 py-4">
+      <div className=" px-3 sm:px-3 py-2">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-          <h1 className={style?.title || `text-xl font-semibold text-gray-900 flex-shrink-0`}>{title}</h1>
-          
-          {/* View Toggle for testing diff structure dont remove this */}
-          {/* <div className="flex items-center bg-gray-100 rounded-lg p-1">
-            <button
-              onClick={() => setCurrentView('table')}
-              className={`inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
-                currentView === 'table'
-                  ? 'bg-white text-gray-900 shadow'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              <List className="w-4 h-4 mr-1" />
-              Table
-            </button>
-            <button
-              onClick={() => setCurrentView('card')}
-              className={`inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
-                currentView === 'card'
-                  ? 'bg-white text-gray-900 shadow'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              <Grid className="w-4 h-4 mr-1" />
-              Cards
-            </button>
-            <button
-              onClick={() => setCurrentView('kanban')}
-              className={`inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
-                currentView === 'kanban'
-                  ? 'bg-white text-gray-900 shadow'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              <Columns className="w-4 h-4 mr-1" />
-              Kanban
-            </button>
-            <button
-              onClick={() => setCurrentView('calendar')}
-              className={`inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
-                currentView === 'calendar'
-                  ? 'bg-white text-gray-900 shadow'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              <Calendar className="w-4 h-4 mr-1" />
-              calendar
-            </button>
-          </div>
-                     */}
+          <h1 className={style?.title || `text-xl font-semibold text-gray-900 flex-shrink-0`}>{title} <span className='text-sm' >({filteredAndSortedData.length})</span> </h1>
           <div className="hidden sm:flex items-center gap-2 flex-shrink-0">
-            {toolbar?.print && (
+            {toolbar?.print !== false && (
               <button
-                onClick={() => window.print()}
-                className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 bg-gray-50 border border-gray-300 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onClick={() => exportTable('pdf')}
+                className="inline-flex items-center px-3 py-1 text-sm font-medium bg-action rounded-md hover:bg-gray-100 cursor-pointer"
               >
                 <Printer className="w-4 h-4 mr-1" />
                 Print
               </button>
             )}
-            {toolbar?.export && (
-              <div className="relative inline-block text-left" ref={dropdownRef}>
-                <button
-                  onClick={() => setOpen(!open)}
-                  className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 bg-gray-50 border border-gray-300 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <Upload className="w-4 h-4 mr-1" />
-                  Export
-                </button>
 
-                {open && (
-                  <div className="absolute left-0 z-10 mt-2 w-48 rounded-md bg-white border border-gray-200 shadow-lg">
-                    <ul className="py-1 text-sm text-gray-700">
-                      <li>
+            <div className="relative inline-block text-left" ref={dropdownRef}>
+              <button
+                onClick={() => setOpen(!open)}
+                className="inline-flex items-center px-3 py-1 text-sm font-medium bg-action rounded-md hover:bg-gray-100 cursor-pointer"
+              >
+                <Upload className="w-4 h-4 mr-1" />
+                Export
+              </button>
+
+              {open && (
+                <div className="absolute right-0 z-50 mt-2 w-48 rounded-md bg-white border border-gray-200 shadow-lg">
+                  <ul className="py-1 text-sm text-action">
+                    {CONSTANTS.EXPORT_ORDER.filter((key) =>
+                      toolbar?.export === false
+                        ? false
+                        : Array.isArray(toolbar?.export)
+                          ? toolbar.export.includes(key)
+                          : CONSTANTS.DEFAULT_EXPORTS.includes(key)
+                    ).map((key) => (
+                      <li key={key}>
                         <button
-                          onClick={() => handleExport('print')}
-                          className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                          onClick={() => handleExport(key)}
+                          className="block w-full text-left px-4 py-1.5 cursor-pointer hover:bg-gray-100"
                         >
-                          🖨️ Print Report
+                          {CONSTANTS.EXPORT_LABELS[key]}
+                          {loading == key && (
+                            <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
+                          )}
                         </button>
                       </li>
-                      <li>
-                        <button
-                          onClick={() => handleExport('csv')}
-                          className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                        >
-                          📄 Export CSV
-                        </button>
+                    ))}
+
+                    {loading && (
+                      <li className="border-t border-gray-100 bg-gray-50 rounded-b-lg">
+                        <div className="px-4 py-2 flex items-center justify-center">
+                          <div className="flex items-center space-x-2">
+                            <Loader2 className="w-3 h-3 animate-spin text-blue-500" />
+                            <span className="text-xs font-medium text-gray-600">Processing export...</span>
+                          </div>
+                        </div>
                       </li>
-                      <li>
-                        <button
-                          onClick={() => handleExport('xml')}
-                          className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                        >
-                          📂 Export XML
-                        </button>
-                      </li>
-                      <li>
-                        <button
-                          onClick={() => handleExport('html')}
-                          className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                        >
-                          🌐 Export HTML
-                        </button>
-                      </li>
-                      <li>
-                        <button
-                          onClick={() => handleExport('image')}
-                          className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                        >
-                          🖼️ Export Image
-                        </button>
-                      </li>
-                      <li>
-                        <button
-                          onClick={() => handleExport('download')}
-                          className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                        >
-                          ⬇️ Download CSV
-                        </button>
-                      </li>
-                    </ul>
-                  </div>
-                )}
-              </div>
-            )}
-            {toolbar?.email && (
-              <button className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 bg-gray-50 border border-gray-300 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    )}
+                  </ul>
+
+                </div>
+              )}
+            </div>
+            {toolbar?.email !== false && (
+              <button
+                className="inline-flex items-center px-3 py-1 text-sm font-medium bg-action rounded-md hover:bg-gray-100 cursor-pointer"
+
+              >
                 <Mail className="w-4 h-4 mr-1" />
                 Email
               </button>
@@ -418,70 +385,144 @@ useEffect(() => {
         </div>
 
         <div className={style?.searchBarContainer || "flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mt-4"}>
-          {toolbar?.search && (
-            <div className="flex items-center gap-3 flex-1 lg:max-w-md">
+          {toolbar?.search !== false && (
+            <div className="flex items-center gap-3 flex-1 lg:max-w-sm">
               <div className="flex-1 relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <input
-                  type="text"
+                  type="search"
                   placeholder="Search..."
                   value={searchTerm}
                   onChange={(e) => handleSearch(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full pl-9 pr-4 py-1 text-slate-600 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
-              <button
+              {/* <button
                 onClick={handleReset}
-                className="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-gray-50 border border-gray-300 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 flex-shrink-0"
+                className="inline-flex cursor-pointer items-center px-3 py-1.5 text-sm font-medium bg-action  rounded-md  flex-shrink-0"
               >
                 <RotateCcw className="w-4 h-4 mr-1" />
                 Reset
-              </button>
+              </button> */}
             </div>
           )}
 
           <div className="flex flex-col sm:flex-row sm:items-center gap-3 lg:gap-4">
             {(groupableColumns.length > 0 || currentView === 'kanban') && (
-          <div className="flex items-center gap-2 flex-shrink-0">
-            <Group className="w-4 h-4 text-gray-500" />
-            <span className="text-sm text-gray-500">
-              {currentView === 'kanban' ? 'Group by:' : 'Group by:'}
-            </span>
-            <select
-              value={currentView === 'kanban' ? (kanbanGroupBy || '') : (groupBy || '')}
-              onChange={(e) => {
-                if (currentView === 'kanban') {
-                  setKanbanGroupBy(e.target.value || null);
-                } else {
-                  setGroupBy(e.target.value || null);
-                }
-              }}
-              className="px-3 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">None</option>
-              {currentView === 'kanban' 
-                ? Object.entries(config?.kanban?.colkeys || {}).map(([key, col]) => (
-                    <option key={key} value={key}>{col.label}</option>
-                  ))
-                : groupableColumns.map(col => (
-                    <option key={col.key} value={col.key}>{col.label}</option>
-                  ))
-              }
-            </select>
-          </div>
-        )}
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <Group className="w-4 h-4 text-gray-500" />
+                <span className="text-sm text-gray-500">
+                  {currentView === 'kanban' ? 'Group by:' : 'Group by:'}
+                </span>
+                <select
+                  value={currentView === 'kanban' ? (kanbanGroupBy || '') : (groupBy || '')}
+                  onChange={(e) => {
+                    if (currentView === 'kanban') {
+                      setKanbanGroupBy(e.target.value || null);
+                    } else {
+                      setGroupBy(e.target.value || null);
+                    }
+                  }}
+                  className="px-3 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">None</option>
+                  {currentView === 'kanban'
+                    ? Object.entries(config?.kanban?.colkeys || {}).map(([key, col]) => (
+                      <option key={key} value={key}>{col.label}</option>
+                    ))
+                    : groupableColumns.map(col => (
+                      <option key={col.key} value={col.key}>{col.label}</option>
+                    ))
+                  }
+                </select>
+              </div>
+            )}
 
             <div className="flex flex-wrap gap-2">
+              <div className="flex items-center bg-gray-100 rounded-lg p-1">
+
+                {
+                  config?.datagrid &&
+                  <button
+                    onClick={() => setCurrentView('table')}
+                    title='Table'
+                    className={`inline-flex items-center px-3 cursor-pointer py-1.5 text-sm font-medium rounded-md transition-colors ${currentView === 'table' || !currentView
+                      ? 'bg-action shadow'
+                      : 'text-gray-600 hover:text-gray-900'
+                      }`}
+                  >
+                    <List className="w-4 h-4 " />
+                    {/* Table */}
+                  </button>
+                }
+                {
+                  config?.cards &&
+                  <button
+                    title='Cards'
+
+                    onClick={() => setCurrentView('cards')}
+                    className={`inline-flex items-center px-3 cursor-pointer py-1.5 text-sm font-medium rounded-md transition-colors ${currentView === 'cards'
+                      ? 'bg-action shadow'
+                      : 'text-gray-600 hover:text-gray-900'
+                      }`}
+                  >
+                    <Grid className="w-4 h-4 " />
+                    {/* Cards */}
+                  </button>
+                }
+                {
+                  config?.kanban &&
+                  <button
+                    onClick={() => setCurrentView('kanban')}
+                    title='Kanban'
+
+                    className={`inline-flex items-center px-3 cursor-pointer py-1.5 text-sm font-medium rounded-md transition-colors ${currentView === 'kanban'
+                      ? 'bg-action shadow'
+                      : 'text-gray-600 hover:text-gray-900'
+                      }`}
+                  >
+                    <Columns className="w-4 h-4 " />
+                    {/* Kanban */}
+                  </button>
+                }
+                {
+                  config?.calendar &&
+                  <button
+                    onClick={() => setCurrentView('calendar')}
+                    title='Calender'
+
+                    className={`inline-flex items-center px-3 cursor-pointer py-1.5 text-sm font-medium rounded-md transition-colors ${currentView === 'calendar'
+                      ? 'bg-action shadow'
+                      : 'text-gray-600 hover:text-gray-900'
+                      }`}
+                  >
+                    <Calendar className="w-4 h-4 " />
+                    {/* calendar */}
+                  </button>
+                }
+              </div>
               {actions && Object.entries(actions).map(([key, action]) => (
                 <button
-                  onClick={()=>handleButtonClick(key,action)}                
+                  onClick={() => handleButtonClick(key, action)}
                   key={key}
-                  className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="inline-flex items-center px-3 py-1.5 text-sm font-medium cursor-pointer bg-action rounded-md"
                 >
                   <Plus className="w-4 h-4 mr-1" />
-                  Add Record
+                  {action?.label || "Add Record"}
                 </button>
               ))}
+              <button
+                className={`inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md transition-colors  bg-action cursor-pointer`}
+              >
+                <FilterIcon className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setSettingsOpen(true)}
+
+                className={`inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md transition-colors  bg-action cursor-pointer`}
+              >
+                <Settings className="w-4 h-4" />
+              </button>
             </div>
           </div>
         </div>
@@ -510,11 +551,103 @@ useEffect(() => {
         )}
       </div>
 
+      {/* Pagination */}
+      {(currentView === 'table' || currentView === null || currentView === 'cards') && totalPages > 1 && (
+        <div className="px-4 sm:px-6 py-1 sticky z-30 top-0 bg-white  border-y border-gray-200">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div className="text-sm text-gray-500">
+              Showing {startIndex + 1} to {Math.min(endIndex, filteredAndSortedData.length)} of {filteredAndSortedData.length} records
+            </div>
+            <div className="flex items-center justify-center sm:justify-end gap-2">
+              <button
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className="inline-flex cursor-pointer items-center px-3 py-0.5 text-sm font-medium text-action  rounded-md   disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ChevronLeft className="w-4 h-4 mr-1" />
+                <span className="hidden sm:inline">Previous</span>
+                <span className="sm:hidden">Prev</span>
+              </button>
+              <span className="text-sm text-gray-700 px-2">
+                {currentPage} of {totalPages}
+              </span>
+              <button
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}
+                className="inline-flex cursor-pointer items-center px-3 py-0.5 text-sm font-medium text-action  rounded-md   disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <span className="hidden sm:inline">Next</span>
+                <span className="sm:hidden">Next</span>
+                <ChevronRight className="w-4 h-4 ml-1" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Selected rows info */}
+      {showExtraColumn === 'checkbox' && selectedRows.size > 0 && (
+        <div className="px-4 sm:px-6 py-2 bg-blue-50 border-t border-blue-200">
+          <div className="text-sm text-blue-700">
+            {selectedRows.size} row{selectedRows.size !== 1 ? 's' : ''} selected
+          </div>
+        </div>
+      )}
       {/* Render Current View */}
-{currentView === 'table' ? (
-  <TableView 
-  style={style?.table}
-    config={config}
+      {
+        currentView === 'cards' ? (
+          <CardView
+            style={style?.cards}
+            config={config}
+            paginatedGroupedData={paginatedGroupedData}
+            hasButtons={hasButtons}
+            visibleButtons={visibleButtons}
+            moreButtons={moreButtons}
+            showExtraColumn={showExtraColumn}
+            selectedRows={selectedRows}
+            openDropdown={openDropdown}
+            handleSelectRow={handleSelectRow}
+            handleButtonClick={handleButtonClick}
+            toggleDropdown={toggleDropdown}
+            setOpenDropdown={setOpenDropdown}
+            getIconComponent={getIconComponent} />
+        ) : currentView === 'kanban' ? (
+          <KanbanView
+            config={config}
+            filteredAndSortedData={filteredAndSortedData}
+            hasButtons={hasButtons}
+            visibleButtons={visibleButtons}
+            moreButtons={moreButtons}
+            showExtraColumn={showExtraColumn}
+            selectedRows={selectedRows}
+            openDropdown={openDropdown}
+            handleSelectRow={handleSelectRow}
+            handleButtonClick={handleButtonClick}
+            toggleDropdown={toggleDropdown}
+            setOpenDropdown={setOpenDropdown}
+            getIconComponent={getIconComponent}
+            kanbanGroupBy={kanbanGroupBy}
+          />
+        ) : currentView === 'calendar' ? (
+          <CalendarView
+            config={config}
+            filteredAndSortedData={filteredAndSortedData}
+            hasButtons={hasButtons}
+            visibleButtons={visibleButtons}
+            moreButtons={moreButtons}
+            showExtraColumn={showExtraColumn}
+            selectedRows={selectedRows}
+            openDropdown={openDropdown}
+            handleSelectRow={handleSelectRow}
+            handleButtonClick={handleButtonClick}
+            toggleDropdown={toggleDropdown}
+            setOpenDropdown={setOpenDropdown}
+            getIconComponent={getIconComponent}
+            kanbanGroupBy={kanbanGroupBy}
+          />
+        ) : <TableView
+          style={style?.table}
+          config={config}
           paginatedGroupedData={paginatedGroupedData}
           visibleColumns={visibleColumns}
           hasButtons={hasButtons}
@@ -535,109 +668,23 @@ useEffect(() => {
           formatCellValue={formatCellValue}
           renderSortIcon={renderSortIcon}
           getIconComponent={getIconComponent}
-    />
-) : currentView === 'card' ? (
-  <CardView  
-          style={style?.cards}
-          config={config}
-          paginatedGroupedData={paginatedGroupedData}
-          hasButtons={hasButtons}
-          visibleButtons={visibleButtons}
-          moreButtons={moreButtons}
-          showExtraColumn={showExtraColumn}
-          selectedRows={selectedRows}
-          openDropdown={openDropdown}
-          handleSelectRow={handleSelectRow}
-          handleButtonClick={handleButtonClick}
-          toggleDropdown={toggleDropdown}
-          setOpenDropdown={setOpenDropdown}
-          getIconComponent={getIconComponent} />
-) : currentView === 'kanban' ? (
-  <KanbanView
-    config={config}
-    filteredAndSortedData={filteredAndSortedData}
-    hasButtons={hasButtons}
-    visibleButtons={visibleButtons}
-    moreButtons={moreButtons}
-    showExtraColumn={showExtraColumn}
-    selectedRows={selectedRows}
-    openDropdown={openDropdown}
-    handleSelectRow={handleSelectRow}
-    handleButtonClick={handleButtonClick}
-    toggleDropdown={toggleDropdown}
-    setOpenDropdown={setOpenDropdown}
-    getIconComponent={getIconComponent}
-    kanbanGroupBy={kanbanGroupBy}
-  />
-): currentView === 'calendar' ? (
-  <CalendarView
-    config={config}
-    filteredAndSortedData={filteredAndSortedData}
-    hasButtons={hasButtons}
-    visibleButtons={visibleButtons}
-    moreButtons={moreButtons}
-    showExtraColumn={showExtraColumn}
-    selectedRows={selectedRows}
-    openDropdown={openDropdown}
-    handleSelectRow={handleSelectRow}
-    handleButtonClick={handleButtonClick}
-    toggleDropdown={toggleDropdown}
-    setOpenDropdown={setOpenDropdown}
-    getIconComponent={getIconComponent}
-    kanbanGroupBy={kanbanGroupBy}
-  />
-) : null}
-      
+        />}
+
       {/* Click outside to close dropdown */}
       {openDropdown && (
         <div
-          className="fixed inset-0 z-40"
+          className="fixed inset-0 z-50"
           onClick={() => setOpenDropdown(null)}
         />
       )}
-      
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="px-4 sm:px-6 py-3 bg-gray-50 border-t border-gray-200">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            <div className="text-sm text-gray-500">
-              Showing {startIndex + 1} to {Math.min(endIndex, filteredAndSortedData.length)} of {filteredAndSortedData.length} records
-            </div>
-            <div className="flex items-center justify-center sm:justify-end gap-2">
-              <button
-                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                disabled={currentPage === 1}
-                className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <ChevronLeft className="w-4 h-4 mr-1" />
-                <span className="hidden sm:inline">Previous</span>
-                <span className="sm:hidden">Prev</span>
-              </button>
-              <span className="text-sm text-gray-700 px-2">
-                {currentPage} of {totalPages}
-              </span>
-              <button
-                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                disabled={currentPage === totalPages}
-                className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <span className="hidden sm:inline">Next</span>
-                <span className="sm:hidden">Next</span>
-                <ChevronRight className="w-4 h-4 ml-1" />
-              </button>
-            </div>
-          </div>
-        </div>
+      {settingsOpen && (
+        <SettingPopup
+          setSettingsOpen={setSettingsOpen}
+          config={config}
+          setConfig={setConfig}
+        />
       )}
-      
-      {/* Selected rows info */}
-      {showExtraColumn === 'checkbox' && selectedRows.size > 0 && (
-        <div className="px-4 sm:px-6 py-2 bg-blue-50 border-t border-blue-200">
-          <div className="text-sm text-blue-700">
-            {selectedRows.size} row{selectedRows.size !== 1 ? 's' : ''} selected
-          </div>
-        </div>
-      )}
+
     </div>
   );
 }
