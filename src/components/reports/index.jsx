@@ -14,7 +14,7 @@ import { exportTable } from '../../helpers/exports';
 import CONSTANTS from '../../constants';
 
 // Main Reports Component
-export default function Reports({ report: reportJSON, style, methods, data: reportdata, onButtonClick,components }) {
+export default function Reports({ report: reportJSON, style, methods, data: reportdata, onButtonClick, components }) {
   const [config, setConfig] = useState(null);
   const [currentView, setCurrentView] = useState();
   const [searchTerm, setSearchTerm] = useState('');
@@ -161,7 +161,7 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
     );
   }
 
-  const { title, toolbar, actions, buttons, datagrid } = config;
+  const { title, toolbar, actions, buttons, datagrid, uiswitcher } = config;
 
   const handleSort = (key) => {
     const column = datagrid[key];
@@ -321,14 +321,15 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
             )}
 
             <div className="relative inline-block text-left" ref={dropdownRef}>
-              <button
-                onClick={() => setOpen(!open)}
-                className="inline-flex items-center px-3 py-1 text-sm font-medium bg-action rounded-md hover:bg-gray-100 cursor-pointer"
-              >
-                <Upload className="w-4 h-4 mr-1" />
-                Export
-              </button>
-
+              {toolbar?.export !== false &&
+                <button
+                  onClick={() => setOpen(!open)}
+                  className="inline-flex items-center px-3 py-1 text-sm font-medium bg-action rounded-md hover:bg-gray-100 cursor-pointer"
+                >
+                  <Upload className="w-4 h-4 mr-1" />
+                  Export
+                </button>
+              }
               {open && (
                 <div className="absolute right-0 z-50 mt-2 w-48 rounded-md bg-white border border-gray-200 shadow-lg">
                   <ul className="py-1 text-sm text-action">
@@ -441,68 +442,70 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
             )}
 
             <div className="flex flex-wrap gap-2">
-              <div className="flex items-center bg-gray-100 rounded-lg p-1">
+              {
+                uiswitcher != false &&
+                <div className="flex items-center bg-gray-100 rounded-lg p-1">
 
-                {
-                  config?.datagrid &&
-                  <button
-                    onClick={() => setCurrentView('table')}
-                    title='Table'
-                    className={`inline-flex items-center px-3 cursor-pointer py-1.5 text-sm font-medium rounded-md transition-colors ${currentView === 'table' || !currentView
-                      ? 'bg-action shadow'
-                      : 'text-gray-600 hover:text-gray-900'
-                      }`}
-                  >
-                    <List className="w-4 h-4 " />
-                    {/* Table */}
-                  </button>
-                }
-                {
-                  config?.cards &&
-                  <button
-                    title='Cards'
+                  {
+                    config?.datagrid &&
+                    <button
+                      onClick={() => setCurrentView('table')}
+                      title='Table'
+                      className={`inline-flex items-center px-3 cursor-pointer py-1.5 text-sm font-medium rounded-md transition-colors ${currentView === 'table' || !currentView
+                        ? 'bg-action shadow'
+                        : 'text-gray-600 hover:text-gray-900'
+                        }`}
+                    >
+                      <List className="w-4 h-4 " />
+                      {/* Table */}
+                    </button>
+                  }
+                  {
+                    config?.cards &&
+                    <button
+                      title='Cards'
 
-                    onClick={() => setCurrentView('cards')}
-                    className={`inline-flex items-center px-3 cursor-pointer py-1.5 text-sm font-medium rounded-md transition-colors ${currentView === 'cards'
-                      ? 'bg-action shadow'
-                      : 'text-gray-600 hover:text-gray-900'
-                      }`}
-                  >
-                    <Grid className="w-4 h-4 " />
-                    {/* Cards */}
-                  </button>
-                }
-                {
-                  config?.kanban &&
-                  <button
-                    onClick={() => setCurrentView('kanban')}
-                    title='Kanban'
+                      onClick={() => setCurrentView('cards')}
+                      className={`inline-flex items-center px-3 cursor-pointer py-1.5 text-sm font-medium rounded-md transition-colors ${currentView === 'cards'
+                        ? 'bg-action shadow'
+                        : 'text-gray-600 hover:text-gray-900'
+                        }`}
+                    >
+                      <Grid className="w-4 h-4 " />
+                      {/* Cards */}
+                    </button>
+                  }
+                  {
+                    config?.kanban &&
+                    <button
+                      onClick={() => setCurrentView('kanban')}
+                      title='Kanban'
 
-                    className={`inline-flex items-center px-3 cursor-pointer py-1.5 text-sm font-medium rounded-md transition-colors ${currentView === 'kanban'
-                      ? 'bg-action shadow'
-                      : 'text-gray-600 hover:text-gray-900'
-                      }`}
-                  >
-                    <Columns className="w-4 h-4 " />
-                    {/* Kanban */}
-                  </button>
-                }
-                {
-                  config?.calendar &&
-                  <button
-                    onClick={() => setCurrentView('calendar')}
-                    title='Calender'
+                      className={`inline-flex items-center px-3 cursor-pointer py-1.5 text-sm font-medium rounded-md transition-colors ${currentView === 'kanban'
+                        ? 'bg-action shadow'
+                        : 'text-gray-600 hover:text-gray-900'
+                        }`}
+                    >
+                      <Columns className="w-4 h-4 " />
+                      {/* Kanban */}
+                    </button>
+                  }
+                  {
+                    config?.calendar &&
+                    <button
+                      onClick={() => setCurrentView('calendar')}
+                      title='Calender'
 
-                    className={`inline-flex items-center px-3 cursor-pointer py-1.5 text-sm font-medium rounded-md transition-colors ${currentView === 'calendar'
-                      ? 'bg-action shadow'
-                      : 'text-gray-600 hover:text-gray-900'
-                      }`}
-                  >
-                    <Calendar className="w-4 h-4 " />
-                    {/* calendar */}
-                  </button>
-                }
-              </div>
+                      className={`inline-flex items-center px-3 cursor-pointer py-1.5 text-sm font-medium rounded-md transition-colors ${currentView === 'calendar'
+                        ? 'bg-action shadow'
+                        : 'text-gray-600 hover:text-gray-900'
+                        }`}
+                    >
+                      <Calendar className="w-4 h-4 " />
+                    </button>
+                  }
+                </div>
+              }
               {actions && Object.entries(actions).map(([key, action]) => (
                 <button
                   onClick={() => handleButtonClick(key, action)}

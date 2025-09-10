@@ -1,4 +1,4 @@
-import { c as Da, _ as Va, g as il } from "./index-DiwBNeur.js";
+import { c as Da, _ as Va, g as il } from "./index-CRpgQ_P2.js";
 var fn = {}, cn = {}, cr, vn;
 function Q() {
   if (vn) return cr;
