@@ -14,7 +14,7 @@ import { exportTable } from '../../helpers/exports';
 import CONSTANTS from '../../constants';
 
 // Main Reports Component
-export default function Reports({ report: reportJSON, style, methods, data: reportdata, onButtonClick }) {
+export default function Reports({ report: reportJSON, style, methods, data: reportdata, onButtonClick,components }) {
   const [config, setConfig] = useState(null);
   const [currentView, setCurrentView] = useState();
   const [searchTerm, setSearchTerm] = useState('');
@@ -51,6 +51,8 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
       setCurrentView(report.template);
     }
   }, [reportJSON]);
+
+
 
   // useEffect(() => {
   //   const localOverrides = JSON.parse(localStorage.getItem("tableOverrides"));
@@ -684,6 +686,10 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
           setConfig={setConfig}
         />
       )}
+
+      {
+        components
+      }
 
     </div>
   );

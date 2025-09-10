@@ -1,6 +1,6 @@
 {
   "name": "logiks-reports",
-  "version": "1.0.72",
+  "version": "1.0.73",
   "private": false,
   "type": "module",
   "main": "dist/index.cjs.js",
