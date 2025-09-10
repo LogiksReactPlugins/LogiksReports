@@ -316,7 +316,7 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
     <div className="bg-white min-h-screen">
       <div className=" px-3 sm:px-3 py-2">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-          <h1 className={style?.title || `text-xl font-semibold text-gray-900 flex-shrink-0`}>{title} <span className='text-sm' >({filteredAndSortedData.length})</span> </h1>
+          <h1 className={style?.title || `text-xl font-semibold text-gray-900 flex-shrink-0`}>{title} {title && <span className='text-sm' >({filteredAndSortedData.length})</span>} </h1>
           <div className="hidden sm:flex items-center gap-2 flex-shrink-0">
             {toolbar?.print !== false && (
               <button
