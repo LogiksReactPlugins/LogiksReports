@@ -31,6 +31,7 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
   const [data, setData] = useState([])
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [loading, setLoading] = useState(null)
+  const [dataLoading,setDataLoading]=useState(false)
   useEffect(() => {
     if (!currentView) return;
     updateLocalOverride("template", currentView);
@@ -83,7 +84,9 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
 
   useEffect(() => {
     const fetchAPI = async () => {
-      if (config?.source?.type === 'API') {
+      setDataLoading(true)
+    try {
+        if (config?.source?.type === 'API') {
         const axiosObject = {
           method: config?.source?.method,
           url: config?.source?.url,
@@ -98,6 +101,11 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
       else if (config?.rows) {
         setData(config?.rows || [])
       }
+    } catch (error) {
+      
+    }finally{
+      setDataLoading(false)
+    }
     }
     fetchAPI()
   }, [config])
@@ -615,7 +623,10 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
             handleButtonClick={handleButtonClick}
             toggleDropdown={toggleDropdown}
             setOpenDropdown={setOpenDropdown}
-            getIconComponent={getIconComponent} />
+            getIconComponent={getIconComponent}
+                      loading={dataLoading}
+
+            />
         ) : currentView === 'kanban' ? (
           <KanbanView
             config={config}
@@ -632,6 +643,8 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
             setOpenDropdown={setOpenDropdown}
             getIconComponent={getIconComponent}
             kanbanGroupBy={kanbanGroupBy}
+                      loading={dataLoading}
+
           />
         ) : currentView === 'calendar' ? (
           <CalendarView
@@ -649,6 +662,8 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
             setOpenDropdown={setOpenDropdown}
             getIconComponent={getIconComponent}
             kanbanGroupBy={kanbanGroupBy}
+                      loading={dataLoading}
+
           />
         ) : <TableView
           style={style?.table}
@@ -673,6 +688,7 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
           formatCellValue={formatCellValue}
           renderSortIcon={renderSortIcon}
           getIconComponent={getIconComponent}
+          loading={dataLoading}
         />}
 
       {/* Click outside to close dropdown */}

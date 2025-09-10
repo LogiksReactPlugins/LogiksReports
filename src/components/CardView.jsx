@@ -85,26 +85,29 @@ const CardView = ({
                   <div className="p-2 pb-2 flex items-start justify-between">
                     <div className="flex items-start space-x-3">
                       {/* Avatar */}
+                   {
+                    getCardValue(row, 'avatar')!=false &&
                       <div className="flex-shrink-0">
                         {getCardValue(row, 'avatar') ? (
                           <img
-                            className="h-10 w-10 rounded-full object-cover"
-                            src={getCardValue(row, 'avatar')}
-                            alt=""
-                            onError={(e) => {
-                              e.target.style.display = 'none';
-                              e.target.nextSibling.style.display = 'flex';
-                            }}
+                          className="h-10 w-10 rounded-full object-cover"
+                          src={getCardValue(row, 'avatar')}
+                          alt=""
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                            e.target.nextSibling.style.display = 'flex';
+                          }}
                           />
                         ) :
                           <div
-                            className={`h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center ${getCardValue(row, 'avatar') ? 'hidden' : 'flex'
-                              }`}
-                          >
+                          className={`h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center ${getCardValue(row, 'avatar') ? 'hidden' : 'flex'
+                            }`}
+                            >
                             <User className="h-5 w-5 text-gray-600" />
                           </div>
                         }
                       </div>
+                          }
 
                       {/* Title and Description */}
                       <div className="flex-1 min-w-0">

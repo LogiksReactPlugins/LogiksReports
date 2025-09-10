@@ -24,7 +24,8 @@ const TableView = ({
   formatCellValue,
   renderSortIcon,
   getIconComponent,
-  style
+  style,
+  loading
 }) => {
   const { datagrid, groupBy } = config;
   const { wrapLines, rowClickSelection, stripedRows, fixFirstColumn, fixFirstTwoColumns, fixLastColumn, compactMode } = config;
@@ -88,7 +89,22 @@ const TableView = ({
                   </tr>
                 </thead>
                 <tbody className={style?.tbody || "bg-white divide-y divide-gray-200"}>
-                  {paginatedGroupedData[groupKey] && paginatedGroupedData[groupKey].length > 0 ? (
+                    {loading ? (
+    // Show shimmer while loading
+    <>
+      {Array.from({ length: 6 }).map((_, rowIndex) => (
+        <ShimmerTableRow
+          key={rowIndex}
+          columns={[
+            ...(hasButtons ? [["__actions", {}]] : []),
+            ...(showExtraColumn === "checkbox" ? [["__checkbox", {}]] : []),
+            ...visibleColumns,
+          ]}
+        />
+      ))}
+    </>
+  ) :
+                  paginatedGroupedData[groupKey] && paginatedGroupedData[groupKey].length > 0 ? (
                     paginatedGroupedData[groupKey].map((row, rowIndex) => (
                       <tr
                         key={rowIndex}
@@ -199,18 +215,18 @@ const TableView = ({
                       </tr>
                     ))
                   ) : (
-                    <>
-                      {Array.from({ length: 6 }).map((_, rowIndex) => (
-                        <ShimmerTableRow
-                          key={rowIndex}
-                          columns={[
-                            ...(hasButtons ? [["__actions", {}]] : []),
-                            ...(showExtraColumn === "checkbox" ? [["__checkbox", {}]] : []),
-                            ...visibleColumns,
-                          ]}
-                        />
-                      ))}
-                    </>
+                      <tr>
+      <td
+        colSpan={
+          visibleColumns.length +
+          (hasButtons ? 1 : 0) +
+          (showExtraColumn === "checkbox" ? 1 : 0)
+        }
+        className="px-4 py-6 text-center text-sm text-gray-500"
+      >
+        No data available
+      </td>
+    </tr>
                   )}
                 </tbody>
               </table>
