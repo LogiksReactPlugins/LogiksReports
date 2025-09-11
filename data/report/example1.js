@@ -23,7 +23,7 @@ export const report = {
   "actions": {
     "addRecord": {
       "label": "adddddd",
-      "icon": "<i class='fa fa-plus'></i>",
+      "icon": "fa fa-plus",
        "event":{
         "click":"addButtonClick"
       }

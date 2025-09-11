@@ -31,7 +31,7 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
   const [data, setData] = useState([])
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [loading, setLoading] = useState(null)
-  const [dataLoading,setDataLoading]=useState(false)
+  const [dataLoading, setDataLoading] = useState(false)
   useEffect(() => {
     if (!currentView) return;
     updateLocalOverride("template", currentView);
@@ -85,27 +85,27 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
   useEffect(() => {
     const fetchAPI = async () => {
       setDataLoading(true)
-    try {
+      try {
         if (config?.source?.type === 'API') {
-        const axiosObject = {
-          method: config?.source?.method,
-          url: config?.source?.url,
-          headers: config?.source?.headers
+          const axiosObject = {
+            method: config?.source?.method,
+            url: config?.source?.url,
+            headers: config?.source?.headers
+          }
+          const { data } = await axios(axiosObject)
+          console.log({ data })
+          setData(data?.data || [])
+        } else if (reportdata) {
+          setData(reportdata)
         }
-        const { data } = await axios(axiosObject)
-        console.log({ data })
-        setData(data?.data || [])
-      } else if (reportdata) {
-        setData(reportdata)
+        else if (config?.rows) {
+          setData(config?.rows || [])
+        }
+      } catch (error) {
+
+      } finally {
+        setDataLoading(false)
       }
-      else if (config?.rows) {
-        setData(config?.rows || [])
-      }
-    } catch (error) {
-      
-    }finally{
-      setDataLoading(false)
-    }
     }
     fetchAPI()
   }, [config])
@@ -316,7 +316,23 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
     <div className="bg-white min-h-screen">
       <div className=" px-3 sm:px-3 py-2">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-          <h1 className={style?.title || `text-xl font-semibold text-gray-900 flex-shrink-0`}>{title} {title && <span className='text-sm' >({filteredAndSortedData.length})</span>} </h1>
+          <div className='flex space-x-2'>
+
+            <h1 className={style?.title || `text-xl font-semibold text-gray-900 flex-shrink-0`}>{title} {title && <span className='text-sm' >({filteredAndSortedData.length})</span>} </h1>
+            <div className="flex">
+              {actions && Object.entries(actions).map(([key, action]) => (
+                <button
+                  onClick={() => handleButtonClick(key, action)}
+                  key={key}
+                  className="inline-flex items-center px-2 py-1 text-sm font-medium cursor-pointer bg-action rounded-md"
+                >
+                  {getIconComponent(action?.icon)}
+                  {action?.label}
+                </button>
+              ))}
+
+            </div>
+          </div>
           <div className="hidden sm:flex items-center gap-2 flex-shrink-0">
             {toolbar?.print !== false && (
               <button
@@ -514,16 +530,6 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
                   }
                 </div>
               }
-              {actions && Object.entries(actions).map(([key, action]) => (
-                <button
-                  onClick={() => handleButtonClick(key, action)}
-                  key={key}
-                  className="inline-flex items-center px-3 py-1.5 text-sm font-medium cursor-pointer bg-action rounded-md"
-                >
-                  <Plus className="w-4 h-4 mr-1" />
-                  {action?.label || "Add Record"}
-                </button>
-              ))}
               <button
                 className={`inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md transition-colors  bg-action cursor-pointer`}
               >
@@ -624,9 +630,9 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
             toggleDropdown={toggleDropdown}
             setOpenDropdown={setOpenDropdown}
             getIconComponent={getIconComponent}
-                      loading={dataLoading}
+            loading={dataLoading}
 
-            />
+          />
         ) : currentView === 'kanban' ? (
           <KanbanView
             config={config}
@@ -643,7 +649,7 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
             setOpenDropdown={setOpenDropdown}
             getIconComponent={getIconComponent}
             kanbanGroupBy={kanbanGroupBy}
-                      loading={dataLoading}
+            loading={dataLoading}
 
           />
         ) : currentView === 'calendar' ? (
@@ -662,7 +668,7 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
             setOpenDropdown={setOpenDropdown}
             getIconComponent={getIconComponent}
             kanbanGroupBy={kanbanGroupBy}
-                      loading={dataLoading}
+            loading={dataLoading}
 
           />
         ) : <TableView

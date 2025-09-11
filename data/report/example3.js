@@ -25,7 +25,7 @@ export const report = {
   "actions": {
     "forms@new": {
       "label": "Add Persona",
-      "icon": "<i class='fa fa-plus'></i>",
+      "icon": "fa fa-plus",
     }
   },
   "buttons": {
