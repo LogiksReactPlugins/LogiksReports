@@ -9,6 +9,9 @@ export const report = {
   "template": "cards",
   "custombar": false,
   // "showExtraColumn": "checkbox",
+
+  // "settings":false,
+  // "filters":false,
   "source": {
     "type": "API",  
     // "axiosObject": {

@@ -530,18 +530,25 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
                   }
                 </div>
               }
+              {
+                config?.filters!=false &&
+
               <button
-                className={`inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md transition-colors  bg-action cursor-pointer`}
+              className={`inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md transition-colors  bg-action cursor-pointer`}
               >
                 <FilterIcon className="w-4 h-4" />
               </button>
+              }
+              {
+                config?.settings!=false &&
               <button
-                onClick={() => setSettingsOpen(true)}
-
-                className={`inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md transition-colors  bg-action cursor-pointer`}
+              onClick={() => setSettingsOpen(true)}
+              
+              className={`inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md transition-colors  bg-action cursor-pointer`}
               >
                 <Settings className="w-4 h-4" />
               </button>
+              }
             </div>
           </div>
         </div>

@@ -36557,7 +36557,7 @@ endobj\r
   var l = o.getContext("2d");
   l.fillStyle = "#fff", l.fillRect(0, 0, o.width, o.height);
   var c = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, h = this;
-  return (Qt.canvg ? Promise.resolve(Qt.canvg) : import("./index.es-DRBneeev.js")).catch(function(g) {
+  return (Qt.canvg ? Promise.resolve(Qt.canvg) : import("./index.es-CMJyVoNy.js")).catch(function(g) {
     return Promise.reject(new Error("Could not load canvg: " + g));
   }).then(function(g) {
     return g.default ? g.default : g;
@@ -38175,14 +38175,14 @@ function HP({ report: e, style: t, methods: A, data: r, onButtonClick: n, compon
                 }
               )
             ] }),
-            /* @__PURE__ */ Q.jsx(
+            a?.filters != !1 && /* @__PURE__ */ Q.jsx(
               "button",
               {
                 className: "inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md transition-colors  bg-action cursor-pointer",
                 children: /* @__PURE__ */ Q.jsx(By, { className: "w-4 h-4" })
               }
             ),
-            /* @__PURE__ */ Q.jsx(
+            a?.settings != !1 && /* @__PURE__ */ Q.jsx(
               "button",
               {
                 onClick: () => oe(!0),
