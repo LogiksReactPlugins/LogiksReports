@@ -9,6 +9,7 @@ const CONSTANTS={
         csvdown: "Download CSV",
         email: "Email Report",
     },
-    EXPORT_ORDER : ["pdf", "csv", "xml", "htm", "img", "csvdown"]
+    EXPORT_ORDER : ["pdf", "csv", "xml", "htm", "img", "csvdown"],
+    REPORT_LOCALSTORAGE_PRIFIX:"RPT-"
 }
 export default CONSTANTS

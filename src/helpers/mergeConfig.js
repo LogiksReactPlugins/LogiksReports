@@ -3,6 +3,7 @@ export default function mergeConfig(serverConfig, localOverrides) {
 
     const merged = {
       ...serverConfig,
+      density: localOverrides.density ?? null,
       rowsPerPage: localOverrides.rowsPerPage ?? serverConfig.rowsPerPage,
       wrapLines: localOverrides.wrapLines ?? serverConfig.wrapLines,
       stripedRows: localOverrides.stripedRows ?? serverConfig.stripedRows,

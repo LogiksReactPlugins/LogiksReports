@@ -35,7 +35,7 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
   const [dataLoading, setDataLoading] = useState(false)
   useEffect(() => {
     if (!currentView) return;
-    updateLocalOverride("template", currentView);
+      updateLocalOverride("template", currentView);
   }, [currentView]);
 
   // useEffect(() => {
@@ -59,7 +59,7 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
   const STORAGE_KEY = getPathKey();
 
   if (reportJSON?.settings !== false) {
-    const localOverrides = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+    const localOverrides = JSON.parse(localStorage.getItem(`${CONSTANTS.REPORT_LOCALSTORAGE_PRIFIX}${STORAGE_KEY}`)) || {};
     const report = mergeConfig(reportJSON, localOverrides);
     setConfig(report);
 
@@ -173,7 +173,7 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
     );
   }
 
-  const { title, toolbar, actions, buttons, datagrid, uiswitcher } = config;
+  const { title, toolbar, actions, buttons, datagrid, uiswitcher ,compactMode} = config;
 
   const handleSort = (key) => {
     const column = datagrid[key];
@@ -220,10 +220,6 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
     setSelectedRows(newSelection);
     setSelectAll(newSelection.size === currentData.length);
   };
-
-
-
-
 
   const parseStyle = (styleStr) => {
     if (!styleStr) return {};
@@ -306,8 +302,13 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
   // }
 
   return (
-    <div className="bg-white">
-      <div className=" px-3 sm:px-3 py-2">
+<div
+  className={`bg-white report-root ${
+    compactMode === undefined || compactMode === true
+      ? "compact"
+      : "wide"
+  }`}
+>      <div className=" px-3 sm:px-3 py-2">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div className='flex space-x-2'>
 

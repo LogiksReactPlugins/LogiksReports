@@ -1,7 +1,9 @@
+import CONSTANTS from "../constants";
 import getPathKey from "./getPathKey";
 
 export default  function saveOverrides(config) {
         const overrides = {
+            density: config.density,
             rowsPerPage: config.rowsPerPage,
             wrapLines: config.wrapLines,
             stripedRows: config.stripedRows,
@@ -17,6 +19,6 @@ export default  function saveOverrides(config) {
                 ])
             ),
         };
-          const STORAGE_KEY=getPathKey()
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(overrides));
+        const STORAGE_KEY=getPathKey()
+        localStorage.setItem(`${CONSTANTS.REPORT_LOCALSTORAGE_PRIFIX}${STORAGE_KEY}`, JSON.stringify(overrides));
     }

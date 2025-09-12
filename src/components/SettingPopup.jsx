@@ -4,10 +4,12 @@ import saveOverrides from '../helpers/saveOverrides';
 export default function SettingPopup({ config, setConfig, setSettingsOpen }) {
     const [searchTerm, setSearchTerm] = useState('');
     const [tempConfig, setTempConfig] = useState({ ...config });
+    const [density, setDensity] = useState("default");
+
     const [columnOrder, setColumnOrder] = useState(
         Object.keys(config?.datagrid || {})
     );
-   
+
     // Filter columns based on search
     const filteredColumns = Object.entries(tempConfig?.datagrid || {}).filter(
         ([key, col]) =>
@@ -132,8 +134,8 @@ export default function SettingPopup({ config, setConfig, setSettingsOpen }) {
                                     value={tempConfig?.rowsPerPage || 10}
                                     onChange={(e) => updateSetting('rowsPerPage', parseInt(e.target.value))}
                                     className="w-full text-sm bg-white rounded-lg px-3 py-2 transition-all 
-                   border border-gray-300 focus:outline-none cursor-pointer 
-                   focus:ring-gray-200 focus:border-gray-400"
+                                            border border-gray-300 focus:outline-none cursor-pointer 
+                                            focus:ring-gray-200 focus:border-gray-400"
                                 >
                                     <option value={10}>10 rows</option>
                                     <option value={25}>25 rows</option>
@@ -154,6 +156,19 @@ export default function SettingPopup({ config, setConfig, setSettingsOpen }) {
                             <div className="mb-3">
                                 <h3 className="text-sm font-medium text-secondary mb-1">Display Options</h3>
                                 <div className="space-y-3">
+                                    <div>
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-sm text-muted">Layout density</span>
+                                            <Toggle
+                                                checked={tempConfig?.compactMode ?? true}
+                                                onChange={(value) => updateSetting("compactMode", value)}
+                                            />
+                                        </div>
+                                        <p className="text-xs text-gray-500">
+                                            Switch between <span className="font-medium">Compact view</span> (reduced padding and row height to fit more data on screen)
+                                            and <span className="font-medium">Normal view</span> (default spacing for better readability).
+                                        </p>
+                                    </div>
                                     <div>
                                         <div className="flex items-center justify-between">
                                             <span className="text-sm text-muted">Wrap text in cells</span>
@@ -193,7 +208,7 @@ export default function SettingPopup({ config, setConfig, setSettingsOpen }) {
                                         </p>
                                     </div>
 
-                                    <div>
+                                    {/* <div>
                                         <div className="flex items-center justify-between">
                                             <span className="text-sm text-muted">Dense layout</span>
                                             <Toggle
@@ -204,7 +219,7 @@ export default function SettingPopup({ config, setConfig, setSettingsOpen }) {
                                         <p className="text-xs text-gray-500">
                                             Reduces row height to fit more rows on the screen.
                                         </p>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
 
