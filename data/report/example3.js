@@ -63,7 +63,6 @@ export const report = {
       "groupable": false,
       "classes": "",
       "style": "width:50px;",
-      "formatter": "method",
       'method':'test1'
     },
 

@@ -191,7 +191,7 @@ const TableView = ({
                             >
                               <div className="relative group flex items-center">
                                 <div className={wrapLines ? "whitespace-pre-wrap break-words max-w-none" : "truncate max-w-xs sm:max-w-none"}>
-                                  {formatCellValue(row[key], col.formatter)}
+                                  {formatCellValue(row[key], col.formatter, row, col)}
                                 </div>
 
                                 <button

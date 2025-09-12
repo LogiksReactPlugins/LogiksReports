@@ -313,7 +313,7 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
   // }
 
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-white">
       <div className=" px-3 sm:px-3 py-2">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div className='flex space-x-2'>
