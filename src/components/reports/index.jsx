@@ -12,6 +12,7 @@ import formatCellValue from '../../helpers/formatCellValue';
 import updateLocalOverride from '../../helpers/updateLocalOverride';
 import { exportTable } from '../../helpers/exports';
 import CONSTANTS from '../../constants';
+import getPathKey from '../../helpers/getPathKey';
 
 // Main Reports Component
 export default function Reports({ report: reportJSON, style, methods, data: reportdata, onButtonClick, components }) {
@@ -37,40 +38,43 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
     updateLocalOverride("template", currentView);
   }, [currentView]);
 
-  useEffect(() => {
-    const localOverrides = JSON.parse(localStorage.getItem("tableOverrides")) || {};
+  // useEffect(() => {
+  //   const STORAGE_KEY=getPathKey()
+  //   const localOverrides = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
 
+  //   const report = mergeConfig(reportJSON, localOverrides);
+  //   setConfig(report);
+
+  //   // 2. Restore template (view) priority:
+  //   // first from localStorage, else from server
+  //   if (localOverrides?.template) {
+  //     console.log([localOverrides.template])
+  //     setCurrentView((reportJSON[localOverrides?.template]) ? localOverrides.template : null);
+  //   } else if (report?.template) {
+  //     setCurrentView(report.template);
+  //   }
+  // }, [reportJSON]);
+
+  useEffect(() => {
+  const STORAGE_KEY = getPathKey();
+
+  if (reportJSON?.settings !== false) {
+    const localOverrides = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
     const report = mergeConfig(reportJSON, localOverrides);
     setConfig(report);
 
-    // 2. Restore template (view) priority:
-    // first from localStorage, else from server
     if (localOverrides?.template) {
-      console.log([localOverrides.template])
-      setCurrentView((reportJSON[localOverrides?.template]) ? localOverrides.template : null);
+      setCurrentView(reportJSON[localOverrides?.template] ? localOverrides.template : null);
     } else if (report?.template) {
       setCurrentView(report.template);
     }
-  }, [reportJSON]);
-
-
-
-  // useEffect(() => {
-  //   const localOverrides = JSON.parse(localStorage.getItem("tableOverrides"));
-  //   const report = mergeConfig(reportJSON, localOverrides);
-  //   setConfig(report);
-  //   // if (report?.template === 'card' && (report?.cards && Object.keys(report.cards).length > 0)) {
-  //   //   setCurrentView('card');
-  //   // } else if (report?.template === 'calendar' && (report?.calendar && Object.keys(report.calendar).length > 0)) {
-  //   //   setCurrentView('calendar');
-  //   // } else if (report?.template === 'kanban' && (report?.kanban && Object.keys(report.kanban).length > 0)) {
-  //   //   setCurrentView('kanban');
-  //   //   const kanbanKeys = Object.keys(report.kanban?.colkeys || {});
-  //   //   if (kanbanKeys.length > 0) {
-  //   //     setKanbanGroupBy(kanbanKeys[0]);
-  //   //   }
-  //   // }
-  // }, [reportJSON]);
+  } else {
+    setConfig(reportJSON);
+    if (reportJSON?.template) {
+      setCurrentView(reportJSON.template);
+    }
+  }
+}, [reportJSON]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -252,17 +256,6 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
 
   const getIconComponent = (iconStr) => {
     if (!iconStr) return <i className='fa fa-star'></i>;
-
-    // if (iconStr.includes('eye')) return <Eye className="w-4 h-4" />;
-    // if (iconStr.includes('pencil') ||iconStr.includes('tag') || iconStr.includes('code') || iconStr.includes('edit')) return <Edit className="w-4 h-4" />;
-    // if (iconStr.includes('user')) return <User className="w-4 h-4" />;
-    // if (iconStr.includes('check')) return <Check className="w-4 h-4" />;
-    // if (iconStr.includes('close') || iconStr.includes('times')) return <X className="w-4 h-4" />;
-    // if (iconStr.includes('exchange')) return <RefreshCw className="w-4 h-4" />;
-    // if (iconStr.includes('ban')) return <Ban className="w-4 h-4" />;
-    // if (iconStr.includes('add')) return <PlusIcon className="w-4 h-4" />;
-    // if (iconStr.includes('gear')) return <Cog className="w-4 h-4" />;
-
     return <i className={`${iconStr}`}></i>;
   };
 

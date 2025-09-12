@@ -1,5 +1,8 @@
+import getPathKey from "./getPathKey";
+
 export default function updateLocalOverride(key, value) {
-  const existing = JSON.parse(localStorage.getItem("tableOverrides")) || {};
+  const STORAGE_KEY=getPathKey()
+  const existing = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
   const updated = { ...existing, [key]: value };
-  localStorage.setItem("tableOverrides", JSON.stringify(updated));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
 }

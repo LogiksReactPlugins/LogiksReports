@@ -1,3 +1,5 @@
+import getPathKey from "./getPathKey";
+
 export default  function saveOverrides(config) {
         const overrides = {
             rowsPerPage: config.rowsPerPage,
@@ -15,5 +17,6 @@ export default  function saveOverrides(config) {
                 ])
             ),
         };
-        localStorage.setItem("tableOverrides", JSON.stringify(overrides));
+          const STORAGE_KEY=getPathKey()
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(overrides));
     }
