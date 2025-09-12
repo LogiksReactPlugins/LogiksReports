@@ -6,7 +6,7 @@ export const report = {
   "blocked": false,
   "rowlink": false,
   "rowsPerPage": 50,
-  "template": "cards",
+  // "template": "cards",
   "custombar": false,
   // "showExtraColumn": "checkbox",
 

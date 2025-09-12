@@ -572,7 +572,7 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
       </div>
 
       {/* Pagination */}
-      {(currentView === 'table' || currentView === null || currentView === 'cards') && totalPages > 1 && (
+      {(currentView === 'table' || !currentView  || currentView === 'cards') && totalPages > 1 && (
         <div className="px-4 sm:px-6 py-1 sticky z-30 top-0 bg-white  border-y border-gray-200">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div className="text-sm text-gray-500">

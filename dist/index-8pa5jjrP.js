@@ -36723,7 +36723,7 @@ endobj\r
   var l = o.getContext("2d");
   l.fillStyle = "#fff", l.fillRect(0, 0, o.width, o.height);
   var c = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, h = this;
-  return (Tt.canvg ? Promise.resolve(Tt.canvg) : import("./index.es-DcYmi2x1.js")).catch(function(g) {
+  return (Tt.canvg ? Promise.resolve(Tt.canvg) : import("./index.es-DmaqK30X.js")).catch(function(g) {
     return Promise.reject(new Error("Could not load canvg: " + g));
   }).then(function(g) {
     return g.default ? g.default : g;
@@ -38371,7 +38371,7 @@ function qP({ report: e, style: t, methods: A, data: r, onButtonClick: n, compon
             ] })
           ] })
         ] }),
-        (o === "table" || o === null || o === "cards") && k > 1 && /* @__PURE__ */ L.jsx("div", { className: "px-4 sm:px-6 py-1 sticky z-30 top-0 bg-white  border-y border-gray-200", children: /* @__PURE__ */ L.jsxs("div", { className: "flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3", children: [
+        (o === "table" || !o || o === "cards") && k > 1 && /* @__PURE__ */ L.jsx("div", { className: "px-4 sm:px-6 py-1 sticky z-30 top-0 bg-white  border-y border-gray-200", children: /* @__PURE__ */ L.jsxs("div", { className: "flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3", children: [
           /* @__PURE__ */ L.jsxs("div", { className: "text-sm text-gray-500", children: [
             "Showing ",
             q + 1,
