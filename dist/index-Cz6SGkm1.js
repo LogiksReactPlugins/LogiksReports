@@ -6876,7 +6876,7 @@ function S3({ config: e, setConfig: t, setSettingsOpen: A }) {
         "button",
         {
           onClick: p,
-          className: "px-5 py-2 cursor-pointer text-sm font-medium text-action bg-action hover:bg-action/90 rounded-lg shadow-sm hover:shadow-md transition-all duration-200",
+          className: "px-5 py-2 cursor-pointer text-sm font-medium bg-action hover:bg-action/90 rounded-lg shadow-sm hover:shadow-md transition-all duration-200",
           children: "Apply Changes"
         }
       )
@@ -36723,7 +36723,7 @@ endobj\r
   var l = o.getContext("2d");
   l.fillStyle = "#fff", l.fillRect(0, 0, o.width, o.height);
   var c = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, h = this;
-  return (Tt.canvg ? Promise.resolve(Tt.canvg) : import("./index.es-ExM7MpL7.js")).catch(function(g) {
+  return (Tt.canvg ? Promise.resolve(Tt.canvg) : import("./index.es-DcYmi2x1.js")).catch(function(g) {
     return Promise.reject(new Error("Could not load canvg: " + g));
   }).then(function(g) {
     return g.default ? g.default : g;

@@ -355,7 +355,7 @@ export default function SettingPopup({ config, setConfig, setSettingsOpen }) {
                     </button>
                     <button
                         onClick={handleSubmit}
-                        className="px-5 py-2 cursor-pointer text-sm font-medium text-action bg-action hover:bg-action/90 rounded-lg shadow-sm hover:shadow-md transition-all duration-200"
+                        className="px-5 py-2 cursor-pointer text-sm font-medium bg-action hover:bg-action/90 rounded-lg shadow-sm hover:shadow-md transition-all duration-200"
                     >
                         Apply Changes
                     </button>
