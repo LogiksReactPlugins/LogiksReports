@@ -167,7 +167,15 @@ export const report = {
     },
     "unilink": "staff.main"
   },
-
+"gallery":{
+		"colmap":{
+		    "avatar": "persona_avatar",
+			"title":"persona_name",
+			"descs":"persona_desc",
+			"due_date":"persona_code"
+		},
+		"unilink":"staff.main"
+	},
   "calendar": {
     "colmap": {
       "title": "persona_name",
@@ -180,6 +188,7 @@ export const report = {
     },
     "unilink": "staff.main",
     "notes_user": "<div class='text-center' style='color:white;'><span style='background:#333;padding:5px;'>created on</span><span style='background:orange;padding:5px;'>edited on</span></div>"
-  }
+  },
+  "gantt":{},
 }
 

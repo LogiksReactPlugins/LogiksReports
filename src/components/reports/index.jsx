@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
-import { Search, Printer, Download, Mail, Plus, Eye, Tag, Check, X, ChevronUp, ChevronDown, RotateCcw, Group, ChevronLeft, ChevronRight, Menu, Filter, MoreHorizontal, Edit, User, Ban, RefreshCw, MoreVertical, Upload, Grid, List, Calendar, Clock, MapPin, Columns, Recycle, PlusIcon, Cog, FilterIcon, Settings, Loader2 } from 'lucide-react';
+import { Search, Printer, Download, Mail, Plus, Eye, Tag, Check, X, ChevronUp, ChevronDown, RotateCcw, Group, ChevronLeft, ChevronRight, Menu, Filter, MoreHorizontal, Edit, User, Ban, RefreshCw, MoreVertical, Upload, Grid, List, Calendar, Clock, MapPin, Columns, Recycle, PlusIcon, Cog, FilterIcon, Settings, Loader2, LayoutGrid, Image, GanttChartSquare } from 'lucide-react';
 import CardView from '../CardView';
 import TableView from '../TableView';
 import KanbanView from '../KanbanView';
@@ -13,6 +13,8 @@ import updateLocalOverride from '../../helpers/updateLocalOverride';
 import { exportTable } from '../../helpers/exports';
 import CONSTANTS from '../../constants';
 import getPathKey from '../../helpers/getPathKey';
+import GalleryView from '../GalleryView';
+import GanttView from '../GanttView';
 
 // Main Reports Component
 export default function Reports({ report: reportJSON, style, methods, data: reportdata, onButtonClick, components }) {
@@ -33,47 +35,71 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [loading, setLoading] = useState(null)
   const [dataLoading, setDataLoading] = useState(false)
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+
   useEffect(() => {
     if (!currentView) return;
     updateLocalOverride("template", currentView);
   }, [currentView]);
 
-  // useEffect(() => {
-  //   const STORAGE_KEY=getPathKey()
-  //   const localOverrides = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
 
-  //   const report = mergeConfig(reportJSON, localOverrides);
-  //   setConfig(report);
+  function setViewHistory(view) {
+    const STORAGE_KEY = getPathKey();
+    const localOverrides = JSON.parse(localStorage.getItem(`${CONSTANTS.REPORT_LOCALSTORAGE_PRIFIX}${STORAGE_KEY}`)) || {};
 
-  //   // 2. Restore template (view) priority:
-  //   // first from localStorage, else from server
-  //   if (localOverrides?.template) {
-  //     console.log([localOverrides.template])
-  //     setCurrentView((reportJSON[localOverrides?.template]) ? localOverrides.template : null);
-  //   } else if (report?.template) {
-  //     setCurrentView(report.template);
-  //   }
-  // }, [reportJSON]);
+    let history = localOverrides.template_history ? JSON.parse(localOverrides.template_history) : [];
 
+    // remove duplicates + add latest on top
+    history = [view, ...history.filter(v => v !== view)].slice(0, 3);
+
+    const updated = {
+      ...localOverrides,
+      template: view,
+      template_history: JSON.stringify(history),
+    };
+
+    localStorage.setItem(`${CONSTANTS.REPORT_LOCALSTORAGE_PRIFIX}${STORAGE_KEY}`, JSON.stringify(updated));
+    setCurrentView(view);
+  }
+
+  const allViews = [
+    { key: "table", icon: <List className="w-4 h-4" />, title: "Table" },
+    { key: "cards", icon: <LayoutGrid className="w-4 h-4" />, title: "Cards" },
+    { key: "kanban", icon: <Columns className="w-4 h-4" />, title: "Kanban" },
+    { key: "calendar", icon: <Calendar className="w-4 h-4" />, title: "Calendar" },
+    { key: "gallery", icon: <Image className="w-4 h-4" />, title: "Gallery" },
+      { key: "gantt", icon: <GanttChartSquare className="w-4 h-4" />, title: "Gantt" },
+
+  ];
+  const STORAGE_KEY = getPathKey();
+  const localOverrides = JSON.parse(localStorage.getItem(`${CONSTANTS.REPORT_LOCALSTORAGE_PRIFIX}${STORAGE_KEY}`)) || {};
+  const history = localOverrides.template_history ? JSON.parse(localOverrides.template_history) : [];
+
+  const activeKeys = history.length > 0 ? history : [currentView];
+  const activeViews = allViews.filter(v => activeKeys.includes(v.key));
+  const otherViews = allViews.filter(v => !activeKeys.includes(v.key));
   useEffect(() => {
     const STORAGE_KEY = getPathKey();
+    const localOverrides = JSON.parse(localStorage.getItem(`${CONSTANTS.REPORT_LOCALSTORAGE_PRIFIX}${STORAGE_KEY}`)) || {};
 
-    if (reportJSON?.settings !== false) {
-      const localOverrides = JSON.parse(localStorage.getItem(`${CONSTANTS.REPORT_LOCALSTORAGE_PRIFIX}${STORAGE_KEY}`)) || {};
-      const report = mergeConfig(reportJSON, localOverrides);
-      setConfig(report);
+    const report = mergeConfig(reportJSON, localOverrides);
+    setConfig(report);
 
-      if (localOverrides?.template) {
-        setCurrentView(reportJSON[localOverrides?.template] ? localOverrides.template : null);
-      } else if (report?.template) {
-        setCurrentView(report.template);
-      }
-    } else {
-      setConfig(reportJSON);
-      if (reportJSON?.template) {
-        setCurrentView(reportJSON.template);
-      }
+    let initialView;
+
+    if (localOverrides.template) {
+      initialView = localOverrides.template;
     }
+    else if (report?.template) {
+      initialView = report.template;
+    }
+    else {
+      initialView = "table";
+    }
+
+    setCurrentView(initialView);
+
   }, [reportJSON]);
 
   useEffect(() => {
@@ -116,40 +142,6 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
   useEffect(() => {
 
   })
-
-  // const filteredAndSortedData = useMemo(() => {
-  //   if (!data) return [];
-
-  //   let filtered = data;
-
-  //   if (searchTerm) {
-  //     filtered = filtered.filter(row => {
-  //       return Object.entries(config.datagrid).some(([key, col]) => {
-  //         if (!col.searchable) return false;
-  //         const value = String(row[key] || '').toLowerCase();
-  //         return value.includes(searchTerm.toLowerCase());
-  //       });
-  //     });
-  //   }
-
-  //   if (sortConfig.key) {
-  //     filtered = [...filtered].sort((a, b) => {
-  //       const aVal = a[sortConfig.key];
-  //       const bVal = b[sortConfig.key];
-
-  //       if (aVal < bVal) return sortConfig.direction === 'asc' ? -1 : 1;
-  //       if (aVal > bVal) return sortConfig.direction === 'asc' ? 1 : -1;
-  //       return 0;
-  //     });
-  //   }
-  //   console.log({ filtered })
-  //   return filtered;
-  // }, [config, searchTerm, sortConfig, data]);
-
-
-
-
-
   const filteredAndSortedData = useMemo(() => {
     if (!data) return [];
 
@@ -358,23 +350,12 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
     }
   };
 
-  // Sample data for demonstration
-  // const sampleData = [
-  //   { id: 1, userid: 'john_doe', gender: 'male', name: 'John Doe', blocked: false, dtoc: '2024-01-15', dtoe: '09:30:00' },
-  //   { id: 2, userid: 'jane_smith', gender: 'female', name: 'Jane Smith', blocked: true, dtoc: '2024-01-20', dtoe: '14:45:00' },
-  //   { id: 3, userid: 'bob_wilson', gender: 'male', name: 'Bob Wilson', blocked: false, dtoc: '2024-01-25', dtoe: '11:15:00' }
-  // ];
-
-  // // Add sample data if no rows exist
-  // if (!config.rows || config.rows.length === 0) {
-  //   config.rows = sampleData;
-  // }
 
   return (
     <div
       className={`bg-white report-root ${compactMode === undefined || compactMode === true
-          ? "compact"
-          : "wide"
+        ? "compact"
+        : "wide"
         }`}
     >      <div className=" px-3 sm:px-3 py-2">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
@@ -529,69 +510,55 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
 
             <div className="flex flex-wrap gap-2">
               {
-                uiswitcher != false &&
-                <div className="flex items-center bg-gray-100 rounded-lg p-1">
+                uiswitcher !== false && (
+                  <div className="flex items-center bg-gray-100 rounded-lg p-1">
 
-                  {
-                    config?.datagrid &&
-                    <button
-                      onClick={() => setCurrentView('table')}
-                      title='Table'
-                      className={`inline-flex items-center px-3 cursor-pointer py-1.5 text-sm font-medium rounded-md transition-colors ${currentView === 'table' || !currentView
-                        ? 'bg-action shadow'
-                        : 'text-gray-600 hover:text-gray-900'
-                        }`}
-                    >
-                      <List className="w-4 h-4 " />
-                      {/* Table */}
-                    </button>
-                  }
-                  {
-                    config?.cards &&
-                    <button
-                      title='Cards'
+                    {activeViews.map(({ key, icon, title }) => (
+                      <button
+                        key={key}
+                        onClick={() => {
+                          setCurrentView(key);
+                          setViewHistory(key);
+                        }}
+                        title={title}
+                        className={`inline-flex cursor-pointer items-center px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${currentView === key ? "bg-action shadow" : "text-gray-600 hover:text-gray-900"
+                          }`}
+                      >
+                        {icon}
+                      </button>
+                    ))}
 
-                      onClick={() => setCurrentView('cards')}
-                      className={`inline-flex items-center px-3 cursor-pointer py-1.5 text-sm font-medium rounded-md transition-colors ${currentView === 'cards'
-                        ? 'bg-action shadow'
-                        : 'text-gray-600 hover:text-gray-900'
-                        }`}
-                    >
-                      <Grid className="w-4 h-4 " />
-                      {/* Cards */}
-                    </button>
-                  }
-                  {
-                    config?.kanban &&
-                    <button
-                      onClick={() => setCurrentView('kanban')}
-                      title='Kanban'
-
-                      className={`inline-flex items-center px-3 cursor-pointer py-1.5 text-sm font-medium rounded-md transition-colors ${currentView === 'kanban'
-                        ? 'bg-action shadow'
-                        : 'text-gray-600 hover:text-gray-900'
-                        }`}
-                    >
-                      <Columns className="w-4 h-4 " />
-                      {/* Kanban */}
-                    </button>
-                  }
-                  {
-                    config?.calendar &&
-                    <button
-                      onClick={() => setCurrentView('calendar')}
-                      title='Calender'
-
-                      className={`inline-flex items-center px-3 cursor-pointer py-1.5 text-sm font-medium rounded-md transition-colors ${currentView === 'calendar'
-                        ? 'bg-action shadow'
-                        : 'text-gray-600 hover:text-gray-900'
-                        }`}
-                    >
-                      <Calendar className="w-4 h-4 " />
-                    </button>
-                  }
-                </div>
+                    {otherViews.length > 0 && (
+                      <div className="relative z-50">
+                        <button
+                          className="px-3 cursor-pointer py-1.5 text-sm text-gray-600 hover:text-gray-900 rounded-md"
+                          onClick={() => setDropdownOpen(!dropdownOpen)}
+                        >
+                          •••
+                        </button>
+                        {dropdownOpen && (
+                          <div className="absolute right-0 mt-2 bg-white shadow rounded z-10">
+                            {otherViews.map(({ key, icon, title }) => (
+                              <button
+                                key={key}
+                                onClick={() => {
+                                  setCurrentView(key);
+                                  setViewHistory(key);
+                                  setDropdownOpen(false);
+                                }}
+                                className="flex items-center cursor-pointer px-3 py-1.5 text-sm w-full hover:bg-gray-100"
+                              >
+                                {icon} <span className="ml-2">{title}</span>
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )
               }
+
               {
                 config?.filters != false &&
 
@@ -702,6 +669,25 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
             loading={dataLoading}
 
           />
+        ) : currentView === 'gallery' ? (
+          <GalleryView
+            style={style?.cards}
+            config={config}
+            paginatedGroupedData={paginatedGroupedData}
+            hasButtons={hasButtons}
+            visibleButtons={visibleButtons}
+            moreButtons={moreButtons}
+            showExtraColumn={showExtraColumn}
+            selectedRows={selectedRows}
+            openDropdown={openDropdown}
+            handleSelectRow={handleSelectRow}
+            handleButtonClick={handleButtonClick}
+            toggleDropdown={toggleDropdown}
+            setOpenDropdown={setOpenDropdown}
+            getIconComponent={getIconComponent}
+            loading={dataLoading}
+
+          />
         ) : currentView === 'kanban' ? (
           <KanbanView
             config={config}
@@ -719,6 +705,11 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
             getIconComponent={getIconComponent}
             kanbanGroupBy={kanbanGroupBy}
             loading={dataLoading}
+
+          />
+        ) :  currentView === 'gantt' ? (
+          <GanttView
+            paginatedGroupedData={paginatedGroupedData}
 
           />
         ) : currentView === 'calendar' ? (
