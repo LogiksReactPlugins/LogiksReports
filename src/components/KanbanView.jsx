@@ -305,7 +305,7 @@ const KanbanView = ({
           </div>
         </div>
 
-        <div className="bg-gray-50 p-2 thin-scrollbar space-y-2 rounded-b-lg min-h-96 max-h-96 overflow-y-auto">
+        <div className="bg-gray-50 p-2 thin-scrollbar space-y-2 rounded-b-lg min-h-96 max-h-150 overflow-y-auto">
           <SortableContext items={cards.map(card => card.id)} strategy={verticalListSortingStrategy}>
             {cards.length === 0 ? (
               <div className="min-h-[50px] rounded border border-dashed border-gray-300 flex items-center justify-center text-gray-400">

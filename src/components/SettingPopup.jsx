@@ -158,15 +158,15 @@ export default function SettingPopup({ config, setConfig, setSettingsOpen }) {
                                 <div className="space-y-3">
                                     <div>
                                         <div className="flex items-center justify-between">
-                                            <span className="text-sm text-muted">Layout density</span>
+                                            <span className="text-sm text-muted">Compact View</span>
                                             <Toggle
                                                 checked={tempConfig?.compactMode ?? true}
                                                 onChange={(value) => updateSetting("compactMode", value)}
                                             />
                                         </div>
                                         <p className="text-xs text-gray-500">
-                                            Switch between <span className="font-medium">Compact view</span> (reduced padding and row height to fit more data on screen)
-                                            and <span className="font-medium">Normal view</span> (default spacing for better readability).
+                                            Reduce spacing to fit more rows on the screen. Turn off for standard spacing for easier reading.
+
                                         </p>
                                     </div>
                                     <div>

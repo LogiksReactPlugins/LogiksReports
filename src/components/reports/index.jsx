@@ -35,7 +35,7 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
   const [dataLoading, setDataLoading] = useState(false)
   useEffect(() => {
     if (!currentView) return;
-      updateLocalOverride("template", currentView);
+    updateLocalOverride("template", currentView);
   }, [currentView]);
 
   // useEffect(() => {
@@ -56,25 +56,25 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
   // }, [reportJSON]);
 
   useEffect(() => {
-  const STORAGE_KEY = getPathKey();
+    const STORAGE_KEY = getPathKey();
 
-  if (reportJSON?.settings !== false) {
-    const localOverrides = JSON.parse(localStorage.getItem(`${CONSTANTS.REPORT_LOCALSTORAGE_PRIFIX}${STORAGE_KEY}`)) || {};
-    const report = mergeConfig(reportJSON, localOverrides);
-    setConfig(report);
+    if (reportJSON?.settings !== false) {
+      const localOverrides = JSON.parse(localStorage.getItem(`${CONSTANTS.REPORT_LOCALSTORAGE_PRIFIX}${STORAGE_KEY}`)) || {};
+      const report = mergeConfig(reportJSON, localOverrides);
+      setConfig(report);
 
-    if (localOverrides?.template) {
-      setCurrentView(reportJSON[localOverrides?.template] ? localOverrides.template : null);
-    } else if (report?.template) {
-      setCurrentView(report.template);
+      if (localOverrides?.template) {
+        setCurrentView(reportJSON[localOverrides?.template] ? localOverrides.template : null);
+      } else if (report?.template) {
+        setCurrentView(report.template);
+      }
+    } else {
+      setConfig(reportJSON);
+      if (reportJSON?.template) {
+        setCurrentView(reportJSON.template);
+      }
     }
-  } else {
-    setConfig(reportJSON);
-    if (reportJSON?.template) {
-      setCurrentView(reportJSON.template);
-    }
-  }
-}, [reportJSON]);
+  }, [reportJSON]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -117,19 +117,83 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
 
   })
 
+  // const filteredAndSortedData = useMemo(() => {
+  //   if (!data) return [];
+
+  //   let filtered = data;
+
+  //   if (searchTerm) {
+  //     filtered = filtered.filter(row => {
+  //       return Object.entries(config.datagrid).some(([key, col]) => {
+  //         if (!col.searchable) return false;
+  //         const value = String(row[key] || '').toLowerCase();
+  //         return value.includes(searchTerm.toLowerCase());
+  //       });
+  //     });
+  //   }
+
+  //   if (sortConfig.key) {
+  //     filtered = [...filtered].sort((a, b) => {
+  //       const aVal = a[sortConfig.key];
+  //       const bVal = b[sortConfig.key];
+
+  //       if (aVal < bVal) return sortConfig.direction === 'asc' ? -1 : 1;
+  //       if (aVal > bVal) return sortConfig.direction === 'asc' ? 1 : -1;
+  //       return 0;
+  //     });
+  //   }
+  //   console.log({ filtered })
+  //   return filtered;
+  // }, [config, searchTerm, sortConfig, data]);
+
+
+
+
+
   const filteredAndSortedData = useMemo(() => {
     if (!data) return [];
 
     let filtered = data;
 
     if (searchTerm) {
-      filtered = filtered.filter(row => {
-        return Object.entries(config.datagrid).some(([key, col]) => {
-          if (!col.searchable) return false;
-          const value = String(row[key] || '').toLowerCase();
-          return value.includes(searchTerm.toLowerCase());
+      const advancedSearch = searchTerm.includes(":");
+
+      if (advancedSearch) {
+        const conditions = searchTerm.split(",").map(cond => {
+          let [rawKey, value] = cond.split(":").map(s => s.trim().toLowerCase());
+
+          let key = rawKey;
+          let colConfig = config.datagrid[key];
+
+          if (!colConfig) {
+            const match = Object.entries(config.datagrid).find(
+              ([colKey, col]) => col.label.toLowerCase() === rawKey
+            );
+            if (match) key = match[0];
+          }
+
+          return { key, value };
         });
-      });
+
+        console.log({ conditions })
+
+        filtered = filtered.filter(row => {
+          return conditions.every(({ key, value }) => {
+            const colConfig = config.datagrid[key];
+            if (!colConfig || !colConfig.searchable) return false;
+            const cellVal = String(row[key] || "").toLowerCase();
+            return cellVal.includes(value);
+          });
+        });
+      } else {
+        filtered = filtered.filter(row => {
+          return Object.entries(config.datagrid).some(([key, col]) => {
+            if (!col.searchable) return false;
+            const value = String(row[key] || '').toLowerCase();
+            return value.includes(searchTerm.toLowerCase());
+          });
+        });
+      }
     }
 
     if (sortConfig.key) {
@@ -142,9 +206,14 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
         return 0;
       });
     }
-    console.log({ filtered })
+
+    console.log({ filtered });
     return filtered;
   }, [config, searchTerm, sortConfig, data]);
+
+
+
+
 
   const rowsPerPage = config?.rowsPerPage || 5;
   const totalPages = Math.ceil(filteredAndSortedData.length / rowsPerPage);
@@ -173,7 +242,7 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
     );
   }
 
-  const { title, toolbar, actions, buttons, datagrid, uiswitcher ,compactMode} = config;
+  const { title, toolbar, actions, buttons, datagrid, uiswitcher, compactMode } = config;
 
   const handleSort = (key) => {
     const column = datagrid[key];
@@ -302,13 +371,12 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
   // }
 
   return (
-<div
-  className={`bg-white report-root ${
-    compactMode === undefined || compactMode === true
-      ? "compact"
-      : "wide"
-  }`}
->      <div className=" px-3 sm:px-3 py-2">
+    <div
+      className={`bg-white report-root ${compactMode === undefined || compactMode === true
+          ? "compact"
+          : "wide"
+        }`}
+    >      <div className=" px-3 sm:px-3 py-2">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div className='flex space-x-2'>
 
@@ -525,23 +593,23 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
                 </div>
               }
               {
-                config?.filters!=false &&
+                config?.filters != false &&
 
-              <button
-              className={`inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md transition-colors  bg-action cursor-pointer`}
-              >
-                <FilterIcon className="w-4 h-4" />
-              </button>
+                <button
+                  className={`inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md transition-colors  bg-action cursor-pointer`}
+                >
+                  <FilterIcon className="w-4 h-4" />
+                </button>
               }
               {
-                config?.settings!=false &&
-              <button
-              onClick={() => setSettingsOpen(true)}
-              
-              className={`inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md transition-colors  bg-action cursor-pointer`}
-              >
-                <Settings className="w-4 h-4" />
-              </button>
+                config?.settings != false &&
+                <button
+                  onClick={() => setSettingsOpen(true)}
+
+                  className={`inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md transition-colors  bg-action cursor-pointer`}
+                >
+                  <Settings className="w-4 h-4" />
+                </button>
               }
             </div>
           </div>
@@ -572,7 +640,7 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
       </div>
 
       {/* Pagination */}
-      {(currentView === 'table' || !currentView  || currentView === 'cards') && totalPages > 1 && (
+      {(currentView === 'table' || !currentView || currentView === 'cards') && totalPages > 1 && (
         <div className="px-4 sm:px-6 py-1 sticky z-30 top-0 bg-white  border-y border-gray-200">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div className="text-sm text-gray-500">

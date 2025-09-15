@@ -238,7 +238,7 @@ const CalendarView = ({
             <div className="flex items-center space-x-3">
               <button
                 onClick={() => setCurrentDate(new Date())}
-                className="inline-flex cursor-pointer items-center px-3 py-2 bg-action text-white text-sm font-medium rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-sm hover:shadow-md"
+                className="inline-flex cursor-pointer items-center px-3 py-1.5 bg-action text-white text-sm font-medium rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-sm hover:shadow-md"
               >
                 <Calendar className="w-4 h-4 mr-2" />
                 Current Month
@@ -352,7 +352,7 @@ const CalendarView = ({
         {/* Selected Date Details Sidebar */}
         {selectedDate && (
           <div className="w-80 border-l border-gray-200 bg-gray-50 flex flex-col">
-            <div className="p-4 border-b border-gray-200 bg-white">
+            <div className="p-2 border-b border-gray-200 bg-white">
               <h3 className="font-medium text-gray-900 flex items-center">
                 <Calendar className="w-4 h-4 mr-2" />
                 {selectedDate?.toLocaleDateString('en-US', {
@@ -367,23 +367,21 @@ const CalendarView = ({
               </p>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-4 space-y-3 max-h-screen overflow-x-hidden">
+            <div className="flex-1 overflow-y-auto p-2 space-y-1.5 max-h-screen overflow-x-hidden">
               {selectedDateEvents?.length > 0 ? (
                 selectedDateEvents?.map((event, index) => (
                   <div key={index}
-                    onClick={() => {
-                      console.log(event)
-                    }}
+                  
                     className="bg-white rounded-lg border border-gray-200 p-3 hover:shadow-sm transition-shadow">
                     {/* Event Header */}
 
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex items-start space-x-2 flex-1">
-                        <div className="flex-shrink-0">
+                        {/* <div className="flex-shrink-0">
                           <div className="h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center">
                             <User className="h-4 w-4 text-gray-600" />
                           </div>
-                        </div>
+                        </div> */}
                         <div className="flex-1 min-w-0">
                           <h4 className="text-sm font-medium text-gray-900 truncate">
                             {event?.title}
@@ -396,14 +394,14 @@ const CalendarView = ({
                         </div>
                       </div>
 
-                      {showExtraColumn === 'checkbox' && (
+                      {/* {showExtraColumn === 'checkbox' && (
                         <input
                           type="checkbox"
                           checked={selectedRows.has(event?.id)}
                           onChange={() => handleSelectRow(event?.id)}
                           className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                         />
-                      )}
+                      )} */}
                     </div>
 
                     {/* Event Type Badge */}
@@ -419,9 +417,9 @@ const CalendarView = ({
 
                     {/* Event Actions */}
                     {hasButtons && (
-                      <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+                      <div className="flex items-center justify-between pt-1 border-t border-gray-100">
                         <div className="flex items-center space-x-1">
-                          {visibleButtons.slice(0, 2).map(([buttonKey, button]) => (
+                          {visibleButtons.slice(0, 5).map(([buttonKey, button]) => (
                             <button
                               key={buttonKey}
                               onClick={() => handleButtonClick(buttonKey, button, event)}
@@ -433,7 +431,7 @@ const CalendarView = ({
                           ))}
                         </div>
 
-                        {(visibleButtons?.length > 2 || moreButtons?.length > 0) && (
+                        {(visibleButtons?.length > 5 || moreButtons?.length > 0) && (
                           <div className="relative">
                             <button
                               onClick={() => toggleDropdown(event?.id)}
@@ -447,7 +445,7 @@ const CalendarView = ({
                             {openDropdown === event?.id && (
                               <div className="absolute right-0 mt-1 w-44 bg-white border border-gray-200 rounded-md shadow-lg z-50">
                                 <div className="py-1">
-                                  {visibleButtons?.slice(2)?.concat(moreButtons)?.map(([buttonKey, button]) => (
+                                  {visibleButtons?.slice(5)?.concat(moreButtons)?.map(([buttonKey, button]) => (
                                     <button
                                       key={buttonKey}
                                       onClick={() => {
