@@ -44,9 +44,10 @@ const TableView = ({
               </div>
             )}
 
-            <div className="min-w-full" >
+<div className="overflow-x-auto overflow-y-auto max-h-screen thin-scrollbar">
+  
               <table className="min-w-full divide-y divide-gray-200 border border-gray-200 bordr-t" id="printable">
-                <thead className={style?.thead || "bg-muted text-action z-20"}>
+<thead className={`${style?.thead || "bg-muted text-action"} sticky top-0 bg-white z-30`}>
                   <tr>
                     {hasButtons && (
                       <th className={style?.th || "px-4 sm:px-6 py-2 text-left text-xs font-bold uppercase tracking-wider w-32"}>
@@ -89,145 +90,145 @@ const TableView = ({
                   </tr>
                 </thead>
                 <tbody className={style?.tbody || "bg-white divide-y divide-gray-200"}>
-                    {loading ? (
-    // Show shimmer while loading
-    <>
-      {Array.from({ length: 6 }).map((_, rowIndex) => (
-        <ShimmerTableRow
-          key={rowIndex}
-          columns={[
-            ...(hasButtons ? [["__actions", {}]] : []),
-            ...(showExtraColumn === "checkbox" ? [["__checkbox", {}]] : []),
-            ...visibleColumns,
-          ]}
-        />
-      ))}
-    </>
-  ) :
-                  paginatedGroupedData[groupKey] && paginatedGroupedData[groupKey].length > 0 ? (
-                    paginatedGroupedData[groupKey].map((row, rowIndex) => (
-                      <tr
-                        key={rowIndex}
-                        className={`${style?.tr || "hover:bg-secondary"} 
+                  {loading ? (
+                    // Show shimmer while loading
+                    <>
+                      {Array.from({ length: 6 }).map((_, rowIndex) => (
+                        <ShimmerTableRow
+                          key={rowIndex}
+                          columns={[
+                            ...(hasButtons ? [["__actions", {}]] : []),
+                            ...(showExtraColumn === "checkbox" ? [["__checkbox", {}]] : []),
+                            ...visibleColumns,
+                          ]}
+                        />
+                      ))}
+                    </>
+                  ) :
+                    paginatedGroupedData[groupKey] && paginatedGroupedData[groupKey].length > 0 ? (
+                      paginatedGroupedData[groupKey].map((row, rowIndex) => (
+                        <tr
+                          key={rowIndex}
+                          className={`${style?.tr || "hover:bg-secondary"} 
                             ${rowClickSelection ? "cursor-pointer" : ""} 
                             ${compactMode ? "text-xs py-0.5" : ""} 
                             ${stripedRows && rowIndex % 2 === 1 ? "bg-gray-50" : ""}`}
 
-                        onClick={() => rowClickSelection && handleSelectRow(row.id)}
-                      >
-                        {hasButtons && (
-                          <td className={style?.td || "px-4 sm:px-6 py-1 whitespace-nowrap text-sm text-gray-900"}>
-                            <div className="flex items-center gap-2">
-                              {visibleButtons.map(([buttonKey, button]) => (
-                                <button
-                                  key={buttonKey}
-                                  onClick={() => handleButtonClick(buttonKey, button, row)}
-                                  className="inline-flex items-center px-2 py-1 text-xs font-medium rounded cursor-pointer text-action"
-                                  title={button.label}
-                                >
-                                  {getIconComponent(button.icon)}
-                                </button>
-                              ))}
-
-                              {moreButtons.length > 0 && (
-                                <div className="relative">
+                          onClick={() => rowClickSelection && handleSelectRow(row.id)}
+                        >
+                          {hasButtons && (
+                            <td className={style?.td || "px-4 sm:px-6 py-1 whitespace-nowrap text-sm text-gray-900"}>
+                              <div className="flex items-center gap-2">
+                                {visibleButtons.map(([buttonKey, button]) => (
                                   <button
-                                    onClick={() => toggleDropdown(row.id)}
-                                    className="inline-flex items-center px-1 py-1 text-xs font-medium text-gray-700 rounded hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    title='More'
+                                    key={buttonKey}
+                                    onClick={() => handleButtonClick(buttonKey, button, row)}
+                                    className="inline-flex items-center px-2 py-1 text-xs font-medium rounded cursor-pointer text-action"
+                                    title={button.label}
                                   >
-                                    <MoreVertical className="w-4 h-4" />
+                                    {getIconComponent(button.icon)}
                                   </button>
+                                ))}
 
-                                  {openDropdown === row.id && (
-                                    <div className="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
-                                      <div className="py-1">
-                                        {moreButtons.map(([buttonKey, button]) => (
-                                          <button
-                                            key={buttonKey}
-                                            onClick={() => {
-                                              handleButtonClick(buttonKey, button, row);
-                                              setOpenDropdown(null);
-                                            }}
-                                            className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                            title={button.label}
-                                          >
-                                            <div className="flex-shrink-0">{getIconComponent(button.icon)}</div>
-                                            <span className="truncate block w-full text-left">{button.label}</span>
-                                          </button>
-                                        ))}
+                                {moreButtons.length > 0 && (
+                                  <div className="relative">
+                                    <button
+                                      onClick={() => toggleDropdown(row.id)}
+                                      className="inline-flex items-center px-1 py-1 text-xs font-medium text-gray-700 rounded hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                      title='More'
+                                    >
+                                      <MoreVertical className="w-4 h-4" />
+                                    </button>
+
+                                    {openDropdown === row.id && (
+                                      <div className="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                                        <div className="py-1">
+                                          {moreButtons.map(([buttonKey, button]) => (
+                                            <button
+                                              key={buttonKey}
+                                              onClick={() => {
+                                                handleButtonClick(buttonKey, button, row);
+                                                setOpenDropdown(null);
+                                              }}
+                                              className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                              title={button.label}
+                                            >
+                                              <div className="flex-shrink-0">{getIconComponent(button.icon)}</div>
+                                              <span className="truncate block w-full text-left">{button.label}</span>
+                                            </button>
+                                          ))}
+                                        </div>
                                       </div>
-                                    </div>
-                                  )}
-                                </div>
-                              )}
-                            </div>
-                          </td>
-                        )}
-
-                        {showExtraColumn === 'checkbox' && (
-                          <td className={style?.td || "px-4 sm:px-6 py-1 whitespace-nowrap text-sm text-gray-900"}>
-                            <input
-                              type="checkbox"
-                              checked={selectedRows.has(row.id)}
-                              onChange={() => handleSelectRow(row.id)}
-                              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                            />
-                          </td>
-                        )}
-                        {visibleColumns.map(([key, col], colIndex) => {
-                          const fixedClass =
-                            (fixFirstTwoColumns && colIndex < 2) ||
-                              (fixFirstColumn && colIndex === 0)
-                              ? "sticky left-0 bg-white z-10"
-                              : fixLastColumn && colIndex === visibleColumns.length - 1
-                                ? "sticky right-0 bg-white z-10"
-                                : "";
-
-                          return (
-                            <td
-                              key={key}
-                              className={`${style?.td || "px-4 sm:px-6 py-1 text-sm text-gray-900"} ${fixedClass}`}
-                            >
-                              <div className="relative group flex items-center">
-                                <div className={wrapLines ? "whitespace-pre-wrap break-words max-w-none" : "truncate max-w-xs sm:max-w-none"}>
-                                  {formatCellValue(row[key], col.formatter, row, col)}
-                                </div>
-
-                                <button
-                                  onClick={() => copyToClipboard(row[key] || "", `${row.id}-${key}`, setCopiedCell)}
-                                  className="absolute -right-4 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity ml-2 p-1 rounded bg-gray-50 hover:bg-gray-100 cursor-pointer"
-                                  title="Copy"
-                                >
-                                  {copiedCell === `${row.id}-${key}` ? (
-                                    <>
-                                      <span className="text-xs text-gray-600">Copied!</span>
-                                    </>
-                                  ) : (
-                                      <i class="fa-regular fa-copy"></i>
-                                  )}
-                                </button>
+                                    )}
+                                  </div>
+                                )}
                               </div>
                             </td>
+                          )}
 
-                          );
-                        })}
-                      </tr>
-                    ))
-                  ) : (
+                          {showExtraColumn === 'checkbox' && (
+                            <td className={style?.td || "px-4 sm:px-6 py-1 whitespace-nowrap text-sm text-gray-900"}>
+                              <input
+                                type="checkbox"
+                                checked={selectedRows.has(row.id)}
+                                onChange={() => handleSelectRow(row.id)}
+                                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                              />
+                            </td>
+                          )}
+                          {visibleColumns.map(([key, col], colIndex) => {
+                            const fixedClass =
+                              (fixFirstTwoColumns && colIndex < 2) ||
+                                (fixFirstColumn && colIndex === 0)
+                                ? "sticky left-0 bg-white z-10"
+                                : fixLastColumn && colIndex === visibleColumns.length - 1
+                                  ? "sticky right-0 bg-white z-10"
+                                  : "";
+
+                            return (
+                              <td
+                                key={key}
+                                className={`${style?.td || "px-4 sm:px-6 py-1 text-sm text-gray-900"} ${fixedClass}`}
+                              >
+                                <div className="relative group flex items-center">
+                                  <div className={wrapLines ? "whitespace-pre-wrap break-words max-w-none" : "truncate max-w-xs sm:max-w-none"}>
+                                    {formatCellValue(row[key], col.formatter, row, col)}
+                                  </div>
+
+                                  <button
+                                    onClick={() => copyToClipboard(row[key] || "", `${row.id}-${key}`, setCopiedCell)}
+                                    className="absolute -right-4 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity ml-2 p-1 rounded bg-gray-50 hover:bg-gray-100 cursor-pointer"
+                                    title="Copy"
+                                  >
+                                    {copiedCell === `${row.id}-${key}` ? (
+                                      <>
+                                        <span className="text-xs text-gray-600">Copied!</span>
+                                      </>
+                                    ) : (
+                                      <i class="fa-regular fa-copy"></i>
+                                    )}
+                                  </button>
+                                </div>
+                              </td>
+
+                            );
+                          })}
+                        </tr>
+                      ))
+                    ) : (
                       <tr>
-      <td
-        colSpan={
-          visibleColumns.length +
-          (hasButtons ? 1 : 0) +
-          (showExtraColumn === "checkbox" ? 1 : 0)
-        }
-        className="px-4 py-6 text-center text-sm text-gray-500"
-      >
-        No data available
-      </td>
-    </tr>
-                  )}
+                        <td
+                          colSpan={
+                            visibleColumns.length +
+                            (hasButtons ? 1 : 0) +
+                            (showExtraColumn === "checkbox" ? 1 : 0)
+                          }
+                          className="px-4 py-6 text-center text-sm text-gray-500"
+                        >
+                          No data available
+                        </td>
+                      </tr>
+                    )}
                 </tbody>
               </table>
             </div>

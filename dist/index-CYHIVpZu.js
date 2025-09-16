@@ -915,8 +915,8 @@ const gC = [
       t[te].length,
       " records)"
     ] }) }),
-    /* @__PURE__ */ U.jsx("div", { className: "min-w-full", children: /* @__PURE__ */ U.jsxs("table", { className: "min-w-full divide-y divide-gray-200 border border-gray-200 bordr-t", id: "printable", children: [
-      /* @__PURE__ */ U.jsx("thead", { className: b?.thead || "bg-muted text-action z-20", children: /* @__PURE__ */ U.jsxs("tr", { children: [
+    /* @__PURE__ */ U.jsx("div", { className: "overflow-x-auto overflow-y-auto max-h-screen thin-scrollbar", children: /* @__PURE__ */ U.jsxs("table", { className: "min-w-full divide-y divide-gray-200 border border-gray-200 bordr-t", id: "printable", children: [
+      /* @__PURE__ */ U.jsx("thead", { className: `${b?.thead || "bg-muted text-action"} sticky top-0 bg-white z-30`, children: /* @__PURE__ */ U.jsxs("tr", { children: [
         A && /* @__PURE__ */ U.jsx("th", { className: b?.th || "px-4 sm:px-6 py-2 text-left text-xs font-bold uppercase tracking-wider w-32", children: "Actions" }),
         s === "checkbox" && /* @__PURE__ */ U.jsx("th", { className: b?.th || "px-4 sm:px-6 py-2 text-left text-xs font-bold uppercase tracking-wider", children: /* @__PURE__ */ U.jsx(
           "input",
@@ -36724,7 +36724,7 @@ endobj\r
   var l = o.getContext("2d");
   l.fillStyle = "#fff", l.fillRect(0, 0, o.width, o.height);
   var c = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, h = this;
-  return (It.canvg ? Promise.resolve(It.canvg) : import("./index.es-D44whAUt.js")).catch(function(d) {
+  return (It.canvg ? Promise.resolve(It.canvg) : import("./index.es-BS0vW-Kk.js")).catch(function(d) {
     return Promise.reject(new Error("Could not load canvg: " + d));
   }).then(function(d) {
     return d.default ? d.default : d;
