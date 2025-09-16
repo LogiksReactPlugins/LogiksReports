@@ -408,7 +408,7 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
                           : CONSTANTS.DEFAULT_EXPORTS.includes(key)
                     ).map((key) => (
                       <li key={key}>
-                        <button
+                        <button 
                           onClick={() => handleExport(key)}
                           className="block w-full text-left px-4 py-1.5 cursor-pointer hover:bg-gray-100"
                         >
@@ -537,7 +537,7 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
                           •••
                         </button>
                         {dropdownOpen && (
-                          <div className="absolute right-0 mt-2 bg-white shadow rounded z-10">
+                          <div className="absolute right-0 mt-2 bg-white shadow-md text-action rounded z-10">
                             {otherViews.map(({ key, icon, title }) => (
                               <button
                                 key={key}

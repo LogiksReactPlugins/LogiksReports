@@ -95,7 +95,7 @@ export const exportTable = async (type) => {
       break;
     }
 
-    case "html": {
+    case "htm": {
   const cleanTable = cloneTableWithoutExcluded(table);
 
   // Remove unwanted elements (buttons, svgs, icons etc.)
