@@ -21,18 +21,15 @@ const CalendarView = ({
 
   const { calendar } = config;
 
-  // Get current month details
   const today = new Date();
   const currentMonth = currentDate.getMonth();
   const currentYear = currentDate.getFullYear();
 
-  // Get first day of month and number of days
   const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
   const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0);
   const daysInMonth = lastDayOfMonth.getDate();
   const startingDayOfWeek = firstDayOfMonth.getDay();
 
-  // Month names
   const monthNames = [
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
@@ -41,7 +38,6 @@ const CalendarView = ({
   const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   const dateColumns = config?.date_col || {};
-
 
   function buildCalendarEvents(config) {
     const dateColumns = config?.calendar?.date_col || {};
@@ -88,8 +84,6 @@ const CalendarView = ({
 
   const calendarEventsMap = useMemo(() => buildCalendarEvents(config), [config]);
 
-
-  // Navigate months
   const navigateMonth = (direction) => {
     setCurrentDate(prev => {
       const newDate = new Date(prev);
@@ -115,7 +109,6 @@ const CalendarView = ({
       });
     }
 
-    // Current month days
     for (let day = 1; day <= daysInMonth; day++) {
       const date = new Date(currentYear, currentMonth, day);
       const dateKey = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
@@ -130,8 +123,7 @@ const CalendarView = ({
       });
     }
 
-    // Next month's leading days
-    const totalCells = 42; // 6 rows × 7 days
+    const totalCells = 42; 
     const remainingCells = totalCells - days.length;
 
     for (let day = 1; day <= remainingCells; day++) {
@@ -149,10 +141,6 @@ const CalendarView = ({
 
   const calendarDays = generateCalendarDays();
 
-  // Get events for selected date
-  //   const selectedDateEvents = selectedDate ? calendarEvents[
-  //     `${selectedDate.getFullYear()}-${String(selectedDate.getMonth()).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`
-  //   ] || [] : [];
   const selectedDateEvents = selectedDate ? calendarEventsMap[
     `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`
   ] || [] : [];
@@ -297,7 +285,7 @@ const CalendarView = ({
           </div>
 
           {/* Calendar Grid */}
-          <div className="grid grid-cols-7 gap-px bg-gray-200 border border-gray-200 rounded-lg overflow-hidden">
+<div className="grid grid-cols-7 divide-x divide-y divide-gray-200 border border-gray-200 rounded-lg overflow-hidden">
             {calendarDays.map((dayObj, index) => (
               <div
                 key={index}
@@ -306,13 +294,14 @@ const CalendarView = ({
                     setSelectedDate(dayObj?.date);
                   }
                 }}
-                className={`
-                  min-h-24 p-2 bg-white cursor-pointer hover:bg-gray-50 transition-colors relative
-                  ${!dayObj?.isCurrentMonth ? 'text-gray-400 bg-gray-50' : ''}
-                  ${dayObj?.isToday ? 'bg-blue-50 border-2 border-blue-200' : ''}
-                  ${selectedDate && dayObj?.date?.toDateString() === selectedDate?.toDateString() ?
-                    'ring-2 ring-blue-500 ring-inset' : ''}
-                `}
+                  className={`
+                    min-h-24 p-2 bg-white cursor-pointer hover:bg-gray-50 transition-colors relative
+                    ${!dayObj?.isCurrentMonth ? 'text-gray-400 bg-gray-50' : ''}
+                    ${dayObj?.isToday ? 'bg-blue-50 border-2 border-blue-200' : ''}
+                    ${selectedDate && dayObj?.date?.toDateString() === selectedDate?.toDateString()
+                      ? 'ring-2 ring-blue-500 ring-inset'
+                      : ''}
+                  `}
               >
                 {/* Day Number */}
                 <div className={`
@@ -377,11 +366,6 @@ const CalendarView = ({
 
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex items-start space-x-2 flex-1">
-                        {/* <div className="flex-shrink-0">
-                          <div className="h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center">
-                            <User className="h-4 w-4 text-gray-600" />
-                          </div>
-                        </div> */}
                         <div className="flex-1 min-w-0">
                           <h4 className="text-sm font-medium text-gray-900 truncate">
                             {event?.title}
@@ -393,16 +377,7 @@ const CalendarView = ({
                           )}
                         </div>
                       </div>
-
-                      {/* {showExtraColumn === 'checkbox' && (
-                        <input
-                          type="checkbox"
-                          checked={selectedRows.has(event?.id)}
-                          onChange={() => handleSelectRow(event?.id)}
-                          className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                        />
-                      )} */}
-                    </div>
+                   </div>
 
                     {/* Event Type Badge */}
                     <div className="mb-2">

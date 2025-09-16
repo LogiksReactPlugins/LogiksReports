@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
-import { Search, Printer, Download, Mail, Plus, Eye, Tag, Check, X, ChevronUp, ChevronDown, RotateCcw, Group, ChevronLeft, ChevronRight, Menu, Filter, MoreHorizontal, Edit, User, Ban, RefreshCw, MoreVertical, Upload, Grid, List, Calendar, Clock, MapPin, Columns, Recycle, PlusIcon, Cog, FilterIcon, Settings, Loader2, LayoutGrid, Image, GanttChartSquare } from 'lucide-react';
+import { Search, Printer, Download, Mail, Plus, Eye, Tag, Check, X, ChevronUp, ChevronDown, RotateCcw, Group, ChevronLeft, ChevronRight, Menu, Filter, MoreHorizontal, Edit, User, Ban, RefreshCw, MoreVertical, Upload, Grid, List, Calendar, Clock, MapPin, Columns, Recycle, PlusIcon, Cog, FilterIcon, Settings, Loader2, LayoutGrid, Image, GanttChartSquare, MapIcon } from 'lucide-react';
 import CardView from '../CardView';
 import TableView from '../TableView';
 import KanbanView from '../KanbanView';
@@ -15,6 +15,7 @@ import CONSTANTS from '../../constants';
 import getPathKey from '../../helpers/getPathKey';
 import GalleryView from '../GalleryView';
 import GanttView from '../GanttView';
+import GmapView from '../GmapView';
 
 // Main Reports Component
 export default function Reports({ report: reportJSON, style, methods, data: reportdata, onButtonClick, components }) {
@@ -70,6 +71,7 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
     { key: "calendar", icon: <Calendar className="w-4 h-4" />, title: "Calendar" },
     { key: "gallery", icon: <Image className="w-4 h-4" />, title: "Gallery" },
       { key: "gantt", icon: <GanttChartSquare className="w-4 h-4" />, title: "Gantt" },
+      { key: "gmap", icon: <MapIcon className="w-4 h-4" />, title: "Gmap" },
 
   ];
   const STORAGE_KEY = getPathKey();
@@ -294,6 +296,11 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
     }, {});
   };
 
+
+const dummyData = [
+  { name: "Marker A", info: "Description A", geo: "19.0760,72.8777" },
+  { name: "Marker B", info: "Description B", geo: "28.7041,77.1025" },
+];
   const renderSortIcon = (key) => {
     if (!datagrid[key].sortable) return null;
 
@@ -478,7 +485,7 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
           )}
 
           <div className="flex flex-col sm:flex-row sm:items-center gap-3 lg:gap-4">
-            {(groupableColumns.length > 0 || currentView === 'kanban') && (
+            {(groupableColumns.length > 0 && (currentView === 'kanban' || currentView === 'table' || !currentView)) && (
               <div className="flex items-center gap-2 flex-shrink-0">
                 <Group className="w-4 h-4 text-gray-500" />
                 <span className="text-sm text-gray-500">
@@ -710,6 +717,12 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
         ) :  currentView === 'gantt' ? (
           <GanttView
             paginatedGroupedData={paginatedGroupedData}
+
+          />
+        ) :  currentView === 'gmap' ? (
+          <GmapView
+            reportConfig={config}
+            data={dummyData}
 
           />
         ) : currentView === 'calendar' ? (

@@ -39,10 +39,15 @@
     "dayjs": "^1.11.18",
     "file-saver": "^2.0.5",
     "frappe-gantt": "^1.0.3",
+    "highcharts": "^12.4.0",
+    "highcharts-gantt": "^0.1.7",
+    "highcharts-react-official": "^3.2.2",
     "html-to-image": "^1.11.13",
     "html2canvas": "^1.4.1",
     "jspdf": "^3.0.2",
+    "leaflet": "^1.9.4",
     "lucide-react": "^0.525.0",
+    "react-leaflet": "^5.0.0",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

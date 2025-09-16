@@ -190,5 +190,18 @@ export const report = {
     "notes_user": "<div class='text-center' style='color:white;'><span style='background:#333;padding:5px;'>created on</span><span style='background:orange;padding:5px;'>edited on</span></div>"
   },
   "gantt":{},
+   "gmap": {
+    "zoom": 4,
+    "mapid": "terrain",
+    "colmap": {
+      "title": "name",
+      "descs": "info",
+      "geolocation": "geo",
+    },
+    "template": `<div>
+        <h2>$title</h2>
+        <p>$descs</p>
+      </div>`,
+  },
 }
 

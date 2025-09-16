@@ -37,7 +37,7 @@ const TableView = ({
         {Object.keys(paginatedGroupedData).map(groupKey => (
           <div key={groupKey}>
             {groupBy && (
-              <div className="bg-gray-100 px-4 sm:px-6 py-2 ">
+              <div className="bg-gray-100 px-2  py-2 ">
                 <h3 className="text-sm font-medium text-gray-700">
                   {datagrid[groupBy].label}: {groupKey} ({paginatedGroupedData[groupKey].length} records)
                 </h3>
@@ -50,12 +50,12 @@ const TableView = ({
 <thead className={`${style?.thead || "bg-muted text-action"} sticky top-0 bg-white z-30`}>
                   <tr>
                     {hasButtons && (
-                      <th className={style?.th || "px-4 sm:px-6 py-2 text-left text-xs font-bold uppercase tracking-wider w-32"}>
+                      <th className={style?.th || "px-2  py-2 text-left text-xs font-bold uppercase tracking-wider w-32"}>
                         Actions
                       </th>
                     )}
                     {showExtraColumn === 'checkbox' && (
-                      <th className={style?.th || "px-4 sm:px-6 py-2 text-left text-xs font-bold uppercase tracking-wider"}>
+                      <th className={style?.th || "px-2  py-2 text-left text-xs font-bold uppercase tracking-wider"}>
                         <input
                           type="checkbox"
                           checked={selectAll}
@@ -76,7 +76,7 @@ const TableView = ({
                       return (
                         <th
                           key={key}
-                          className={`${style?.th || "px-4 sm:px-6 py-2 text-left text-xs font-bold uppercase tracking-wider"} ${col.sortable ? 'cursor-pointer hover:bg-gray-100' : ''} ${fixedClass}`}
+                          className={`${style?.th || "px-2  py-2 text-left text-xs font-bold uppercase tracking-wider"} ${col.sortable ? 'cursor-pointer hover:bg-gray-100' : ''} ${fixedClass}`}
                           style={col.style ? parseStyle(col.style) : {}}
                           onClick={() => col.sortable && handleSort(key)}
                         >
@@ -117,8 +117,8 @@ const TableView = ({
                           onClick={() => rowClickSelection && handleSelectRow(row.id)}
                         >
                           {hasButtons && (
-                            <td className={style?.td || "px-4 sm:px-6 py-1 whitespace-nowrap text-sm text-gray-900"}>
-                              <div className="flex items-center gap-2">
+                            <td className={style?.td || "px-2 py-1 whitespace-nowrap text-sm text-gray-900"}>
+                              <div className="flex items-center">
                                 {visibleButtons.map(([buttonKey, button]) => (
                                   <button
                                     key={buttonKey}
@@ -167,7 +167,7 @@ const TableView = ({
                           )}
 
                           {showExtraColumn === 'checkbox' && (
-                            <td className={style?.td || "px-4 sm:px-6 py-1 whitespace-nowrap text-sm text-gray-900"}>
+                            <td className={style?.td || "px-2  py-1 whitespace-nowrap text-sm text-gray-900"}>
                               <input
                                 type="checkbox"
                                 checked={selectedRows.has(row.id)}
@@ -188,7 +188,7 @@ const TableView = ({
                             return (
                               <td
                                 key={key}
-                                className={`${style?.td || "px-4 sm:px-6 py-1 text-sm text-gray-900"} ${fixedClass}`}
+                                className={`${style?.td || "px-2  py-1 text-sm text-gray-900"} ${fixedClass}`}
                               >
                                 <div className="relative group flex items-center">
                                   <div className={wrapLines ? "whitespace-pre-wrap break-words max-w-none" : "truncate max-w-xs sm:max-w-none"}>
