@@ -26,8 +26,8 @@ const RecenterMap = ({ lat, lng }) => {
 
 const GmapView = ({ reportConfig, data }) => {
   const [currentLocation, setCurrentLocation] = useState(null);
-  console.log({reportConfig,data})
-console.log(reportConfig.gmap.colmap)
+    // console.log({reportConfig,data})
+    // console.log(reportConfig.gmap.colmap)
   const colMap = {
     title: "title",
     descs: "descs",
@@ -66,7 +66,7 @@ console.log(reportConfig.gmap.colmap)
   const defaultCenter = [17.7199121, 75.8663931];
 
   return (
-    <div className="h-[100vh] w-full">
+    <div className="h-[100vh] w-full relative z-0">
       <MapContainer
         center={defaultCenter}
         zoom={zoom} 

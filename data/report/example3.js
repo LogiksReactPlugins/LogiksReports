@@ -189,7 +189,20 @@ export const report = {
     "unilink": "staff.main",
     "notes_user": "<div class='text-center' style='color:white;'><span style='background:#333;padding:5px;'>created on</span><span style='background:orange;padding:5px;'>edited on</span></div>"
   },
-  "gantt":{},
+  "gantt":{
+"colmap": {
+    "id": "id",
+    "name": "persona_name",
+    "start": "created_on",
+    "end": "end_date",
+    "progress": "completion",
+    "owner": "assigned_to",
+    "milestone": "is_milestone",
+    "parent": "parent_id",
+    "dependencies": "depends_on"
+  }
+
+  },
    "gmap": {
     "zoom": 4,
     "mapid": "terrain",

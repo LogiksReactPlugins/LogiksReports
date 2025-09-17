@@ -36,6 +36,7 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [loading, setLoading] = useState(null)
   const [dataLoading, setDataLoading] = useState(false)
+    const newDropdownRef = useRef(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
 
@@ -108,6 +109,10 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setOpen(false);
+      } 
+      
+      if (newDropdownRef.current && !newDropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false)
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -386,7 +391,7 @@ const dummyData = [
           <div className="hidden sm:flex items-center gap-2 flex-shrink-0">
             {toolbar?.print !== false && (
               <button
-                onClick={() => exportTable('pdf')}
+                onClick={() => window.print()}
                 className="inline-flex items-center px-3 py-1 text-sm font-medium bg-action rounded-md hover:bg-gray-100 cursor-pointer"
               >
                 <Printer className="w-4 h-4 mr-1" />
@@ -544,7 +549,9 @@ const dummyData = [
                           •••
                         </button>
                         {dropdownOpen && (
-                          <div className="absolute right-0 mt-2 bg-white shadow-md text-action rounded z-10">
+                          <div
+                          ref={newDropdownRef}
+                          className="absolute right-0 mt-2 bg-white shadow-md text-action rounded z-10">
                             {otherViews.map(({ key, icon, title }) => (
                               <button
                                 key={key}
@@ -566,15 +573,7 @@ const dummyData = [
                 )
               }
 
-              {
-                config?.filters != false &&
-
-                <button
-                  className={`inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md transition-colors  bg-action cursor-pointer`}
-                >
-                  <FilterIcon className="w-4 h-4" />
-                </button>
-              }
+             
               {
                 config?.settings != false &&
                 <button
@@ -589,28 +588,6 @@ const dummyData = [
           </div>
         </div>
 
-        {showMobileFilters && (
-          <div className="sm:hidden mt-4 flex flex-wrap gap-2">
-            {toolbar?.print && (
-              <button className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 bg-gray-50 border border-gray-300 rounded-md hover:bg-gray-100">
-                <Printer className="w-4 h-4 mr-1" />
-                Print
-              </button>
-            )}
-            {toolbar?.export?.csv && (
-              <button className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 bg-gray-50 border border-gray-300 rounded-md hover:bg-gray-100">
-                <Download className="w-4 h-4 mr-1" />
-                Export
-              </button>
-            )}
-            {toolbar?.email && (
-              <button className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 bg-gray-50 border border-gray-300 rounded-md hover:bg-gray-100">
-                <Mail className="w-4 h-4 mr-1" />
-                Email
-              </button>
-            )}
-          </div>
-        )}
       </div>
 
       {/* Pagination */}
@@ -717,6 +694,7 @@ const dummyData = [
         ) :  currentView === 'gantt' ? (
           <GanttView
             paginatedGroupedData={paginatedGroupedData}
+            config={config}
 
           />
         ) :  currentView === 'gmap' ? (
