@@ -14,7 +14,6 @@ export const report = {
   // "filters":false,
   "source": {
     "type": "API",  
-    // "axiosObject": {
       "method": "get",
       "url": "https://ai.smartinfologiks.com/api/skills/personas", 
       "headers": {
@@ -22,7 +21,6 @@ export const report = {
           "Authorization": "Bearer q5AJgy9ayLip", 
           "Content-Type": "application/json", 
       },
-    // },
     "limit": 10
   },
   "actions": {
@@ -43,9 +41,10 @@ export const report = {
     "page@skills/{id}": {
       "label": "Add",
       "icon": "fa fa-gear pull-lef",
-      "params": {
-        "test_id": "id"
-      }
+    },
+    "handelTrig": {
+      "label": "Add",
+      "icon": "fa fa-gear pull-lef",
     }
   },
   "toolbar": {

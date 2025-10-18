@@ -36,22 +36,18 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [loading, setLoading] = useState(null)
   const [dataLoading, setDataLoading] = useState(false)
-    const newDropdownRef = useRef(null);
+  const newDropdownRef = useRef(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-
 
   useEffect(() => {
     if (!currentView) return;
     updateLocalOverride("template", currentView);
   }, [currentView]);
 
-
   function setViewHistory(view) {
     const STORAGE_KEY = getPathKey();
     const localOverrides = JSON.parse(localStorage.getItem(`${CONSTANTS.REPORT_LOCALSTORAGE_PRIFIX}${STORAGE_KEY}`)) || {};
-
     let history = localOverrides.template_history ? JSON.parse(localOverrides.template_history) : [];
-
     // remove duplicates + add latest on top
     history = [view, ...history.filter(v => v !== view)].slice(0, 3);
 
@@ -333,8 +329,13 @@ const dummyData = [
     // const resolvedParams = Object.values(button?.params || {}).map(key => data?.[key]);
     // methods[button?.event?.click]?.(...resolvedParams);
     // console.log('METHOD--',methods[button?.event?.click])
-    console.log('Button clicked:', buttonKey, button, data);
-    onButtonClick(buttonKey, data)
+    // console.log('Button clicked:', buttonKey, button, data);
+        if (methods[buttonKey]) {
+        methods[buttonKey](data)
+      } else {
+        onButtonClick(buttonKey, data)
+      }
+
   };
 
   const toggleDropdown = (rowId) => {
@@ -762,11 +763,6 @@ const dummyData = [
           setConfig={setConfig}
         />
       )}
-
-      {
-        components
-      }
-
     </div>
   );
 }

@@ -44,10 +44,10 @@ const TableView = ({
               </div>
             )}
 
-<div className="overflow-x-auto overflow-y-auto max-h-screen thin-scrollbar">
-  
+            <div className="overflow-x-auto overflow-y-auto max-h-screen thin-scrollbar">
+
               <table className="min-w-full divide-y divide-gray-200 border border-gray-200 bordr-t" id="printable">
-<thead className={`${style?.thead || "bg-muted text-action"} sticky top-0 bg-white z-30`}>
+                <thead className={`${style?.thead || "bg-muted text-action"} sticky top-0 bg-white z-30`}>
                   <tr>
                     {hasButtons && (
                       <th className={style?.th || "px-2  py-2 text-left text-xs font-bold uppercase tracking-wider w-32"}>
@@ -76,7 +76,7 @@ const TableView = ({
                       return (
                         <th
                           key={key}
-                          className={`${style?.th || "px-2  py-2 text-left text-xs font-bold uppercase tracking-wider"} ${col.sortable ? 'cursor-pointer hover:bg-gray-100' : ''} ${fixedClass}`}
+                          className={`${style?.th || "px-2  py-2 text-left text-xs font-bold uppercase tracking-wider"} ${col.sortable ? 'cursor-pointer hover:bg-gray-100' : ''} ${fixedClass} ${col?.classes}`}
                           style={col.style ? parseStyle(col.style) : {}}
                           onClick={() => col.sortable && handleSort(key)}
                         >
