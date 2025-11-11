@@ -71,13 +71,33 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
       { key: "gmap", icon: <MapIcon className="w-4 h-4" />, title: "Gmap" },
 
   ];
-  const STORAGE_KEY = getPathKey();
-  const localOverrides = JSON.parse(localStorage.getItem(`${CONSTANTS.REPORT_LOCALSTORAGE_PRIFIX}${STORAGE_KEY}`)) || {};
-  const history = localOverrides.template_history ? JSON.parse(localOverrides.template_history) : [];
 
-  const activeKeys = history.length > 0 ? history : [currentView];
-  const activeViews = allViews.filter(v => activeKeys.includes(v.key));
-  const otherViews = allViews.filter(v => !activeKeys.includes(v.key));
+      const availableViews = allViews.filter(v =>
+      v.key === "table" || (reportJSON && reportJSON[v.key])
+    );
+
+    const STORAGE_KEY = getPathKey();
+    const localOverrides =
+      JSON.parse(
+        localStorage.getItem(`${CONSTANTS.REPORT_LOCALSTORAGE_PRIFIX}${STORAGE_KEY}`)
+      ) || {};
+    const history = localOverrides.template_history
+      ? JSON.parse(localOverrides.template_history)
+      : [];
+
+    const validHistory = history.filter(k =>
+      availableViews.some(v => v.key === k)
+    );
+
+    const activeViewKeys = [
+      ...new Set([...validHistory, ...availableViews.map(v => v.key)]),
+    ].slice(0, 3);
+
+    const activeViews = availableViews.filter(v => activeViewKeys.includes(v.key));
+    const otherViews = availableViews.filter(v => !activeViewKeys.includes(v.key));
+
+
+  // const activeKeys = history.length > 0 ? history : [currentView];
   useEffect(() => {
     const STORAGE_KEY = getPathKey();
     const localOverrides = JSON.parse(localStorage.getItem(`${CONSTANTS.REPORT_LOCALSTORAGE_PRIFIX}${STORAGE_KEY}`)) || {};
