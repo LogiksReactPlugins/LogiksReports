@@ -106,14 +106,24 @@ const TableView = ({
                     </>
                   ) :
                     paginatedGroupedData[groupKey] && paginatedGroupedData[groupKey].length > 0 ? (
-                      paginatedGroupedData[groupKey].map((row, rowIndex) => (
+                      paginatedGroupedData[groupKey].map((row, rowIndex) => {
+                        const rowRules = config?.rules?.row_class || {};
+                            let dynamicRowClass = "";
+
+                            Object.entries(rowRules).forEach(([field, valueMap]) => {
+                              const fieldValue = row[field];
+                              if (valueMap && fieldValue && valueMap[fieldValue]) {
+                                dynamicRowClass += ` ${valueMap[fieldValue]}`;
+                              }
+                            });
+                        return (
                         <tr
                           key={rowIndex}
                           className={`${style?.tr || "hover:bg-secondary"} 
                             ${rowClickSelection ? "cursor-pointer" : ""} 
                             ${compactMode ? "text-xs py-0.5" : ""} 
-                            ${stripedRows && rowIndex % 2 === 1 ? "bg-gray-50" : ""}`}
-
+                            ${stripedRows && rowIndex % 2 === 1 ? "bg-gray-50" : ""}
+                            ${dynamicRowClass.trim()}`}
                           onClick={() => rowClickSelection && handleSelectRow(row.id)}
                         >
                           {hasButtons && (
@@ -185,10 +195,18 @@ const TableView = ({
                                   ? "sticky right-0 bg-white z-10"
                                   : "";
 
+                                const colRules = config?.rules?.col_class || {};
+                                  const valueMap = colRules[key];
+                                  let dynamicColClass = "";
+
+                                  if (valueMap && row[key] && valueMap[row[key]]) {
+                                    dynamicColClass = valueMap[row[key]];
+                                  }
+
                             return (
                               <td
                                 key={key}
-                                className={`${style?.td || "px-2  py-1 text-sm text-gray-900"} ${fixedClass}`}
+                                className={`${style?.td || "px-2  py-1 text-sm text-gray-900"} ${fixedClass} ${dynamicColClass.trim()}`}
                               >
                                 <div className="relative group flex items-center">
                                   <div className={wrapLines ? "whitespace-pre-wrap break-words max-w-none" : "truncate max-w-xs sm:max-w-none"}>
@@ -214,7 +232,8 @@ const TableView = ({
                             );
                           })}
                         </tr>
-                      ))
+                      )
+                      })
                     ) : (
                       <tr>
                         <td

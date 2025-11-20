@@ -1,4 +1,4 @@
-import { Calendar, Check, Copy, MoreHorizontal, User } from 'lucide-react';
+import { Calendar, Check, Copy, MoreHorizontal, Tag, User } from 'lucide-react';
 import React, { useState } from 'react'
 import ShimmerCard from './loadings/ShimmerCard';
 import copyToClipboard, { formatCardContent } from '../helpers/copyToClipboard';
@@ -75,7 +75,7 @@ const CardView = ({
                   >
                     {copiedCell === `${row.id}-${rowIndex}` ? (
                       <>
-                        <span className="text-xs text-gray-600">Copied!</span>
+                        <span className="text-xs z-50 bg-white text-gray-600">Copied!</span>
                       </>
                     ) : (
                       <Copy className="w-4 h-4 text-gray-600" />
@@ -128,7 +128,7 @@ const CardView = ({
                         type="checkbox"
                         checked={selectedRows.has(row.id)}
                         onChange={() => handleSelectRow(row.id)}
-                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                        className="rounded relative right-6 cursor-pointer border-gray-300 text-blue-600 focus:ring-blue-500"
                       />
                     )}
                   </div>
@@ -147,14 +147,14 @@ const CardView = ({
 
                     {/* Due Date */}
                     {getCardValue(row, 'due_date') && (
-                      <div className="flex items-center text-xs text-gray-500 mb-2">
+                      <div className="flex items-center justify-end text-xs text-gray-500 mb-2">
                         <Calendar className="w-3 h-3 mr-1" />
                         {new Date(getCardValue(row, 'due_date')).toLocaleDateString()}
                       </div>
                     )}
 
                     {/* Additional Info */}
-                    <div className="space-y-1 text-xs text-gray-600">
+                    {/* <div className="space-y-1 text-xs text-gray-600">
                       {Object.entries(row).slice(0, 3).map(([key, value]) => {
                         if (!value || key === 'id' || getCardValue(row, 'title') === value) return null;
                         const column = datagrid[key];
@@ -175,7 +175,7 @@ const CardView = ({
                           </div>
                         );
                       })}
-                    </div>
+                    </div> */}
                   </div>
 
                   {/* Card Actions */}
@@ -246,10 +246,13 @@ const CardView = ({
                 </div>
               ))
             ) : (
-              <div className="col-span-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
-                {Array.from({ length: 6 }).map((_, index) => (
+              // <div className="col-span-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
+                <div className="h-screen col-span-full  text-center flex justify-center items-center ">
+
+                {/* {Array.from({ length: 6 }).map((_, index) => (
                   <ShimmerCard key={index} />
-                ))}
+                ))} */}
+                <h1>Data Not available</h1>
               </div>
             )}
           </div>

@@ -44,6 +44,15 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
     updateLocalOverride("template", currentView);
   }, [currentView]);
 
+    useEffect(() => {
+      if (currentView === "kanban") {
+        const entries = Object.entries(config?.kanban?.colkeys || {});
+        if (entries.length > 0 && !kanbanGroupBy) {
+          setKanbanGroupBy(entries[0][0]); 
+        }
+      }
+    }, [currentView, config, kanbanGroupBy]);
+
   function setViewHistory(view) {
     const STORAGE_KEY = getPathKey();
     const localOverrides = JSON.parse(localStorage.getItem(`${CONSTANTS.REPORT_LOCALSTORAGE_PRIFIX}${STORAGE_KEY}`)) || {};
@@ -225,9 +234,6 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
     console.log({ filtered });
     return filtered;
   }, [config, searchTerm, sortConfig, data]);
-
-
-
 
 
   const rowsPerPage = config?.rowsPerPage || 5;

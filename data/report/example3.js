@@ -8,7 +8,7 @@ export const report = {
   "rowsPerPage": 50,
   "template": "table",
   "custombar": false,
-  // "showExtraColumn": "checkbox",
+  "showExtraColumn": "checkbox",
 
   // "settings":false,
   // "filters":false,
@@ -215,5 +215,17 @@ export const report = {
         <p>$descs</p>
       </div>`,
   },
+  "rules":{
+    "row_class":{
+        "persona_group":{
+            "Lifestyle":"bg-red-500"        
+        }    
+    },
+    "col_class":{
+        "persona_group":{
+            "Lifestyle":"bg-red-500"        
+        }    
+    },
+  }
 }
 
