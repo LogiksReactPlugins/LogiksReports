@@ -15,6 +15,9 @@ export default function App() {
   const handelTrig=()=>{
     console.log("DONE TRIG")
   }
+  const handelTrig2=()=>{
+    console.log("handelTrig2")
+  }
   return (
    <>
     
@@ -22,7 +25,7 @@ export default function App() {
      report={report} 
      onButtonClick={handleAction}
      
-    methods={{handelTrig}}
+    methods={{handelTrig,handelTrig2}}
     />
 
    </>
