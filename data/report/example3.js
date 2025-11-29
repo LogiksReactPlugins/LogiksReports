@@ -45,7 +45,11 @@ export const report = {
     "handelTrig": {
       "label": "Add",
       "icon": "fa fa-gear pull-lef",
-    }
+    },
+    "handelTrig2": {
+      "label": "Add",
+      "icon": "fa fa-gear pull-lef",
+    },
   },
   "toolbar": {
     // "search": true,

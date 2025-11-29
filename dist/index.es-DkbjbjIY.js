@@ -1,4 +1,4 @@
-import { c as Da, _ as Va, g as il } from "./index-xyhgZWWA.js";
+import { c as Da, _ as Va, g as il } from "./index-CQ5bYGHN.js";
 var fn = {}, cn = {}, cr, vn;
 function Q() {
   if (vn) return cr;
@@ -281,10 +281,10 @@ function $a() {
   Fn = 1;
   var n = Me(), e = Q(), r = Ga(), t = "__core-js_shared__", i = St.exports = e[t] || r(t, {});
   return (i.versions || (i.versions = [])).push({
-    version: "3.45.1",
+    version: "3.47.0",
     mode: n ? "pure" : "global",
-    copyright: "© 2014-2025 Denis Pushkarev (zloirock.ru)",
-    license: "https://github.com/zloirock/core-js/blob/v3.45.1/LICENSE",
+    copyright: "© 2014-2025 Denis Pushkarev (zloirock.ru), 2025 CoreJS Company (core-js.io)",
+    license: "https://github.com/zloirock/core-js/blob/v3.47.0/LICENSE",
     source: "https://github.com/zloirock/core-js"
   }), St.exports;
 }
@@ -1706,9 +1706,13 @@ function rn() {
       }, ""[u](y) !== 7;
     }), g = f && !t(function() {
       var y = !1, m = /a/;
-      return u === "split" && (m = {}, m.constructor = {}, m.constructor[s] = function() {
-        return m;
-      }, m.flags = "", m[v] = /./[v]), m.exec = function() {
+      if (u === "split") {
+        var b = {};
+        b[s] = function() {
+          return m;
+        }, m = { constructor: b, flags: "" }, m[v] = /./[v];
+      }
+      return m.exec = function() {
         return y = !0, null;
       }, m[v](""), !y;
     });
@@ -2756,20 +2760,6 @@ function mf() {
   }), _u;
 }
 mf();
-/*! *****************************************************************************
-Copyright (c) Microsoft Corporation.
-
-Permission to use, copy, modify, and/or distribute this software for any
-purpose with or without fee is hereby granted.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.
-***************************************************************************** */
 var ql = function(n, e) {
   return (ql = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function(r, t) {
     r.__proto__ = t;

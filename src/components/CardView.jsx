@@ -183,7 +183,7 @@ const CardView = ({
                     <div className="p-2 border-t border-gray-100 rounded-b-lg">
                       <div className="flex items-center justify-end">
                         <div className="flex items-center  space-x-2">
-                          {visibleButtons.slice(0, 4).map(([buttonKey, button]) => (
+                          {visibleButtons.slice(0, 6).map(([buttonKey, button]) => (
                             <button
                               key={buttonKey}
                               onClick={() => handleButtonClick(buttonKey, button, row)}
@@ -200,7 +200,7 @@ const CardView = ({
 
                         
 
-                        {(visibleButtons.length > 4 || moreButtons.length > 0) && (
+                        {(visibleButtons.length > 6 || moreButtons.length > 0) && (
                           <div className="relative">
                             <button
                               onClick={() => toggleDropdown(row.id)}
@@ -212,7 +212,7 @@ const CardView = ({
                             {openDropdown === row.id && (
                               <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
                                 <div className="py-1">
-                                  {visibleButtons.slice(4).map(([buttonKey, button]) => (
+                                  {visibleButtons.slice(6).map(([buttonKey, button]) => (
                                     <button
                                       key={buttonKey}
                                       onClick={() => {

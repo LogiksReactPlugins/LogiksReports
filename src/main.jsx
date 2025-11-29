@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
-globalThis.React = React;
-globalThis.ReactDOM = ReactDOM;
+// globalThis.React = React;
+// globalThis.ReactDOM = ReactDOM;
 
 import './App.css';
 import App from './App';
