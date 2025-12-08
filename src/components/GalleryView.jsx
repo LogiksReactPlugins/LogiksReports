@@ -135,7 +135,7 @@ const GalleryView = ({
                                     {/* Card Actions */}
                                     <div className="p-2 border-t border-gray-100 rounded-b-lg">
 
-                                        <div className="flex items-center justify-between">
+                                        <div className="flex flex-col md:flex-row items-center justify-between">
                                             {getCardValue(row, 'due_date') && (
                                                 <div className="flex items-center text-xs text-gray-500 ">
                                                     <Calendar className="w-3 h-3 mr-1" />

@@ -121,9 +121,9 @@ export default function SettingPopup({ config, setConfig, setSettingsOpen }) {
                 </div>
 
                 {/* Content */}
-                <div className="flex flex-1 overflow-hidden">
+                <div className="flex flex-wrap flex-1 overflow-y-auto md:overflow-hidden thin-scrollbar">
                     {/* Left Panel - Preferences */}
-                    <div className="w-1/2 bg-gray-50/50 overflow-y-auto thin-scrollbar">
+                    <div className="w-full md:w-1/2 bg-gray-50/50 overflow-y-auto thin-scrollbar">
                         <div className="p-5">
                             {/* Page Size */}
                             <div className="mb-3">
@@ -272,7 +272,7 @@ export default function SettingPopup({ config, setConfig, setSettingsOpen }) {
 
 
                     {/* Right Panel - Columns */}
-                    <div className="flex-1 flex flex-col bg-white">
+                    <div className="w-full md:w-1/2 flex-1 flex flex-col bg-white">
                         <div className="p-5 flex items-center justify-between bg-gray-50/30">
                             <div>
                                 <h3 className="text-sm font-medium text-secondary">Column Visibility</h3>

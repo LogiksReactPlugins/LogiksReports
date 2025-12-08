@@ -56,8 +56,8 @@ const CardView = ({
           )}
 
           <div className={style?.cardContainer || "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2"}>
-            {paginatedGroupedData[groupKey] && paginatedGroupedData[groupKey].length > 0 ? (
-              paginatedGroupedData[groupKey].map((row, rowIndex) => (
+            {paginatedGroupedData[groupKey] && paginatedGroupedData[groupKey]?.length > 0 ? (
+              paginatedGroupedData[groupKey]?.map((row, rowIndex) => (
                 <div
                   key={rowIndex}
                   className={

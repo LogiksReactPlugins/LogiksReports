@@ -41,7 +41,7 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
 
   useEffect(() => {
     if (!currentView) return;
-    updateLocalOverride("template", currentView);
+    updateLocalOverride("template", currentView,reportJSON);
   }, [currentView]);
 
     useEffect(() => {
@@ -76,8 +76,8 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
     { key: "kanban", icon: <Columns className="w-4 h-4" />, title: "Kanban" },
     { key: "calendar", icon: <Calendar className="w-4 h-4" />, title: "Calendar" },
     { key: "gallery", icon: <Image className="w-4 h-4" />, title: "Gallery" },
-      { key: "gantt", icon: <GanttChartSquare className="w-4 h-4" />, title: "Gantt" },
-      { key: "gmap", icon: <MapIcon className="w-4 h-4" />, title: "Gmap" },
+    { key: "gantt", icon: <GanttChartSquare className="w-4 h-4" />, title: "Gantt" },
+    { key: "gmap", icon: <MapIcon className="w-4 h-4" />, title: "Gmap" },
 
   ];
 
@@ -157,7 +157,26 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
           const { data } = await axios(axiosObject)
           console.log({ data })
           setData(data?.data || [])
-        } else if (reportdata) {
+        }else if (config?.source?.type === "sql") {
+          const axiosObject = {
+            method: config?.source?.method || "post",
+            url: config?.source?.url,
+            headers: config?.source?.headers,
+            data: {
+              "query":{
+                table: config?.source?.table,
+                cols: config?.source?.cols,
+                where: config?.source?.where,
+                limit: config?.source?.limit,
+              },
+              "queryid":config?.source?.queryid,
+              "filter":config?.source?.filter || {}
+            },
+          };
+          const { data } = await axios(axiosObject);
+          console.log({ data });
+          setData(data?.data || []);
+        }  else if (reportdata) {
           setData(reportdata)
         }
         else if (config?.rows) {
@@ -356,7 +375,7 @@ const dummyData = [
     // methods[button?.event?.click]?.(...resolvedParams);
     // console.log('METHOD--',methods[button?.event?.click])
     // console.log('Button clicked:', buttonKey, button, data);
-        if (methods[buttonKey]) {
+      if (methods[buttonKey]) {
         methods[buttonKey](data)
       } else {
         onButtonClick(buttonKey, data)
