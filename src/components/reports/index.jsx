@@ -180,9 +180,10 @@ const getValueByPath = (obj, path) => {
   const responsePath = config?.source?.response || "data";
           // console.log({config?.source.response})
           console.log({ data });
+          console.log({responsePath})
           // setData(data?.data || []);
            const result = getValueByPath(data, responsePath);
-
+          console.log({result})
         setData(result || []);
         }  else if (reportdata) {
           setData(reportdata)
