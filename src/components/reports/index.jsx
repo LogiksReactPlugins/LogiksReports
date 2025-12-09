@@ -143,7 +143,9 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
-
+const getValueByPath = (obj, path) => {
+  return path.split(".").reduce((acc, key) => acc?.[key], obj);
+};
   useEffect(() => {
     const fetchAPI = async () => {
       setDataLoading(true)
@@ -174,8 +176,14 @@ export default function Reports({ report: reportJSON, style, methods, data: repo
             },
           };
           const { data } = await axios(axiosObject);
+
+  const responsePath = config?.source?.response || "data";
+          // console.log({config?.source.response})
           console.log({ data });
-          setData(data?.data || []);
+          // setData(data?.data || []);
+           const result = getValueByPath(data, responsePath);
+
+        setData(result || []);
         }  else if (reportdata) {
           setData(reportdata)
         }
