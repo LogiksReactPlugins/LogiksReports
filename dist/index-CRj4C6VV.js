@@ -36454,7 +36454,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Or.canvg ? Promise.resolve(Or.canvg) : import("./index.es-DEY4SLFc.js")).catch(function(f) {
+  return (Or.canvg ? Promise.resolve(Or.canvg) : import("./index.es-BlGFpJmM.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
@@ -93615,12 +93615,6 @@ function T6e({ report: r, style: e, methods: t, data: n, onButtonClick: i, compo
             url: o?.source?.url,
             headers: o?.source?.headers,
             data: {
-              query: {
-                table: o?.source?.table,
-                cols: o?.source?.cols,
-                where: o?.source?.where,
-                limit: o?.source?.limit
-              },
               queryid: o?.source?.queryid,
               filter: o?.source?.filter || {}
             }
@@ -93698,7 +93692,7 @@ function T6e({ report: r, style: e, methods: t, data: n, onButtonClick: i, compo
   ], Zt = ($e) => ir[$e].sortable ? f.key === $e ? f.direction === "asc" ? /* @__PURE__ */ W.jsx(yN, { className: "w-4 h-4" }) : /* @__PURE__ */ W.jsx(mN, { className: "w-4 h-4" }) : /* @__PURE__ */ W.jsxs("div", { className: "flex flex-col", children: [
     /* @__PURE__ */ W.jsx(yN, { className: "w-3 h-3 text-gray-400" }),
     /* @__PURE__ */ W.jsx(mN, { className: "w-3 h-3 text-gray-400 -mt-1" })
-  ] }) : null, Kr = ($e) => $e ? /* @__PURE__ */ W.jsx("i", { className: `${$e}` }) : /* @__PURE__ */ W.jsx("i", { className: "fa fa-star" }), Jt = ($e, it, jt) => {
+  ] }) : null, Kr = ($e) => $e ? /* @__PURE__ */ W.jsx("i", { className: `${$e}` }) : null, Jt = ($e, it, jt) => {
     t[$e] ? t[$e](jt) : i($e, jt);
   }, ur = ($e) => {
     T(I === $e ? null : $e);

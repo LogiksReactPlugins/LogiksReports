@@ -165,24 +165,18 @@ const getValueByPath = (obj, path) => {
             url: config?.source?.url,
             headers: config?.source?.headers,
             data: {
-              "query":{
-                table: config?.source?.table,
-                cols: config?.source?.cols,
-                where: config?.source?.where,
-                limit: config?.source?.limit,
-              },
               "queryid":config?.source?.queryid,
               "filter":config?.source?.filter || {}
             },
           };
           const { data } = await axios(axiosObject);
 
-  const responsePath = config?.source?.response || "data";
+          const responsePath = config?.source?.response || "data";
           // console.log({config?.source.response})
           console.log({ data });
           console.log({responsePath})
           // setData(data?.data || []);
-           const result = getValueByPath(data, responsePath);
+          const result = getValueByPath(data, responsePath);
           console.log({result})
         setData(result || []);
         }  else if (reportdata) {
@@ -374,7 +368,7 @@ const dummyData = [
   };
 
   const getIconComponent = (iconStr) => {
-    if (!iconStr) return <i className='fa fa-star'></i>;
+    if (!iconStr) return null;
     return <i className={`${iconStr}`}></i>;
   };
 
