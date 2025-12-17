@@ -323,7 +323,7 @@ const KanbanView = ({
   };
 
 
-  if (!columnsData.length>0) {
+  if (!filteredAndSortedData.length>0) {
     return (
       <div className="flex items-center justify-center h-64 text-gray-500">
         <div className="text-center">
