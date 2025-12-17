@@ -4213,7 +4213,7 @@ const Ire = ({
       /* @__PURE__ */ W.jsx("div", { className: "bg-gray-50 p-2 thin-scrollbar space-y-2 rounded-b-lg min-h-96 max-h-150 overflow-y-auto", children: /* @__PURE__ */ W.jsx(_re, { items: k.map((j) => j.id), strategy: yre, children: k.length === 0 ? /* @__PURE__ */ W.jsx("div", { className: "min-h-[50px] rounded border border-dashed border-gray-300 flex items-center justify-center text-gray-400", children: "Drop here" }) : k.map((j) => /* @__PURE__ */ W.jsx(D, { row: j, columnId: N }, j.id)) }) })
     ] });
   };
-  return h ? /* @__PURE__ */ W.jsx(
+  return !y.length > 0 ? /* @__PURE__ */ W.jsx("div", { className: "flex items-center justify-center h-64 text-gray-500", children: /* @__PURE__ */ W.jsx("div", { className: "text-center", children: /* @__PURE__ */ W.jsx("div", { className: "text-sm", children: "No data available" }) }) }) : /* @__PURE__ */ W.jsx(
     qte,
     {
       sensors: g,
@@ -4231,10 +4231,7 @@ const Ire = ({
         /* @__PURE__ */ W.jsx(vre, { children: x && /* @__PURE__ */ W.jsx("div", { className: `${I(x)} border rounded-lg p-3 shadow-md w-72`, children: /* @__PURE__ */ W.jsx("div", { className: "text-sm font-medium truncate", children: T(x, "title") || x.name || "Untitled" }) }) })
       ] })
     }
-  ) : /* @__PURE__ */ W.jsx("div", { className: "flex items-center justify-center h-64 text-gray-500", children: /* @__PURE__ */ W.jsxs("div", { className: "text-center", children: [
-    /* @__PURE__ */ W.jsx("div", { className: "text-lg font-medium mb-2", children: "Select a column to group by" }),
-    /* @__PURE__ */ W.jsx("div", { className: "text-sm", children: "Choose a grouping option from the toolbar above" })
-  ] }) });
+  );
 }, Dre = ({
   config: r,
   filteredAndSortedData: e,
@@ -36454,7 +36451,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Or.canvg ? Promise.resolve(Or.canvg) : import("./index.es-BlGFpJmM.js")).catch(function(f) {
+  return (Or.canvg ? Promise.resolve(Or.canvg) : import("./index.es-YkKDohA_.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;

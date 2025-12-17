@@ -13,28 +13,28 @@ export const report = {
   // "settings":false,
   // "filters":false,
   "source": {
-    // "type": "API",  
-    //   "method": "get",
-    //   "url": "https://ai.smartinfologiks.com/api/skills/personas", 
-    //   "headers": {
-    //       "appid": "app01",
-    //       "Authorization": "Bearer q5AJgy9ayLip", 
-    //       "Content-Type": "application/json", 
-    //   },
-    // "limit": 10
-    "url":"http://192.168.0.20:9999/api/query",
-    "method":"post",
-      "type": "sql",      
-        "table": "lgks_domains",
-        "cols": "lgks_domains.domain_host,lgks_domains.blocked,lgks_domains.created_by,lgks_domains.created_on",
-        "where": {
-            "lgks_domains.id": "1",
-            "(DATE(lgks_domains.created_on)< CURDATE())": "RAW"
-        },
-        "headers": {
-          "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwidXNlcklkIjoxMDEsInVzZXJuYW1lIjoiYWRtaW4iLCJ0ZW5hbnRJZCI6InRlbmFudC0xIiwicm9sZXMiOlsiYWRtaW4iXSwic2NvcGVzIjpbInRlbmFudC0xOm9yZGVyczpyZWFkIiwidGVuYW50LTE6b3JkZXJzOndyaXRlIiwidGVuYW50LTE6ZG9jczpyZWFkIl0sImlwIjoiMTI3LjAuMC4xIiwiZGV2aWNlVHlwZSI6ImFwaSIsImlhdCI6MTc2NTEyOTE4NCwiZXhwIjoxNzY1NzMzOTg0LCJqdGkiOiJhY2M6MTAxOjE3NjUxMjkxODQwMjA6YXBpIn0.8lw9tzW_xkRGAwl_bgT61F4m3Qe6RD2E5dUeq3pZIxs", 
+    "type": "API",  
+      "method": "get",
+      "url": "https://ai.smartinfologiks.com/api/skills/personas", 
+      "headers": {
+          "appid": "app01",
+          "Authorization": "Bearer x-q5AJgy9ayLip", 
           "Content-Type": "application/json", 
       },
+    // "limit": 10
+    // "url":"http://192.168.0.20:9999/api/query",
+    // "method":"post",
+    //   "type": "sql",      
+    //     "table": "lgks_domains",
+    //     "cols": "lgks_domains.domain_host,lgks_domains.blocked,lgks_domains.created_by,lgks_domains.created_on",
+    //     "where": {
+    //         "lgks_domains.id": "1",
+    //         "(DATE(lgks_domains.created_on)< CURDATE())": "RAW"
+    //     },
+    //     "headers": {
+    //       "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwidXNlcklkIjoxMDEsInVzZXJuYW1lIjoiYWRtaW4iLCJ0ZW5hbnRJZCI6InRlbmFudC0xIiwicm9sZXMiOlsiYWRtaW4iXSwic2NvcGVzIjpbInRlbmFudC0xOm9yZGVyczpyZWFkIiwidGVuYW50LTE6b3JkZXJzOndyaXRlIiwidGVuYW50LTE6ZG9jczpyZWFkIl0sImlwIjoiMTI3LjAuMC4xIiwiZGV2aWNlVHlwZSI6ImFwaSIsImlhdCI6MTc2NTEyOTE4NCwiZXhwIjoxNzY1NzMzOTg0LCJqdGkiOiJhY2M6MTAxOjE3NjUxMjkxODQwMjA6YXBpIn0.8lw9tzW_xkRGAwl_bgT61F4m3Qe6RD2E5dUeq3pZIxs", 
+    //       "Content-Type": "application/json", 
+    //   },
         "limit": 10
   },
   "actions": {

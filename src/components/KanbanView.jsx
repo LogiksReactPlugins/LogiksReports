@@ -323,12 +323,11 @@ const KanbanView = ({
   };
 
 
-  if (!kanbanGroupBy) {
+  if (!columnsData.length>0) {
     return (
       <div className="flex items-center justify-center h-64 text-gray-500">
         <div className="text-center">
-          <div className="text-lg font-medium mb-2">Select a column to group by</div>
-          <div className="text-sm">Choose a grouping option from the toolbar above</div>
+          <div className="text-sm">No data available</div>
         </div>
       </div>
     );
