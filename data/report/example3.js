@@ -18,7 +18,7 @@ export const report = {
       "url": "https://ai.smartinfologiks.com/api/skills/personas", 
       "headers": {
           "appid": "app01",
-          "Authorization": "Bearer x-q5AJgy9ayLip", 
+          "Authorization": "Bearer q5AJgy9ayLip", 
           "Content-Type": "application/json", 
       },
     // "limit": 10
@@ -48,6 +48,8 @@ export const report = {
       "label": "View Info",
       "icon": "fa fa-eye"
     },
+    "more":{
+
     "forms@edit/{hashid}": {
       "label": "Edit Info",
       "icon": "fa-solid fa-pen-to-square"
@@ -64,6 +66,7 @@ export const report = {
       "label": "Add",
       "icon": "fa fa-gear pull-lef",
     },
+    }
   },
   "toolbar": {
     // "search": true,

@@ -102,7 +102,7 @@ export default function SettingPopup({ config, setConfig, setSettingsOpen }) {
     );
 
     return (
-        <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/50 backdrop-blur-sm">
+        <div className="fixed report-setting-popup inset-0 z-[999] flex items-center justify-center bg-black/50 backdrop-blur-sm">
             <div className="bg-white rounded-xl shadow-2xl w-full max-w-5xl h-[90vh] flex flex-col m-4 overflow-hidden">
                 {/* Header */}
                 <div className="flex items-center justify-between px-5 py-2 bg-gradient-to-r from-primary/5 to-primary/10">
@@ -121,9 +121,9 @@ export default function SettingPopup({ config, setConfig, setSettingsOpen }) {
                 </div>
 
                 {/* Content */}
-                <div className="flex flex-wrap flex-1 overflow-y-auto md:overflow-hidden thin-scrollbar">
+                <div className="flex flex-wrap flex-1  overflow-y-auto  thin-scrollbar">
                     {/* Left Panel - Preferences */}
-                    <div className="w-full md:w-1/2 bg-gray-50/50 overflow-y-auto thin-scrollbar">
+                    <div className="w-full md:w-1/2 bg-gray-50/50 h-full overflow-y-auto thin-scrollbar">
                         <div className="p-5">
                             {/* Page Size */}
                             <div className="mb-3">
@@ -272,7 +272,7 @@ export default function SettingPopup({ config, setConfig, setSettingsOpen }) {
 
 
                     {/* Right Panel - Columns */}
-                    <div className="w-full md:w-1/2 flex-1 flex flex-col bg-white">
+                    <div className="w-full md:w-1/2 overflow-y-auto h-full flex flex-col bg-white">
                         <div className="p-5 flex items-center justify-between bg-gray-50/30">
                             <div>
                                 <h3 className="text-sm font-medium text-secondary">Column Visibility</h3>
