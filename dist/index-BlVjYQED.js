@@ -6858,7 +6858,16 @@ function die(r, e, t = {}, n = {}) {
     case "num":
       return /* @__PURE__ */ K.jsx("span", { className: "text-center", children: Number(r).toLocaleString() });
     case "url":
-      return r ? /* @__PURE__ */ K.jsx("a", { href: r, target: "_blank", rel: "noopener noreferrer", className: "text-blue-600 underline", children: r }) : null;
+      return r ? /* @__PURE__ */ K.jsx(
+        "a",
+        {
+          href: r,
+          target: "_blank",
+          rel: "noopener noreferrer",
+          className: "text-blue-600 underline",
+          children: r
+        }
+      ) : null;
     case "email":
       return r ? /* @__PURE__ */ K.jsx("a", { href: `mailto:${r}`, className: "text-blue-600 underline", children: r }) : null;
     case "tel":
@@ -6872,7 +6881,9 @@ function die(r, e, t = {}, n = {}) {
       return r ? /* @__PURE__ */ K.jsx(
         "a",
         {
-          href: `https://www.google.com/maps/place/${encodeURIComponent(r)}`,
+          href: `https://www.google.com/maps/place/${encodeURIComponent(
+            r
+          )}`,
           target: "_blank",
           rel: "noopener noreferrer",
           className: "text-blue-600 underline",
@@ -6880,7 +6891,13 @@ function die(r, e, t = {}, n = {}) {
         }
       ) : null;
     case "color":
-      return r ? /* @__PURE__ */ K.jsx("div", { className: "flex items-center justify-center", children: /* @__PURE__ */ K.jsx("span", { className: "w-5 h-5 rounded-full border", style: { backgroundColor: r } }) }) : null;
+      return r ? /* @__PURE__ */ K.jsx("div", { className: "flex items-center justify-center", children: /* @__PURE__ */ K.jsx(
+        "span",
+        {
+          className: "w-5 h-5 rounded-full border",
+          style: { backgroundColor: r }
+        }
+      ) }) : null;
     case "avatar":
       return /* @__PURE__ */ K.jsx(
         "img",
@@ -6903,7 +6920,16 @@ function die(r, e, t = {}, n = {}) {
       );
     case "file":
     case "attachment":
-      return r ? /* @__PURE__ */ K.jsx("a", { href: r, target: "_blank", rel: "noopener noreferrer", className: "text-blue-600 underline", children: "FILE" }) : "No File";
+      return r ? /* @__PURE__ */ K.jsx(
+        "a",
+        {
+          href: r,
+          target: "_blank",
+          rel: "noopener noreferrer",
+          className: "text-blue-600 underline",
+          children: "FILE"
+        }
+      ) : "No File";
     case "json":
       try {
         const a = typeof r == "string" ? JSON.parse(r) : r;
@@ -6968,12 +6994,27 @@ function die(r, e, t = {}, n = {}) {
         const a = i.substring(0, 35) + " ...";
         return /* @__PURE__ */ K.jsxs("div", { className: "cursor-pointer", children: [
           a,
-          /* @__PURE__ */ K.jsx("div", { className: "hidden", dangerouslySetInnerHTML: { __html: i } })
+          /* @__PURE__ */ K.jsx(
+            "div",
+            {
+              className: "hidden",
+              dangerouslySetInnerHTML: { __html: i }
+            }
+          )
         ] });
       }
       return /* @__PURE__ */ K.jsx("span", { dangerouslySetInnerHTML: { __html: i } });
     case "template":
-      return n?.template ? n.template.replace(/%([\w.-]+)%/g, (a, o) => t[o] ?? "") : String(r);
+      return n?.template ? n.template.replace(
+        /%([\w.-]+)%/g,
+        (a, o) => t[o] ?? ""
+      ) : String(r);
+    case "edge": {
+      const a = new Date(r), s = /* @__PURE__ */ new Date() - a;
+      if (Number.isNaN(a.getTime())) return "";
+      const l = Math.floor(s / 1e3), u = Math.floor(l / 60), A = Math.floor(u / 60), c = Math.floor(A / 24), f = Math.floor(c / 7), h = Math.floor(c / 30), d = Math.floor(c / 365);
+      return l < 60 ? `${l || 1} sec ago` : u < 60 ? `${u} min ago` : A < 24 ? `${A} hr ago` : c < 7 ? `${c} day${c > 1 ? "s" : ""} ago` : f < 5 ? `${f} week${f > 1 ? "s" : ""} ago` : h < 12 ? `${h} month${h > 1 ? "s" : ""} ago` : `${d} yr${d > 1 ? "s" : ""} ago`;
+    }
     default:
       return Array.isArray(r) ? r.join(", ") : typeof r == "string" && r.length > 100 ? /* @__PURE__ */ K.jsx("pre", { className: "whitespace-pre-wrap", children: r }) : typeof r == "string" && r.length > 20 ? /* @__PURE__ */ K.jsx("span", { children: r }) : String(r);
   }
@@ -36535,7 +36576,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Or.canvg ? Promise.resolve(Or.canvg) : import("./index.es-qjD_WWnd.js")).catch(function(f) {
+  return (Or.canvg ? Promise.resolve(Or.canvg) : import("./index.es-CHnp_7hd.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
