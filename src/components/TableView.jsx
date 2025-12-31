@@ -38,19 +38,27 @@ const TableView = ({
     compactMode,
   } = config;
   const [copiedCell, setCopiedCell] = useState(null);
-const dropdownRef = React.useRef(null);
-useEffect(() => {
-  if (!openDropdown) return;
+  const dropdownRef = React.useRef(null);
+  useEffect(() => {
+    if (!openDropdown) return;
 
-  const handleOutsideClick = (e) => {
-    if (dropdownRef.current?.contains(e.target)) return;
-    setOpenDropdown(null);
+    const handleOutsideClick = (e) => {
+      if (dropdownRef.current?.contains(e.target)) return;
+      setOpenDropdown(null);
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => document.removeEventListener("mousedown", handleOutsideClick);
+  }, [openDropdown]);
+
+  const resolveTitle = (title, row) => {
+    if (!title) return "";
+    if (title.startsWith("{") && title.endsWith("}")) {
+      const key = title.slice(1, -1);
+      return row?.[key] ?? "";
+    }
+    return title;
   };
-
-  document.addEventListener("mousedown", handleOutsideClick);
-  return () =>
-    document.removeEventListener("mousedown", handleOutsideClick);
-}, [openDropdown]);
 
   return (
     <div className="overflow-hidden">
@@ -200,57 +208,73 @@ useEffect(() => {
                                       handleButtonClick(buttonKey, button, row);
                                     }}
                                     className="inline-flex items-center px-2 py-1 text-xs font-medium rounded cursor-pointer text-action"
-                                    title={button.label}
+                                    title={resolveTitle(button.label, row)}
                                   >
                                     {getIconComponent(button.icon)}
                                   </button>
                                 ))}
 
-                               {moreButtons.length > 0 && (
-  <div className="relative">
-    <button
-      onMouseDown={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        setOpenDropdown(openDropdown === row.id ? null : row.id);
-      }}
-      className="inline-flex items-center px-1 py-1 text-xs font-medium text-gray-700 rounded hover:bg-gray-200"
-      title="More"
-    >
-      <MoreVertical className="w-4 h-4" />
-    </button>
+                                {moreButtons.length > 0 && (
+                                  <div className="relative">
+                                    <button
+                                      onMouseDown={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        setOpenDropdown(
+                                          openDropdown === row.id
+                                            ? null
+                                            : row.id
+                                        );
+                                      }}
+                                      className="inline-flex items-center px-1 py-1 text-xs font-medium text-gray-700 rounded hover:bg-gray-200"
+                                      title="More"
+                                    >
+                                      <MoreVertical className="w-4 h-4" />
+                                    </button>
 
-    {openDropdown === row.id && (
-      <div
-        ref={dropdownRef}
-        onMouseDown={(e) => e.stopPropagation()}
-        className="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-999"
-      >
-        {moreButtons.map(([buttonKey, button]) => (
-          <button
-            key={buttonKey}
-            onMouseDown={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              handleButtonClick(buttonKey, button, row);
-              setOpenDropdown(null);
-            }}
-            className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-            title={button.label}
-          >
-            <span className="flex-shrink-0">
-              {getIconComponent(button.icon)}
-            </span>
-            <span className="truncate text-left w-full">
-              {button.label}
-            </span>
-          </button>
-        ))}
-      </div>
-    )}
-  </div>
-)}
-
+                                    {openDropdown === row.id && (
+                                      <div
+                                        ref={dropdownRef}
+                                        onMouseDown={(e) => e.stopPropagation()}
+                                        className="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-999"
+                                      >
+                                        {moreButtons.map(
+                                          ([buttonKey, button]) => (
+                                            <button
+                                              key={buttonKey}
+                                              onMouseDown={(e) => {
+                                                e.preventDefault();
+                                                e.stopPropagation();
+                                                handleButtonClick(
+                                                  buttonKey,
+                                                  button,
+                                                  row
+                                                );
+                                                setOpenDropdown(null);
+                                              }}
+                                              className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                              title={resolveTitle(
+                                                button.label,
+                                                row
+                                              )}
+                                            >
+                                              <span className="flex-shrink-0">
+                                                {getIconComponent(button.icon)}
+                                              </span>
+                                              <span className="truncate text-left w-full">
+                                                title=
+                                                {resolveTitle(
+                                                  button.label,
+                                                  row
+                                                )}
+                                              </span>
+                                            </button>
+                                          )
+                                        )}
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
                               </div>
                             </td>
                           )}
