@@ -19,7 +19,7 @@ export const report = {
     },
   },
   toolbar: {
-    search: false,
+    search: true,
     print: false,
     export: false,
     email: false,
