@@ -99,6 +99,7 @@ export default function Reports({
       // debugg_URL
       (async () => {
         const axiosObject = {
+          method: "POST",
           url: config?.endPoints?.debuggUrl,
           headers: config?.endPoints?.headers,
           data: {
