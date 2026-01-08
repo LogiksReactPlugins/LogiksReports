@@ -289,8 +289,18 @@ export default function Reports({
     }
   };
 
-  useEffect(() => {
+  const handleReset = () => {
+    setSearchTerm("");
+    setSortConfig({ key: null, direction: "asc" });
+    setGroupBy(null);
+    setCurrentPage(1);
+    setSelectedRows(new Set());
+    setSelectAll(false);
     fetchAPI();
+  };
+
+  useEffect(() => {
+    handleReset();
   }, [config]);
 
   useEffect(() => {});
@@ -403,16 +413,6 @@ export default function Reports({
       direction: prev.key === key && prev.direction === "asc" ? "desc" : "asc",
     }));
     setCurrentPage(1);
-  };
-
-  const handleReset = () => {
-    setSearchTerm("");
-    setSortConfig({ key: null, direction: "asc" });
-    setGroupBy(null);
-    setCurrentPage(1);
-    setSelectedRows(new Set());
-    setSelectAll(false);
-    fetchAPI();
   };
 
   const handleSearch = (term) => {

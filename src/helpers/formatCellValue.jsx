@@ -18,15 +18,38 @@ export default function formatCellValue(
           className="w-4 h-4 text-green-600 accent-green-600 cursor-default"
         />
       );
+    case "date": {
+      const d = new Date(value);
+      const invalid = isNaN(d.getTime());
 
-    case "date":
-      return new Date(value).toLocaleDateString();
+      return (
+        <span title={String(value)}>
+          {invalid ? "Invalid Date" : d.toLocaleDateString()}
+        </span>
+      );
+    }
 
-    case "time":
-      return new Date(value).toLocaleTimeString();
+    case "time": {
+      const d = new Date(value);
+      const invalid = isNaN(d.getTime());
 
-    case "datetime":
-      return new Date(value).toLocaleString();
+      return (
+        <span title={String(value)}>
+          {invalid ? "Invalid Time" : d.toLocaleTimeString()}
+        </span>
+      );
+    }
+
+    case "datetime": {
+      const d = new Date(value);
+      const invalid = isNaN(d.getTime());
+
+      return (
+        <span title={String(value)}>
+          {invalid ? "Invalid Date" : d.toLocaleString()}
+        </span>
+      );
+    }
 
     case "currency":
       return new Intl.NumberFormat(undefined, {
@@ -41,6 +64,7 @@ export default function formatCellValue(
         <span className="text-center">{Number(value).toLocaleString()}</span>
       );
 
+    case "link":
     case "url":
       return value ? (
         <a
@@ -117,19 +141,22 @@ export default function formatCellValue(
       );
 
     case "file":
-    case "attachment":
-      return value ? (
-        <a
-          href={value}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-blue-600 underline"
-        >
-          FILE
-        </a>
-      ) : (
-        "No File"
+    case "attachment": {
+      if (!value) return "No File";
+
+      const links = String(value)
+        .split(",")
+        .map((v) => v.trim())
+        .filter(Boolean);
+
+      return (
+        <div className="flex flex-col gap-1">
+          {links.map((link, idx) => (
+            <AttachmentPopup key={idx} url={link} index={idx} />
+          ))}
+        </div>
       );
+    }
 
     case "json":
       try {
@@ -320,6 +347,58 @@ function ContentPopup({ abstract, content }) {
               className="text-sm text-gray-800 whitespace-pre-wrap"
               dangerouslySetInnerHTML={{ __html: content }}
             />
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+function AttachmentPopup({ url, index }) {
+  const [open, setOpen] = React.useState(false);
+
+  const fileName = url.split("/").pop();
+
+  return (
+    <>
+      <span
+        className="text-blue-600 underline cursor-pointer text-sm"
+        onClick={() => setOpen(true)}
+      >
+        {fileName || `File ${index + 1}`}
+      </span>
+
+      {open && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="bg-white max-w-3xl w-full rounded shadow-lg p-4 relative max-h-[80vh] overflow-y-auto">
+            <button
+              className="absolute top-2 right-2 cursor-pointer text-gray-500 bg-gray-200 px-2 py-1 hover:text-gray-800"
+              onClick={() => setOpen(false)}
+            >
+              ✕
+            </button>
+
+            <div className="mb-3 text-sm font-medium text-gray-700">
+              {fileName}
+            </div>
+
+            {/* File preview */}
+            <iframe
+              src={url}
+              title={fileName}
+              className="w-full h-[60vh] border border-slate-200 rounded"
+            />
+
+            <div className="mt-3 text-right">
+              <a
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 underline text-sm"
+              >
+                Open in new tab
+              </a>
+            </div>
           </div>
         </div>
       )}
