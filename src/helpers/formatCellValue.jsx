@@ -1,3 +1,5 @@
+import React from "react";
+
 export default function formatCellValue(
   value,
   formatter,
@@ -142,19 +144,35 @@ export default function formatCellValue(
       }
 
     case "pretty":
-      return (
-        <pre className="whitespace-pre-wrap text-sm text-gray-700 bg-gray-100 p-2 rounded">
-          {typeof value === "object"
-            ? JSON.stringify(value, null, 2)
-            : String(value)}
-        </pre>
-      );
-
     case "uppercase":
-      return String(value).toUpperCase();
+    case "lowercase": {
+      let val = value;
 
-    case "lowercase":
-      return String(value).toLowerCase();
+      if (Array.isArray(val)) {
+        val = val.join(", ");
+      }
+
+      val = String(val).replace(/_/g, " ");
+
+      switch (formatter.toLowerCase()) {
+        case "pretty":
+          val = val.replace(
+            /\w\S*/g,
+            (w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()
+          );
+          break;
+
+        case "uppercase":
+          val = val.toUpperCase();
+          break;
+
+        case "lowercase":
+          val = val.toLowerCase();
+          break;
+      }
+
+      return val;
+    }
 
     case "html":
       return <div dangerouslySetInnerHTML={{ __html: value }} />;
@@ -213,27 +231,23 @@ export default function formatCellValue(
         </div>
       ) : null;
 
-    case "content":
+    case "content": {
       if (!value) return "No Content";
+
       const cleanValue = String(value)
         .replace(/\\r\\n/g, "<br>")
         .replace(/\\n/g, "<br>")
         .replace(/\\'s/g, "'s")
         .replace(/\\"/g, '"');
-      if (cleanValue.length > 40) {
-        const abstract = cleanValue.substring(0, 35) + " ...";
-        return (
-          <div className="cursor-pointer">
-            {abstract}
-            <div
-              className="hidden"
-              dangerouslySetInnerHTML={{ __html: cleanValue }}
-            />
-          </div>
-        );
-      }
-      return <span dangerouslySetInnerHTML={{ __html: cleanValue }} />;
 
+      if (cleanValue.length <= 40) {
+        return <span dangerouslySetInnerHTML={{ __html: cleanValue }} />;
+      }
+
+      const abstract = cleanValue.slice(0, 35) + " ...";
+
+      return <ContentPopup abstract={abstract} content={cleanValue} />;
+    }
     case "template":
       if (columnInfo?.template) {
         // Replace %field% with record[field]
@@ -279,4 +293,36 @@ export default function formatCellValue(
         return String(value);
       }
   }
+}
+
+function ContentPopup({ abstract, content }) {
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <>
+      <span className="cursor-pointer" onClick={() => setOpen(true)}>
+        {abstract}
+      </span>
+
+      {open && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="bg-white max-w-2xl w-full rounded shadow-lg p-4 relative max-h-[80vh] overflow-y-auto">
+            <div className="sticky  py-3 top-1">
+              <button
+                className=" absolute -top-2 -right-2 cursor-pointer text-gray-500 bg-gray-200 py-1 px-2 hover:text-gray-800"
+                onClick={() => setOpen(false)}
+              >
+                ✕
+              </button>
+            </div>
+
+            <div
+              className="text-sm text-gray-800 whitespace-pre-wrap"
+              dangerouslySetInnerHTML={{ __html: content }}
+            />
+          </div>
+        </div>
+      )}
+    </>
+  );
 }

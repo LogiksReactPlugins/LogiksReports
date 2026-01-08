@@ -86,11 +86,34 @@ export default function Reports({
   const [dataLoading, setDataLoading] = useState(false);
   const newDropdownRef = useRef(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [debuggerEnable, setDebuggerEnable] = useState(false);
+  const [debuggData, setDebuggData] = useState(null);
 
   useEffect(() => {
     if (!currentView) return;
     updateLocalOverride("template", currentView, reportJSON);
   }, [currentView]);
+
+  useEffect(() => {
+    if (config?.DEBUG === true) {
+      // debugg_URL
+      (async () => {
+        const axiosObject = {
+          url: config?.endPoints?.debuggUrl,
+          headers: config?.endPoints?.headers,
+          data: {
+            ...config.source,
+          },
+        };
+        const { data } = await axios(axiosObject);
+        console.log({ data });
+        setDebuggData(data);
+      })();
+      setDebuggerEnable(true);
+    } else {
+      setDebuggerEnable(false);
+    }
+  }, [config]);
 
   useEffect(() => {
     if (currentView === "kanban") {
@@ -500,6 +523,9 @@ export default function Reports({
       setLoading(null);
     }
   };
+  if (debuggerEnable && debuggData) {
+    return <div>{debuggData}</div>;
+  }
 
   return (
     <div
