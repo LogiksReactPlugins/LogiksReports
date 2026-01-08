@@ -524,8 +524,17 @@ export default function Reports({
       setLoading(null);
     }
   };
-  if (debuggerEnable && debuggData) {
-    return <div>{debuggData}</div>;
+  if (debuggerEnable && debuggData?.QUERY) {
+    return (
+      <pre
+        style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}
+        className="p-4 debugg-query"
+      >
+        {typeof debuggData?.QUERY === "string"
+          ? debuggData?.QUERY
+          : JSON.stringify(debuggData?.QUERY, null, 2)}
+      </pre>
+    );
   }
 
   return (
