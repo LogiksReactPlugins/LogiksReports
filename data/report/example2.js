@@ -13,7 +13,7 @@ export const report = {
     type: "php",
     file: "plugins/modules/test/test.php",
   },
-  buttons: {
+  actions: {
     addRecord: {
       label: "{userid}",
       icon: "fa fa-plus",

@@ -488,7 +488,7 @@ export default function Reports({
     // const resolvedParams = Object.values(button?.params || {}).map(key => data?.[key]);
     // methods[button?.event?.click]?.(...resolvedParams);
     // console.log('METHOD--',methods[button?.event?.click])
-    // console.log('Button clicked:', buttonKey, button, data);
+    console.log("Button clicked:", buttonKey, button, data);
     if (methods[buttonKey]) {
       methods[buttonKey](data);
     } else {
@@ -544,8 +544,8 @@ export default function Reports({
       }`}
     >
       {" "}
-      <div className=" px-3 sm:px-3 py-2">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+      <div className=" px-3 sm:px-3 py-2 report-header">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="flex space-x-2">
             <h1
               className={
@@ -564,7 +564,9 @@ export default function Reports({
               {actions &&
                 Object.entries(actions).map(([key, action]) => (
                   <button
-                    onClick={() => handleButtonClick(key, action)}
+                    onClick={() =>
+                      handleButtonClick(key, action, [...selectedRows])
+                    }
                     key={key}
                     className="inline-flex items-center px-2 py-1 text-sm font-medium cursor-pointer bg-action rounded-md"
                   >
@@ -642,18 +644,18 @@ export default function Reports({
             )}
           </div>
 
-          <button
+          {/* <button
             className="sm:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
             onClick={() => setShowMobileFilters(!showMobileFilters)}
           >
             <Menu className="w-5 h-5" />
-          </button>
+          </button> */}
         </div>
 
         <div
           className={
             style?.searchBarContainer ||
-            "flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mt-4"
+            " report-search-container flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-4"
           }
         >
           <div className="flex items-center gap-3 flex-1 lg:max-w-sm">
@@ -677,7 +679,7 @@ export default function Reports({
             )}
           </div>
 
-          <div className="flex flex-col sm:flex-row sm:items-center gap-3 lg:gap-4">
+          <div className="flex flex-col self-end sm:flex-row sm:items-center gap-3 lg:gap-4">
             {groupableColumns.length > 0 &&
               (currentView === "kanban" ||
                 currentView === "table" ||
@@ -789,26 +791,30 @@ export default function Reports({
       {/* Pagination */}
       {(currentView === "table" || !currentView || currentView === "cards") &&
         totalPages > 1 && (
-          <div className="px-4 sm:px-6 py-1 sticky z-30 top-0 bg-white  border-y border-gray-200">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-              <div className="text-sm text-gray-500">
+          <div className="px-2 md:px-6 py-1 sticky z-30 top-0 bg-white  border-y border-gray-200">
+            <div className="flex flex-row items-center justify-between gap-3">
+              <div className="hidden md:block text-sm text-gray-500">
                 Showing {startIndex + 1} to{" "}
                 {Math.min(endIndex, filteredAndSortedData.length)} of{" "}
                 {filteredAndSortedData.length} records
               </div>
-              <div className="flex items-center justify-center sm:justify-end gap-2">
+              <div className="block md:hidden text-sm text-gray-500">
+                {startIndex + 1}–
+                {Math.min(endIndex, filteredAndSortedData.length)} /{" "}
+                {filteredAndSortedData.length}
+              </div>
+              <div className="flex items-center justify-center sm:justify-end md:gap-2">
                 <button
                   onClick={() =>
                     setCurrentPage((prev) => Math.max(prev - 1, 1))
                   }
                   disabled={currentPage === 1}
-                  className="inline-flex cursor-pointer items-center px-3 py-0.5 text-sm font-medium text-action  rounded-md   disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="inline-flex cursor-pointer items-center px-1 py-0.5 text-sm font-medium text-action  rounded-md   disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <ChevronLeft className="w-4 h-4 mr-1" />
+                  <ChevronLeft className="w-4 h-4" />
                   <span className="hidden sm:inline">Previous</span>
-                  <span className="sm:hidden">Prev</span>
                 </button>
-                <span className="text-sm text-gray-700 px-2">
+                <span className="text-sm text-gray-700 ">
                   {currentPage} of {totalPages}
                 </span>
                 <button
@@ -816,11 +822,10 @@ export default function Reports({
                     setCurrentPage((prev) => Math.min(prev + 1, totalPages))
                   }
                   disabled={currentPage === totalPages}
-                  className="inline-flex cursor-pointer items-center px-3 py-0.5 text-sm font-medium text-action  rounded-md   disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="inline-flex cursor-pointer items-center px-1 py-0.5 text-sm font-medium text-action  rounded-md   disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <span className="hidden sm:inline">Next</span>
-                  <span className="sm:hidden">Next</span>
-                  <ChevronRight className="w-4 h-4 ml-1" />
+                  <ChevronRight className="w-4 h-4" />
                 </button>
               </div>
             </div>

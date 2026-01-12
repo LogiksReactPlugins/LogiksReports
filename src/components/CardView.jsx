@@ -55,13 +55,13 @@ const CardView = ({
             </div>
           )}
 
-          <div className={style?.cardContainer || "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2"}>
+          <div className={style?.cardContainer || "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 report-card-container"}>
             {paginatedGroupedData[groupKey] && paginatedGroupedData[groupKey]?.length > 0 ? (
               paginatedGroupedData[groupKey]?.map((row, rowIndex) => (
                 <div
                   key={rowIndex}
                   className={
-                    style?.card || `border relative rounded-lg shadow-sm group hover:shadow-md transition-shadow duration-200 ${getCardColor(row)}`
+                    style?.card || `border relative rounded-lg shadow-sm group hover:shadow-md transition-shadow duration-200 report-card ${getCardColor(row)}`
                   }
                 >
                   <button
