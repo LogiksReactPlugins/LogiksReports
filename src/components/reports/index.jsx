@@ -88,6 +88,7 @@ export default function Reports({
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [debuggerEnable, setDebuggerEnable] = useState(false);
   const [debuggData, setDebuggData] = useState(null);
+  const [totalCount, setTotalCount] = useState(0);
 
   useEffect(() => {
     if (!currentView) return;
@@ -310,46 +311,62 @@ export default function Reports({
     let filtered = data;
 
     if (searchTerm) {
-      const advancedSearch = searchTerm.includes(":");
+      if (config?.source?.type === "sql") {
+        const axiosObject = {
+          method: config?.source?.method || "post",
+          url: config?.source?.url,
+          headers: config?.source?.headers,
+          data: {
+            queryid: config?.source?.queryid,
+            filter: {},
+          },
+        };
+        console.log({ axiosObject });
+        // const { data } = await axios(axiosObject);
 
-      if (advancedSearch) {
-        const conditions = searchTerm.split(",").map((cond) => {
-          let [rawKey, value] = cond
-            .split(":")
-            .map((s) => s.trim().toLowerCase());
-
-          let key = rawKey;
-          let colConfig = config.datagrid[key];
-
-          if (!colConfig) {
-            const match = Object.entries(config.datagrid).find(
-              ([colKey, col]) => col.label.toLowerCase() === rawKey
-            );
-            if (match) key = match[0];
-          }
-
-          return { key, value };
-        });
-
-        console.log({ conditions });
-
-        filtered = filtered.filter((row) => {
-          return conditions.every(({ key, value }) => {
-            const colConfig = config.datagrid[key];
-            if (!colConfig || !colConfig.searchable) return false;
-            const cellVal = String(row[key] || "").toLowerCase();
-            return cellVal.includes(value);
-          });
-        });
-      } else {
-        filtered = filtered.filter((row) => {
-          return Object.entries(config.datagrid).some(([key, col]) => {
-            if (!col.searchable) return false;
-            const value = String(row[key] || "").toLowerCase();
-            return value.includes(searchTerm.toLowerCase());
-          });
-        });
+        // const responsePath = config?.source?.response || "data";
+        // // console.log({config?.source.response})
+        // console.log({ data });
+        // console.log({ responsePath });
+        // // setData(data?.data || []);
+        // const result = getValueByPath(data, responsePath);
+        // console.log({ result });
+        // setData(result || []);
       }
+      // const advancedSearch = searchTerm.includes(":");
+      // if (advancedSearch) {
+      //   const conditions = searchTerm.split(",").map((cond) => {
+      //     let [rawKey, value] = cond
+      //       .split(":")
+      //       .map((s) => s.trim().toLowerCase());
+      //     let key = rawKey;
+      //     let colConfig = config.datagrid[key];
+      //     if (!colConfig) {
+      //       const match = Object.entries(config.datagrid).find(
+      //         ([colKey, col]) => col.label.toLowerCase() === rawKey
+      //       );
+      //       if (match) key = match[0];
+      //     }
+      //     return { key, value };
+      //   });
+      //   console.log({ conditions });
+      //   filtered = filtered.filter((row) => {
+      //     return conditions.every(({ key, value }) => {
+      //       const colConfig = config.datagrid[key];
+      //       if (!colConfig || !colConfig.searchable) return false;
+      //       const cellVal = String(row[key] || "").toLowerCase();
+      //       return cellVal.includes(value);
+      //     });
+      //   });
+      // } else {
+      //   filtered = filtered.filter((row) => {
+      //     return Object.entries(config.datagrid).some(([key, col]) => {
+      //       if (!col.searchable) return false;
+      //       const value = String(row[key] || "").toLowerCase();
+      //       return value.includes(searchTerm.toLowerCase());
+      //     });
+      //   });
+      // }
     }
 
     if (sortConfig.key) {
@@ -565,7 +582,7 @@ export default function Reports({
                 Object.entries(actions).map(([key, action]) => (
                   <button
                     onClick={() =>
-                      handleButtonClick(key, action, [...selectedRows])
+                      handleButtonClick(key, action, { ids: [...selectedRows] })
                     }
                     key={key}
                     className="inline-flex items-center px-2 py-1 text-sm font-medium cursor-pointer bg-action rounded-md"
