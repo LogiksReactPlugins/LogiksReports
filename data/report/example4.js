@@ -5,9 +5,9 @@ export const report = {
     baseURL: "http://192.168.0.20:9999",
     debuggUrl: `http://192.168.0.20:9999/api/query/raw`,
     accessToken:
-      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwiYXBwSWQiOiJkZW1vIiwiaWQiOjEsInVzZXJJZCI6ImFkbWluIiwidXNlcm5hbWUiOiJBZG1pbiIsInRlbmFudElkIjoiU0lMSyIsImd1aWQiOiJTSUxLIiwicm9sZXMiOlsiR2VuZXJhbCIsIlNJTEsiXSwic2NvcGVzIjpbXSwiaXAiOiIxOTIuMTY4LjAuNjYiLCJkZXZpY2VUeXBlIjoid2ViIiwiaWF0IjoxNzY4Mjc4MjQzLCJleHAiOjE3NjgyODE4NDMsImp0aSI6ImFjYzoxOjE3NjgyNzgyNDM4MDI6d2ViIn0.83Tn5MLM5EfeMYsuaQko_bRp3rhL5_IJ3AU5UBud3PM",
+      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwiYXBwSWQiOiJkZW1vIiwiaWQiOjEsInVzZXJJZCI6ImFkbWluIiwidXNlcm5hbWUiOiJBZG1pbiIsInRlbmFudElkIjoiU0lMSyIsImd1aWQiOiJTSUxLIiwicm9sZXMiOlsiR2VuZXJhbCIsIlNJTEsiXSwic2NvcGVzIjpbXSwiaXAiOiIxOTIuMTY4LjAuNjYiLCJkZXZpY2VUeXBlIjoid2ViIiwiaWF0IjoxNzY4MzY0MzkzLCJleHAiOjE3NjgzNjc5OTMsImp0aSI6ImFjYzoxOjE3NjgzNjQzOTM2MDI6d2ViIn0.Gjqis13HnbXz9MCRzCCL4leiI-Hdrg1HlvC348u4bnU",
     headers: {
-      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwiYXBwSWQiOiJkZW1vIiwiaWQiOjEsInVzZXJJZCI6ImFkbWluIiwidXNlcm5hbWUiOiJBZG1pbiIsInRlbmFudElkIjoiU0lMSyIsImd1aWQiOiJTSUxLIiwicm9sZXMiOlsiR2VuZXJhbCIsIlNJTEsiXSwic2NvcGVzIjpbXSwiaXAiOiIxOTIuMTY4LjAuNjYiLCJkZXZpY2VUeXBlIjoid2ViIiwiaWF0IjoxNzY4Mjc4MjQzLCJleHAiOjE3NjgyODE4NDMsImp0aSI6ImFjYzoxOjE3NjgyNzgyNDM4MDI6d2ViIn0.83Tn5MLM5EfeMYsuaQko_bRp3rhL5_IJ3AU5UBud3PM`,
+      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwiYXBwSWQiOiJkZW1vIiwiaWQiOjEsInVzZXJJZCI6ImFkbWluIiwidXNlcm5hbWUiOiJBZG1pbiIsInRlbmFudElkIjoiU0lMSyIsImd1aWQiOiJTSUxLIiwicm9sZXMiOlsiR2VuZXJhbCIsIlNJTEsiXSwic2NvcGVzIjpbXSwiaXAiOiIxOTIuMTY4LjAuNjYiLCJkZXZpY2VUeXBlIjoid2ViIiwiaWF0IjoxNzY4MzY0MzkzLCJleHAiOjE3NjgzNjc5OTMsImp0aSI6ImFjYzoxOjE3NjgzNjQzOTM2MDI6d2ViIn0.Gjqis13HnbXz9MCRzCCL4leiI-Hdrg1HlvC348u4bnU`,
       "Content-Type": "application/json",
     },
   },
@@ -217,7 +217,7 @@ export const report = {
       hidden: true,
       formatter: "date",
       sortable: true,
-      searchable: true,
+      searchable: false,
       filter: {
         type: "date",
       },
@@ -227,7 +227,7 @@ export const report = {
       hidden: true,
       formatter: "date",
       sortable: true,
-      searchable: true,
+      searchable: false,
       filter: {
         type: "date",
       },
@@ -236,7 +236,7 @@ export const report = {
       label: "Follow Up Time",
       hidden: true,
       sortable: true,
-      searchable: true,
+      searchable: false,
       filter: {
         type: "time",
       },
@@ -256,7 +256,7 @@ export const report = {
       hidden: true,
       formatter: "date",
       sortable: true,
-      searchable: true,
+      searchable: false,
       filter: {
         type: "date",
       },
@@ -387,14 +387,14 @@ export const report = {
       label: "Created By",
       hidden: true,
       sortable: true,
-      searchable: true,
+      searchable: false,
     },
     created_on: {
       label: "Created On",
       hidden: true,
       formatter: "date",
       sortable: true,
-      searchable: true,
+      searchable: false,
       filter: {
         type: "date",
       },
@@ -403,12 +403,12 @@ export const report = {
       label: "Updated By",
       hidden: true,
       sortable: true,
-      searchable: true,
+      searchable: false,
     },
     edited_on: {
       label: "Updated On",
       sortable: true,
-      searchable: true,
+      searchable: false,
       formatter: "date",
       filter: {
         type: "date",

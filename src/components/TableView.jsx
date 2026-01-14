@@ -39,6 +39,8 @@ const TableView = ({
   } = config;
   const [copiedCell, setCopiedCell] = useState(null);
   const dropdownRef = React.useRef(null);
+  const reportTitle = config.title.toLowerCase().trim().replace(/\s+/g, "_");
+
   useEffect(() => {
     if (!openDropdown) return;
 
@@ -178,6 +180,7 @@ const TableView = ({
                       });
                       return (
                         <tr
+                          id={`${reportTitle}_tr_${row.id}`}
                           key={rowIndex}
                           className={`${style?.tr || "hover:bg-secondary"} 
                             ${rowClickSelection ? "cursor-pointer" : ""} 
@@ -314,6 +317,7 @@ const TableView = ({
 
                             return (
                               <td
+                                id={`${reportTitle}_tr_${row.id}_${key}`}
                                 key={key}
                                 className={`${
                                   style?.td ||
