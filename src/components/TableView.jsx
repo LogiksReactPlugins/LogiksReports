@@ -265,7 +265,6 @@ const TableView = ({
                                                 {getIconComponent(button.icon)}
                                               </span>
                                               <span className="truncate text-left w-full">
-                                                title=
                                                 {resolveTitle(
                                                   button.label,
                                                   row
