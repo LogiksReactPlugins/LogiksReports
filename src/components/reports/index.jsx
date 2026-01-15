@@ -259,10 +259,28 @@ export default function Reports({
         console.log({ data });
         setData(data?.data || []);
       } else if (config?.source?.type === "sql") {
+        if (!config?.source?.queryid) {
+          const payload = {
+            query: { ...config.source, limit: config?.rowsPerPage },
+            dbkey: config.source.dbkey,
+            filter: config.source?.filter || {},
+          };
+          const axiosObject = {
+            method: "POST",
+            url: config.endPoints.saveQuery,
+            headers: config?.endPoints?.headers,
+            data: payload,
+          };
+          const { data } = await axios(axiosObject);
+          console.log({ data });
+          config.source.queryid = data?.queryid;
+          config.source.url = config.endPoints.runQuery;
+        }
+
         const axiosObject = {
           method: config?.source?.method || "post",
           url: config?.source?.url,
-          headers: config?.source?.headers,
+          headers: config?.source?.headers || config?.endPoints?.headers,
           data: {
             queryid: config?.source?.queryid,
             filter: config?.source?.filter || {},
@@ -272,6 +290,9 @@ export default function Reports({
 
         const responsePath = config?.source?.response || "data";
         // console.log({config?.source.response})
+        if (data?.page) {
+          setCurrentPage(data?.page || 1);
+        }
         console.log({ data });
         console.log({ responsePath });
         // setData(data?.data || []);
