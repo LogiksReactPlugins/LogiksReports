@@ -274,7 +274,7 @@ export default function Reports({
           const { data } = await axios(axiosObject);
           console.log({ data });
           config.source.queryid = data?.queryid;
-          config.source.url = config.endPoints.runQuery;
+          config.source.url = `${config?.baseURL}/${config.endPoints.runQuery}`;
         }
 
         const axiosObject = {
