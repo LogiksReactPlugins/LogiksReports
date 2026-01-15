@@ -694,7 +694,7 @@ const Iee = [
     fixFirstTwoColumns: M,
     fixLastColumn: N,
     compactMode: k
-  } = r, [Q, G] = gr(null), q = bn.useRef(null), j = r.title.toLowerCase().trim().replace(/\s+/g, "_");
+  } = r, [Q, G] = gr(null), q = bn.useRef(null), j = r?.title?.toLowerCase().trim().replace(/\s+/g, "_");
   Or(() => {
     if (!u) return;
     const ne = (ee) => {
@@ -36671,7 +36671,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Nr.canvg ? Promise.resolve(Nr.canvg) : import("./index.es-DKhuluXC.js")).catch(function(f) {
+  return (Nr.canvg ? Promise.resolve(Nr.canvg) : import("./index.es-83n5Q5Um.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;

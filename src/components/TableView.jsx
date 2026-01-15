@@ -39,7 +39,7 @@ const TableView = ({
   } = config;
   const [copiedCell, setCopiedCell] = useState(null);
   const dropdownRef = React.useRef(null);
-  const reportTitle = config.title.toLowerCase().trim().replace(/\s+/g, "_");
+  const reportTitle = config?.title?.toLowerCase().trim().replace(/\s+/g, "_");
 
   useEffect(() => {
     if (!openDropdown) return;
