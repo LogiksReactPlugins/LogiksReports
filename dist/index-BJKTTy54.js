@@ -860,13 +860,10 @@ const Iee = [
                                         ),
                                         children: [
                                           /* @__PURE__ */ K.jsx("span", { className: "flex-shrink-0", children: w(re.icon) }),
-                                          /* @__PURE__ */ K.jsxs("span", { className: "truncate text-left w-full", children: [
-                                            "title=",
-                                            te(
-                                              re.label,
-                                              ee
-                                            )
-                                          ] })
+                                          /* @__PURE__ */ K.jsx("span", { className: "truncate text-left w-full", children: te(
+                                            re.label,
+                                            ee
+                                          ) })
                                         ]
                                       },
                                       W
@@ -36674,7 +36671,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Nr.canvg ? Promise.resolve(Nr.canvg) : import("./index.es-r0mhbt2W.js")).catch(function(f) {
+  return (Nr.canvg ? Promise.resolve(Nr.canvg) : import("./index.es-DKhuluXC.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
