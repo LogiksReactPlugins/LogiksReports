@@ -13,9 +13,9 @@ export const report = {
     type: "php",
     file: "plugins/modules/test/test.php",
   },
-  actions: {
-    addRecord: {
-      label: "{userid}",
+  buttons: {
+    "form@demo": {
+      label: "a {userid}",
       icon: "fa fa-plus",
     },
   },

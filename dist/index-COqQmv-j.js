@@ -36674,7 +36674,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Nr.canvg ? Promise.resolve(Nr.canvg) : import("./index.es--pMwoakk.js")).catch(function(f) {
+  return (Nr.canvg ? Promise.resolve(Nr.canvg) : import("./index.es-CRAZBIwD.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
@@ -93962,7 +93962,7 @@ function L6e({
     /* @__PURE__ */ K.jsx(yN, { className: "w-3 h-3 text-gray-400" }),
     /* @__PURE__ */ K.jsx(mN, { className: "w-3 h-3 text-gray-400 -mt-1" })
   ] }) : null, Wr = (J) => J ? /* @__PURE__ */ K.jsx("i", { className: `${J}` }) : null, ln = (J, Ae, ue) => {
-    console.log("Button clicked:", J, Ae, ue), t[J] ? t[J](ue) : i(J, ue);
+    console.log("Button clicked:", J, Ae, ue), t[J] ? t[J](ue) : i({ buttonKey: Ae }, ue);
   }, yn = (J) => {
     T(I === J ? null : J);
   }, Wt = Object.entries(tn).filter(([J, Ae]) => Ae.groupable && !Ae.hidden).map(([J, Ae]) => ({ key: J, label: Ae.label })), Zr = o.showExtraColumn, Ai = Object.entries(tn).filter(
