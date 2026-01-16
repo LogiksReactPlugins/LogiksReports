@@ -415,7 +415,7 @@ export default function Reports({
                 : {
                     filter: {},
                   }),
-
+              group_by: groupBy,
               limit: config?.rowsPerPage,
               page: currentPage,
             },

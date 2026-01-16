@@ -28,7 +28,20 @@ export default function formatCellValue(
         </span>
       );
     }
+    case "month": {
+      const month = Number(value);
+      const invalid = !Number.isInteger(month) || month < 1 || month > 12;
 
+      return (
+        <span title={String(value)}>
+          {invalid
+            ? "Invalid Month"
+            : new Date(2000, month - 1).toLocaleString(undefined, {
+                month: "long",
+              })}
+        </span>
+      );
+    }
     case "time": {
       const d = new Date(value);
       const invalid = isNaN(d.getTime());
