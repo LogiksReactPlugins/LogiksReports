@@ -496,7 +496,7 @@ export default function Reports({
   }, [searchTerm, currentPage]);
 
   const rowsPerPage = config?.rowsPerPage || 5;
-  const startIndex = (currentPage - 1) * rowsPerPage;
+  const startIndex = currentPage * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
 
   useEffect(() => {
@@ -952,14 +952,14 @@ export default function Reports({
                   onClick={() =>
                     setCurrentPage((prev) => Math.max(prev - 1, 1))
                   }
-                  disabled={currentPage === 1}
+                  disabled={currentPage === 0}
                   className="inline-flex cursor-pointer items-center px-1 py-0.5 text-sm font-medium text-action  rounded-md   disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <ChevronLeft className="w-4 h-4" />
                   <span className="hidden sm:inline">Previous</span>
                 </button>
                 <span className="text-sm text-gray-700 ">
-                  {currentPage} of {totalPages}
+                  {currentPage + 1} of {totalPages}
                 </span>
                 <button
                   onClick={() =>

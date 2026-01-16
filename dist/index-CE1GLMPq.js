@@ -36874,7 +36874,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Dr.canvg ? Promise.resolve(Dr.canvg) : import("./index.es-Di3b7kOj.js")).catch(function(f) {
+  return (Dr.canvg ? Promise.resolve(Dr.canvg) : import("./index.es-ScSqxJMO.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
@@ -94199,7 +94199,7 @@ function I6e({
   Fr(() => {
     Ae(Lt);
   }, [A, g]);
-  const dn = o?.rowsPerPage || 5, Nr = (g - 1) * dn, _r = Nr + dn;
+  const dn = o?.rowsPerPage || 5, Nr = g * dn, _r = Nr + dn;
   Fr(() => {
     Ye(Math.ceil(pe / (o?.rowsPerPage || 5)));
   }, [pe]);
@@ -94504,7 +94504,7 @@ function I6e({
               "button",
               {
                 onClick: () => m((oe) => Math.max(oe - 1, 1)),
-                disabled: g === 1,
+                disabled: g === 0,
                 className: "inline-flex cursor-pointer items-center px-1 py-0.5 text-sm font-medium text-action  rounded-md   disabled:opacity-50 disabled:cursor-not-allowed",
                 children: [
                   /* @__PURE__ */ W.jsx(sV, { className: "w-4 h-4" }),
@@ -94513,7 +94513,7 @@ function I6e({
               }
             ),
             /* @__PURE__ */ W.jsxs("span", { className: "text-sm text-gray-700 ", children: [
-              g,
+              g + 1,
               " of ",
               Ee
             ] }),
