@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useMemo, useRef } from "react";
+import React, {
+  useEffect,
+  useState,
+  useMemo,
+  useRef,
+  useCallback,
+} from "react";
 import {
   Search,
   Printer,
@@ -88,8 +94,12 @@ export default function Reports({
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [debuggerEnable, setDebuggerEnable] = useState(false);
   const [debuggData, setDebuggData] = useState(null);
-  const [totalCount, setTotalCount] = useState(0);
-
+  const [totalData, setTotalData] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [currentData, setCurrentData] = useState([]);
+  useEffect(() => {
+    setCurrentData(data || []);
+  }, [data]);
   useEffect(() => {
     if (!currentView) return;
     updateLocalOverride("template", currentView, reportJSON);
@@ -104,7 +114,7 @@ export default function Reports({
           url: config?.endPoints?.debuggUrl,
           headers: config?.endPoints?.headers,
           data: {
-            ...config.source,
+            ...config?.source,
           },
         };
         const { data } = await axios(axiosObject);
@@ -258,25 +268,34 @@ export default function Reports({
         const { data } = await axios(axiosObject);
         console.log({ data });
         setData(data?.data || []);
+        if (data.page) {
+          setCurrentPage(data.page);
+        }
+        if (data.max) {
+          setTotalData(data.max);
+        }
       } else if (config?.source?.type === "sql") {
         if (!config?.source?.queryid) {
           const payload = {
-            query: { ...config.source, limit: config?.rowsPerPage },
-            dbkey: config.source.dbkey,
-            filter: config.source?.filter || {},
+            query: {
+              table: config?.source?.table,
+              cols: config?.source?.cols,
+              where: config?.source?.where,
+              join: config?.source?.join,
+            },
+            dbkey: config?.source?.dbkey,
           };
           const axiosObject = {
             method: "POST",
-            url: config.endPoints.saveQuery,
+            url: config?.endPoints.saveQuery,
             headers: config?.endPoints?.headers,
             data: payload,
           };
           const { data } = await axios(axiosObject);
           console.log({ data });
           config.source.queryid = data?.queryid;
-          config.source.url = `${config?.endPoints?.baseURL}${config.endPoints.runQuery}`;
+          config.source.url = `${config?.endPoints?.baseURL}${config?.endPoints.runQuery}`;
         }
-
         const axiosObject = {
           method: config?.source?.method || "post",
           url: config?.source?.url,
@@ -289,9 +308,12 @@ export default function Reports({
         const { data } = await axios(axiosObject);
 
         const responsePath = config?.source?.response || "data";
-        // console.log({config?.source.response})
+        // console.log({config?.source?.response})
         if (data?.page) {
           setCurrentPage(data?.page || 1);
+        }
+        if (data.max) {
+          setTotalData(data.max);
         }
         console.log({ data });
         console.log({ responsePath });
@@ -325,28 +347,101 @@ export default function Reports({
     handleReset();
   }, [config]);
 
-  useEffect(() => {});
-  const filteredAndSortedData = useMemo(() => {
+  const buildSearchFilter = (datagrid, searchString) => {
+    if (!searchString?.trim()) return {};
+
+    return Object.fromEntries(
+      Object.entries(datagrid)
+        .filter(([, col]) => col?.searchable === true)
+        .map(([key]) => [key, [searchString, "LIKE"]])
+    );
+  };
+
+  const filteredAndSortedData = useCallback(() => {
     if (!data) return [];
 
     let filtered = data;
+    // const searchFilter = buildSearchFilter(config?.datagrid, searchTerm);
 
     if (searchTerm) {
       if (config?.source?.type === "sql") {
-        const axiosObject = {
-          method: config?.source?.method || "post",
-          url: config?.source?.url,
-          headers: config?.source?.headers,
-          data: {
-            queryid: config?.source?.queryid,
-            filter: {},
-          },
-        };
-        console.log({ axiosObject });
-        // const { data } = await axios(axiosObject);
+        const conditions = searchTerm
+          .split(",")
+          .map((cond) => {
+            const [rawKey, rawValue] = cond.split(":").map((s) => s.trim());
+            if (!rawKey || !rawValue) return null;
 
+            let key = rawKey.toLowerCase();
+            let colConfig = config?.datagrid[key];
+
+            if (!colConfig) {
+              const match = Object.entries(config?.datagrid).find(
+                ([, col]) => col.label?.toLowerCase() === key
+              );
+              if (match) key = match[0];
+              colConfig = config?.datagrid[key];
+            }
+
+            if (!colConfig?.searchable) return null;
+
+            return [key, [rawValue, "LIKE"]];
+          })
+          .filter(Boolean);
+        const searchFilter = Object.fromEntries(conditions);
+        if (conditions?.length > 0) {
+          (async () => {
+            if (!config?.source?.queryid) {
+              const payload = {
+                query: { ...config?.source, limit: config?.rowsPerPage },
+                dbkey: config?.source?.dbkey,
+                filter: {
+                  ...(config?.source?.filter || {}),
+                },
+              };
+              const axiosObjectForSaveQuery = {
+                method: "POST",
+                url: config?.endPoints.saveQuery,
+                headers: config?.endPoints?.headers,
+                data: payload,
+              };
+              const { data: saveQuerydata } = await axios(
+                axiosObjectForSaveQuery
+              );
+              console.log({ saveQuerydata });
+              config.source.queryid = saveQuerydata?.queryid;
+            }
+            const axiosObject = {
+              method: config?.source?.method || "post",
+              url: config?.source?.url || config?.endPoints.runQuery,
+              headers: config?.source?.headers || config?.endPoints?.headers,
+              data: {
+                queryid: config?.source?.queryid,
+                filter: {
+                  ...searchFilter,
+                },
+              },
+            };
+            console.log({ axiosObject });
+            const { data } = await axios(axiosObject);
+            const responsePath = config?.source?.response || "data";
+            // console.log({config?.source?.response})
+
+            console.log({ data });
+            console.log({ responsePath });
+            // setData(data?.data || []);
+            const result = getValueByPath(data, responsePath);
+            console.log({ result });
+            setData(result || []);
+            if (data?.page) {
+              setCurrentPage(data?.page || 1);
+            }
+            if (data.max) {
+              setTotalData(data.max);
+            }
+          })();
+        }
         // const responsePath = config?.source?.response || "data";
-        // // console.log({config?.source.response})
+        // // console.log({config?.source?.response})
         // console.log({ data });
         // console.log({ responsePath });
         // // setData(data?.data || []);
@@ -361,9 +456,9 @@ export default function Reports({
       //       .split(":")
       //       .map((s) => s.trim().toLowerCase());
       //     let key = rawKey;
-      //     let colConfig = config.datagrid[key];
+      //     let colConfig = config?.datagrid[key];
       //     if (!colConfig) {
-      //       const match = Object.entries(config.datagrid).find(
+      //       const match = Object.entries(config?.datagrid).find(
       //         ([colKey, col]) => col.label.toLowerCase() === rawKey
       //       );
       //       if (match) key = match[0];
@@ -373,15 +468,15 @@ export default function Reports({
       //   console.log({ conditions });
       //   filtered = filtered.filter((row) => {
       //     return conditions.every(({ key, value }) => {
-      //       const colConfig = config.datagrid[key];
-      //       if (!colConfig || !colConfig.searchable) return false;
+      //       const colConfig = config?.datagrid[key];
+      //       if (!colConfig || !colConfig?.searchable) return false;
       //       const cellVal = String(row[key] || "").toLowerCase();
       //       return cellVal.includes(value);
       //     });
       //   });
       // } else {
       //   filtered = filtered.filter((row) => {
-      //     return Object.entries(config.datagrid).some(([key, col]) => {
+      //     return Object.entries(config?.datagrid).some(([key, col]) => {
       //       if (!col.searchable) return false;
       //       const value = String(row[key] || "").toLowerCase();
       //       return value.includes(searchTerm.toLowerCase());
@@ -390,13 +485,13 @@ export default function Reports({
       // }
     }
 
-    if (sortConfig.key) {
+    if (sortConfig?.key) {
       filtered = [...filtered].sort((a, b) => {
-        const aVal = a[sortConfig.key];
-        const bVal = b[sortConfig.key];
+        const aVal = a[sortConfig?.key];
+        const bVal = b[sortConfig?.key];
 
-        if (aVal < bVal) return sortConfig.direction === "asc" ? -1 : 1;
-        if (aVal > bVal) return sortConfig.direction === "asc" ? 1 : -1;
+        if (aVal < bVal) return sortConfig?.direction === "asc" ? -1 : 1;
+        if (aVal > bVal) return sortConfig?.direction === "asc" ? 1 : -1;
         return 0;
       });
     }
@@ -405,11 +500,16 @@ export default function Reports({
     return filtered;
   }, [config, searchTerm, sortConfig, data]);
 
+  useEffect(() => {
+    setCurrentData(filteredAndSortedData);
+  }, [searchTerm]);
   const rowsPerPage = config?.rowsPerPage || 5;
-  const totalPages = Math.ceil(filteredAndSortedData.length / rowsPerPage);
   const startIndex = (currentPage - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
-  const currentData = filteredAndSortedData.slice(startIndex, endIndex);
+
+  useEffect(() => {
+    setTotalPages(Math.ceil(totalData / (config?.rowsPerPage || 5)));
+  }, [totalData]);
 
   const paginatedGroupedData = useMemo(() => {
     if (!groupBy) return { ungrouped: currentData };
@@ -500,8 +600,8 @@ export default function Reports({
   const renderSortIcon = (key) => {
     if (!datagrid[key].sortable) return null;
 
-    if (sortConfig.key === key) {
-      return sortConfig.direction === "asc" ? (
+    if (sortConfig?.key === key) {
+      return sortConfig?.direction === "asc" ? (
         <ChevronUp className="w-4 h-4" />
       ) : (
         <ChevronDown className="w-4 h-4" />
@@ -530,7 +630,7 @@ export default function Reports({
     if (methods[buttonKey]) {
       methods[buttonKey](data);
     } else {
-      onButtonClick({ [buttonKey]: button }, data);
+      onButtonClick(buttonKey, data);
     }
   };
 
@@ -542,7 +642,7 @@ export default function Reports({
     .filter(([key, col]) => col.groupable && !col.hidden)
     .map(([key, col]) => ({ key, label: col.label }));
 
-  const showExtraColumn = config.showExtraColumn;
+  const showExtraColumn = config?.showExtraColumn;
   const visibleColumns = Object.entries(datagrid).filter(
     ([key, col]) => !col.hidden
   );
@@ -591,12 +691,7 @@ export default function Reports({
                 `text-xl font-semibold text-gray-900 flex-shrink-0`
               }
             >
-              {title}{" "}
-              {title && (
-                <span className="text-sm">
-                  ({filteredAndSortedData.length})
-                </span>
-              )}{" "}
+              {title} {title && <span className="text-sm">({totalData})</span>}{" "}
             </h1>
             <div className="flex">
               {actions &&
@@ -832,14 +927,11 @@ export default function Reports({
           <div className="px-2 md:px-6 py-1 sticky z-30 top-0 bg-white  border-y border-gray-200">
             <div className="flex flex-row items-center justify-between gap-3">
               <div className="hidden md:block text-sm text-gray-500">
-                Showing {startIndex + 1} to{" "}
-                {Math.min(endIndex, filteredAndSortedData.length)} of{" "}
-                {filteredAndSortedData.length} records
+                Showing {startIndex + 1} to {Math.min(endIndex, totalData)} of{" "}
+                {totalData} records
               </div>
               <div className="block md:hidden text-sm text-gray-500">
-                {startIndex + 1}–
-                {Math.min(endIndex, filteredAndSortedData.length)} /{" "}
-                {filteredAndSortedData.length}
+                {startIndex + 1}–{Math.min(endIndex, totalData)} / {totalData}
               </div>
               <div className="flex items-center justify-center sm:justify-end md:gap-2">
                 <button
