@@ -36874,7 +36874,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Dr.canvg ? Promise.resolve(Dr.canvg) : import("./index.es-DQsY7Opb.js")).catch(function(f) {
+  return (Dr.canvg ? Promise.resolve(Dr.canvg) : import("./index.es-Di3b7kOj.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
@@ -94012,7 +94012,7 @@ function I6e({
   onButtonClick: i,
   components: a
 }) {
-  const [o, s] = ur(null), [l, u] = ur(), [A, c] = ur(""), [f, h] = ur({ key: null, direction: "asc" }), [d, v] = ur(null), [g, m] = ur(1), [y, _] = ur(/* @__PURE__ */ new Set()), [x, b] = ur(!1), [C, S] = ur(!1), [D, T] = ur(null), [N, I] = ur(!1), M = ln(null), [P, k] = ur(null), [Q, j] = ur([]), [q, z] = ur(!1), [ee, re] = ur(null), [J, O] = ur(!1), H = ln(null), [G, K] = ur(!1), [te, ce] = ur(!1), [de, ve] = ur(null), [pe, Ce] = ur(0), [Ee, Ye] = ur(0), [ze, Ae] = ur([]), [Ke, Ze] = ur("");
+  const [o, s] = ur(null), [l, u] = ur(), [A, c] = ur(""), [f, h] = ur({ key: null, direction: "asc" }), [d, v] = ur(null), [g, m] = ur(0), [y, _] = ur(/* @__PURE__ */ new Set()), [x, b] = ur(!1), [C, S] = ur(!1), [D, T] = ur(null), [N, I] = ur(!1), M = ln(null), [P, k] = ur(null), [Q, j] = ur([]), [q, z] = ur(!1), [ee, re] = ur(null), [J, O] = ur(!1), H = ln(null), [G, K] = ur(!1), [te, ce] = ur(!1), [de, ve] = ur(null), [pe, Ce] = ur(0), [Ee, Ye] = ur(0), [ze, Ae] = ur([]), [Ke, Ze] = ur("");
   Fr(() => {
     Ae(Q || []);
   }, [Q]), Fr(() => {
@@ -94148,7 +94148,7 @@ function I6e({
       O(!1);
     }
   }, hr = () => {
-    c(""), h({ key: null, direction: "asc" }), v(null), m(1), _(/* @__PURE__ */ new Set()), b(!1), Qt(), Ze();
+    c(""), h({ key: null, direction: "asc" }), v(null), m(0), _(/* @__PURE__ */ new Set()), b(!1), Qt(), Ze();
   };
   Fr(() => {
     hr();
@@ -94193,7 +94193,7 @@ function I6e({
       const { data: Pe } = await ni(Se), Fe = o?.source?.response || "data";
       console.log({ data: Pe }), console.log({ responsePath: Fe });
       const Oe = or(Pe, Fe);
-      console.log({ result: Oe }), j(Oe || []), Pe?.page && m(Pe?.page || 1), Pe.max && Ce(Pe.max);
+      console.log({ result: Oe }), j(Oe || []), Pe?.page && m(Pe?.page || 0), Pe.max && Ce(Pe.max);
     })(), console.log({ filtered: oe }), oe;
   }, [o, A, f, Q, g]);
   Fr(() => {
@@ -94221,9 +94221,9 @@ function I6e({
     sr[oe].sortable && (h((Pe) => ({
       key: oe,
       direction: Pe.key === oe && Pe.direction === "asc" ? "desc" : "asc"
-    })), m(1));
+    })), m(0));
   }, Si = (oe) => {
-    c(oe), m(1);
+    c(oe), m(0);
   }, rn = () => {
     if (x)
       _(/* @__PURE__ */ new Set());

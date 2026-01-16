@@ -86,7 +86,7 @@ export default function Reports({
   const [searchTerm, setSearchTerm] = useState("");
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [groupBy, setGroupBy] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
   const [selectedRows, setSelectedRows] = useState(new Set());
   const [selectAll, setSelectAll] = useState(false);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
@@ -350,7 +350,7 @@ export default function Reports({
     setSearchTerm("");
     setSortConfig({ key: null, direction: "asc" });
     setGroupBy(null);
-    setCurrentPage(1);
+    setCurrentPage(0);
     setSelectedRows(new Set());
     setSelectAll(false);
     fetchAPI();
@@ -433,7 +433,7 @@ export default function Reports({
           console.log({ result });
           setData(result || []);
           if (data?.page) {
-            setCurrentPage(data?.page || 1);
+            setCurrentPage(data?.page || 0);
           }
           if (data.max) {
             setTotalData(data.max);
@@ -545,12 +545,12 @@ export default function Reports({
       key,
       direction: prev.key === key && prev.direction === "asc" ? "desc" : "asc",
     }));
-    setCurrentPage(1);
+    setCurrentPage(0);
   };
 
   const handleSearch = (term) => {
     setSearchTerm(term);
-    setCurrentPage(1);
+    setCurrentPage(0);
   };
 
   const handleSelectAll = () => {
