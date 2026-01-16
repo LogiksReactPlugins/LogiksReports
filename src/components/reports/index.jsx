@@ -354,6 +354,7 @@ export default function Reports({
     setSelectedRows(new Set());
     setSelectAll(false);
     fetchAPI();
+    setSearchColumn();
   };
 
   useEffect(() => {
@@ -415,7 +416,7 @@ export default function Reports({
                 : {
                     filter: {},
                   }),
-              group_by: groupBy,
+              ...(groupBy && { group_by: groupBy }),
               limit: config?.rowsPerPage,
               page: currentPage,
             },
