@@ -1,13 +1,13 @@
 export const report = {
   endPoints: {
     saveQuery: "http://192.168.0.20:9999/api/query/save",
-    runQuery: "http://192.168.0.20:9999/api/query/run",
+    runQuery: "/api/query/run",
     baseURL: "http://192.168.0.20:9999",
     debuggUrl: `http://192.168.0.20:9999/api/query/raw`,
     accessToken:
-      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwiYXBwSWQiOiJkZW1vIiwiaWQiOjEsInVzZXJJZCI6ImFkbWluIiwidXNlcm5hbWUiOiJBZG1pbiIsInRlbmFudElkIjoiU0lMSyIsImd1aWQiOiJTSUxLIiwicm9sZXMiOlsiR2VuZXJhbCIsIlNJTEsiXSwic2NvcGVzIjpbXSwiaXAiOiIxOTIuMTY4LjAuNjYiLCJkZXZpY2VUeXBlIjoid2ViIiwiaWF0IjoxNzY4MzY0MzkzLCJleHAiOjE3NjgzNjc5OTMsImp0aSI6ImFjYzoxOjE3NjgzNjQzOTM2MDI6d2ViIn0.Gjqis13HnbXz9MCRzCCL4leiI-Hdrg1HlvC348u4bnU",
+      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwiYXBwSWQiOiJkZW1vIiwiaWQiOjEsInVzZXJJZCI6ImFkbWluIiwidXNlcm5hbWUiOiJBZG1pbiIsInRlbmFudElkIjoiU0lMSyIsImd1aWQiOiJTSUxLIiwicHJpdmlsZWdlIjoicm9vdCIsInJvbGVzIjpbIkdlbmVyYWwiLCJTSUxLIl0sInNjb3BlcyI6W10sImlwIjoiMTkyLjE2OC4wLjY2IiwiZGV2aWNlVHlwZSI6IndlYiIsImlhdCI6MTc2ODU0Mzg0NCwiZXhwIjoxNzY4NTQ3NDQ0LCJqdGkiOiJhY2M6MToxNzY4NTQzODQ0OTUwOndlYiJ9.mhEzqhgchDZe2WvEQFsVlui6JaJQM9Y6IF0QoNtkPEQ",
     headers: {
-      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwiYXBwSWQiOiJkZW1vIiwiaWQiOjEsInVzZXJJZCI6ImFkbWluIiwidXNlcm5hbWUiOiJBZG1pbiIsInRlbmFudElkIjoiU0lMSyIsImd1aWQiOiJTSUxLIiwicm9sZXMiOlsiR2VuZXJhbCIsIlNJTEsiXSwic2NvcGVzIjpbXSwiaXAiOiIxOTIuMTY4LjAuNjYiLCJkZXZpY2VUeXBlIjoid2ViIiwiaWF0IjoxNzY4MzY0MzkzLCJleHAiOjE3NjgzNjc5OTMsImp0aSI6ImFjYzoxOjE3NjgzNjQzOTM2MDI6d2ViIn0.Gjqis13HnbXz9MCRzCCL4leiI-Hdrg1HlvC348u4bnU`,
+      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwiYXBwSWQiOiJkZW1vIiwiaWQiOjEsInVzZXJJZCI6ImFkbWluIiwidXNlcm5hbWUiOiJBZG1pbiIsInRlbmFudElkIjoiU0lMSyIsImd1aWQiOiJTSUxLIiwicHJpdmlsZWdlIjoicm9vdCIsInJvbGVzIjpbIkdlbmVyYWwiLCJTSUxLIl0sInNjb3BlcyI6W10sImlwIjoiMTkyLjE2OC4wLjY2IiwiZGV2aWNlVHlwZSI6IndlYiIsImlhdCI6MTc2ODU0Mzg0NCwiZXhwIjoxNzY4NTQ3NDQ0LCJqdGkiOiJhY2M6MToxNzY4NTQzODQ0OTUwOndlYiJ9.mhEzqhgchDZe2WvEQFsVlui6JaJQM9Y6IF0QoNtkPEQ`,
       "Content-Type": "application/json",
     },
   },
@@ -211,6 +211,7 @@ export const report = {
       sortable: true,
       searchable: true,
       hidden: false,
+      group: "a",
     },
     lead_date: {
       label: "Date",
@@ -221,6 +222,7 @@ export const report = {
       filter: {
         type: "date",
       },
+      group: "a",
     },
     "lead_followup.follow_up_date": {
       label: "Follow Up Date",
@@ -231,6 +233,7 @@ export const report = {
       filter: {
         type: "date",
       },
+      group: "c",
     },
     "lead_followup.follow_up_time": {
       label: "Follow Up Time",
@@ -240,6 +243,7 @@ export const report = {
       filter: {
         type: "time",
       },
+      group: "a",
     },
     followup_remark: {
       label: "Follow Remark",
@@ -250,6 +254,7 @@ export const report = {
       filter: {
         type: "text",
       },
+      group: "c",
     },
     "lead_actions.date": {
       label: "Action Date",

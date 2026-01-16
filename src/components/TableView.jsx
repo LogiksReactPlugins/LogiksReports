@@ -61,7 +61,23 @@ const TableView = ({
     }
     return title;
   };
+  const buildGroupedHeaders = () => {
+    const groups = [];
+    let current = null;
 
+    visibleColumns.forEach(([key, col]) => {
+      const group = col.group || null;
+
+      if (!current || current.label !== group) {
+        current = { label: group, span: 1 };
+        groups.push(current);
+      } else {
+        current.span += 1;
+      }
+    });
+
+    return groups;
+  };
   return (
     <div className="overflow-hidden">
       <div className="overflow-x-auto">
@@ -78,7 +94,7 @@ const TableView = ({
 
             <div className="overflow-x-auto overflow-y-auto max-h-screen thin-scrollbar">
               <table
-                className="min-w-full divide-y divide-gray-200 border border-gray-200 bordr-t"
+                className="min-w-full divide-y divide-gray-200 border border-gray-200 "
                 id="printable"
               >
                 <thead
@@ -86,32 +102,42 @@ const TableView = ({
                     style?.thead || "bg-muted text-action"
                   } sticky top-0 bg-white z-30`}
                 >
+                  {visibleColumns.some(([, col]) => col.group) && (
+                    <tr>
+                      {hasButtons && <th />}
+                      {showExtraColumn === "checkbox" && <th />}
+
+                      {buildGroupedHeaders().map((group, idx) => (
+                        <th
+                          key={idx}
+                          colSpan={group.span}
+                          className="px-2 py-1 text-xs font-semibold text-center group-th border-b"
+                        >
+                          {group.label || ""}
+                        </th>
+                      ))}
+                    </tr>
+                  )}
                   <tr>
                     {hasButtons && (
                       <th
                         className={
-                          style?.th ||
-                          "px-2  py-2 text-left text-xs font-bold uppercase tracking-wider w-32"
+                          style?.th || "px-2 py-2 text-xs font-bold uppercase"
                         }
                       >
                         Actions
                       </th>
                     )}
                     {showExtraColumn === "checkbox" && (
-                      <th
-                        className={
-                          style?.th ||
-                          "px-2  py-2 text-left text-xs font-bold uppercase tracking-wider"
-                        }
-                      >
+                      <th className={style?.th || "px-2 py-2"}>
                         <input
                           type="checkbox"
                           checked={selectAll}
                           onChange={handleSelectAll}
-                          className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                         />
                       </th>
                     )}
+
                     {visibleColumns.map(([key, col], colIndex) => {
                       const fixedClass =
                         (fixFirstTwoColumns && colIndex < 2) ||
@@ -126,13 +152,10 @@ const TableView = ({
                         <th
                           key={key}
                           className={`${
-                            style?.th ||
-                            "px-2  py-2 text-left text-xs font-bold uppercase tracking-wider"
-                          } ${
-                            col.sortable
-                              ? "cursor-pointer hover:bg-gray-100"
-                              : ""
-                          } ${fixedClass} ${col?.classes}`}
+                            style?.th || "px-2 py-2 text-xs font-bold uppercase"
+                          } 
+          ${col.sortable ? "cursor-pointer hover:bg-gray-100" : ""} 
+          ${fixedClass} ${col?.classes}`}
                           style={col.style ? parseStyle(col.style) : {}}
                           onClick={() => col.sortable && handleSort(key)}
                         >
@@ -145,6 +168,7 @@ const TableView = ({
                     })}
                   </tr>
                 </thead>
+
                 <tbody
                   className={
                     style?.tbody || "bg-white divide-y divide-gray-200"

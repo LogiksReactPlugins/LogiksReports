@@ -97,6 +97,7 @@ export default function Reports({
   const [totalData, setTotalData] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [currentData, setCurrentData] = useState([]);
+  const [searchColumn, setSearchColumn] = useState("");
   useEffect(() => {
     setCurrentData(data || []);
   }, [data]);
@@ -298,11 +299,13 @@ export default function Reports({
         }
         const axiosObject = {
           method: config?.source?.method || "post",
-          url: config?.source?.url,
+          url: config?.source?.url || config?.endPoints.runQuery,
           headers: config?.source?.headers || config?.endPoints?.headers,
           data: {
             queryid: config?.source?.queryid,
             filter: config?.source?.filter || {},
+            limit: config.rowsPerPage,
+            page: currentPage,
           },
         };
         const { data } = await axios(axiosObject);
@@ -362,92 +365,63 @@ export default function Reports({
 
     let filtered = data;
     // const searchFilter = buildSearchFilter(config?.datagrid, searchTerm);
-
-    if (searchTerm) {
+    if (searchTerm || currentPage) {
       if (config?.source?.type === "sql") {
-        const conditions = searchTerm
-          .split(",")
-          .map((cond) => {
-            const [rawKey, rawValue] = cond.split(":").map((s) => s.trim());
-            if (!rawKey || !rawValue) return null;
+        (async () => {
+          if (!config?.source?.queryid) {
+            const { table, cols, join, where } = config.source;
 
-            let key = rawKey.toLowerCase();
-            let colConfig = config?.datagrid[key];
-
-            if (!colConfig) {
-              const match = Object.entries(config?.datagrid).find(
-                ([, col]) => col.label?.toLowerCase() === key
-              );
-              if (match) key = match[0];
-              colConfig = config?.datagrid[key];
-            }
-
-            if (!colConfig?.searchable) return null;
-
-            return [key, [rawValue, "LIKE"]];
-          })
-          .filter(Boolean);
-        const searchFilter = Object.fromEntries(conditions);
-        if (conditions?.length > 0) {
-          (async () => {
-            if (!config?.source?.queryid) {
-              const payload = {
-                query: { ...config?.source, limit: config?.rowsPerPage },
-                dbkey: config?.source?.dbkey,
-                filter: {
-                  ...(config?.source?.filter || {}),
-                },
-              };
-              const axiosObjectForSaveQuery = {
-                method: "POST",
-                url: config?.endPoints.saveQuery,
-                headers: config?.endPoints?.headers,
-                data: payload,
-              };
-              const { data: saveQuerydata } = await axios(
-                axiosObjectForSaveQuery
-              );
-              console.log({ saveQuerydata });
-              config.source.queryid = saveQuerydata?.queryid;
-            }
-            const axiosObject = {
-              method: config?.source?.method || "post",
-              url: config?.source?.url || config?.endPoints.runQuery,
-              headers: config?.source?.headers || config?.endPoints?.headers,
-              data: {
-                queryid: config?.source?.queryid,
-                filter: {
-                  ...searchFilter,
-                },
-              },
+            const payload = {
+              query: { table, cols, join, where },
+              dbkey: config?.source?.dbkey,
             };
-            console.log({ axiosObject });
-            const { data } = await axios(axiosObject);
-            const responsePath = config?.source?.response || "data";
-            // console.log({config?.source?.response})
+            const axiosObjectForSaveQuery = {
+              method: "POST",
+              url: config?.endPoints.saveQuery,
+              headers: config?.endPoints?.headers,
+              data: payload,
+            };
+            const { data: saveQuerydata } = await axios(
+              axiosObjectForSaveQuery
+            );
+            console.log({ saveQuerydata });
+            config.source.queryid = saveQuerydata?.queryid;
+          }
 
-            console.log({ data });
-            console.log({ responsePath });
-            // setData(data?.data || []);
-            const result = getValueByPath(data, responsePath);
-            console.log({ result });
-            setData(result || []);
-            if (data?.page) {
-              setCurrentPage(data?.page || 1);
-            }
-            if (data.max) {
-              setTotalData(data.max);
-            }
-          })();
-        }
-        // const responsePath = config?.source?.response || "data";
-        // // console.log({config?.source?.response})
-        // console.log({ data });
-        // console.log({ responsePath });
-        // // setData(data?.data || []);
-        // const result = getValueByPath(data, responsePath);
-        // console.log({ result });
-        // setData(result || []);
+          const axiosObject = {
+            method: config?.source?.method || "post",
+            url: config?.source?.url || config?.endPoints.runQuery,
+            headers: config?.source?.headers || config?.endPoints?.headers,
+            data: {
+              queryid: config?.source?.queryid,
+              ...(searchColumn && {
+                filter: {
+                  [searchColumn]: [searchTerm, "LIKE"],
+                },
+              }),
+
+              limit: config?.rowsPerPage,
+              page: currentPage,
+            },
+          };
+          console.log({ axiosObject });
+          const { data } = await axios(axiosObject);
+          const responsePath = config?.source?.response || "data";
+          // console.log({config?.source?.response})
+
+          console.log({ data });
+          console.log({ responsePath });
+          // setData(data?.data || []);
+          const result = getValueByPath(data, responsePath);
+          console.log({ result });
+          setData(result || []);
+          if (data?.page) {
+            setCurrentPage(data?.page || 1);
+          }
+          if (data.max) {
+            setTotalData(data.max);
+          }
+        })();
       }
       // const advancedSearch = searchTerm.includes(":");
       // if (advancedSearch) {
@@ -485,24 +459,25 @@ export default function Reports({
       // }
     }
 
-    if (sortConfig?.key) {
-      filtered = [...filtered].sort((a, b) => {
-        const aVal = a[sortConfig?.key];
-        const bVal = b[sortConfig?.key];
+    // if (sortConfig?.key) {
+    //   filtered = [...filtered].sort((a, b) => {
+    //     const aVal = a[sortConfig?.key];
+    //     const bVal = b[sortConfig?.key];
 
-        if (aVal < bVal) return sortConfig?.direction === "asc" ? -1 : 1;
-        if (aVal > bVal) return sortConfig?.direction === "asc" ? 1 : -1;
-        return 0;
-      });
-    }
+    //     if (aVal < bVal) return sortConfig?.direction === "asc" ? -1 : 1;
+    //     if (aVal > bVal) return sortConfig?.direction === "asc" ? 1 : -1;
+    //     return 0;
+    //   });
+    // }
 
     console.log({ filtered });
     return filtered;
-  }, [config, searchTerm, sortConfig, data]);
+  }, [config, searchTerm, sortConfig, data, currentPage]);
 
   useEffect(() => {
     setCurrentData(filteredAndSortedData);
-  }, [searchTerm]);
+  }, [searchTerm, currentPage]);
+
   const rowsPerPage = config?.rowsPerPage || 5;
   const startIndex = (currentPage - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
@@ -541,6 +516,9 @@ export default function Reports({
     uiswitcher,
     compactMode,
   } = config;
+  const searchableColumns = Object.entries(datagrid)
+    .filter(([, col]) => col?.searchable === true)
+    .map(([key, col]) => ({ key, ...col }));
 
   const handleSort = (key) => {
     const column = datagrid[key];
@@ -799,15 +777,34 @@ export default function Reports({
               <RotateCcw className="w-4 h-4 mr-1" />
             </button>
             {toolbar?.search !== false && (
-              <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                <input
-                  type="search"
-                  placeholder="Search..."
-                  value={searchTerm}
-                  onChange={(e) => handleSearch(e.target.value)}
-                  className="w-full h-9 pl-9 pr-4 py-1 text-slate-600 border border-gray-300 rounded-md  focus:outline-none focus:ring-1 focus:ring-gray-300 focus:border-transparent"
-                />
+              <div className="flex items-center gap-2 flex-1">
+                {/* SEARCH */}
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <input
+                    type="search"
+                    placeholder="Search..."
+                    value={searchTerm}
+                    onChange={(e) => handleSearch(e.target.value)}
+                    className="w-full h-9 pl-9 pr-4 py-1 text-slate-600 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-gray-300"
+                  />
+                </div>
+
+                {/* SEARCHABLE COLUMNS DROPDOWN */}
+                <select
+                  className="h-9 px-3 text-sm border border-gray-300 rounded-md bg-white text-slate-600 focus:outline-none focus:ring-1 focus:ring-gray-300"
+                  onChange={(e) => setSearchColumn(e.target.value)}
+                  defaultValue=""
+                >
+                  <option value="" disabled>
+                    Search by
+                  </option>
+                  {searchableColumns.map((col) => (
+                    <option key={col.key} value={col.key}>
+                      {col.label}
+                    </option>
+                  ))}
+                </select>
               </div>
             )}
           </div>

@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 
-import { report } from "../data/report/example2";
+import { report } from "../data/report/example4";
 import Reports from "./components/reports";
 import actionHandler from "./actions/actionHandler";
 
