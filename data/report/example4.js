@@ -5,9 +5,9 @@ export const report = {
     baseURL: "http://192.168.0.20:9999",
     debuggUrl: `http://192.168.0.20:9999/api/query/raw`,
     accessToken:
-      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwiYXBwSWQiOiJkZW1vIiwiaWQiOjEsInVzZXJJZCI6ImFkbWluIiwidXNlcm5hbWUiOiJBZG1pbiIsInRlbmFudElkIjoiU0lMSyIsImd1aWQiOiJTSUxLIiwicHJpdmlsZWdlIjoicm9vdCIsInJvbGVzIjpbIkdlbmVyYWwiLCJTSUxLIl0sInNjb3BlcyI6W10sImlwIjoiMTkyLjE2OC4wLjY2IiwiZGV2aWNlVHlwZSI6IndlYiIsImlhdCI6MTc2ODU0Mzg0NCwiZXhwIjoxNzY4NTQ3NDQ0LCJqdGkiOiJhY2M6MToxNzY4NTQzODQ0OTUwOndlYiJ9.mhEzqhgchDZe2WvEQFsVlui6JaJQM9Y6IF0QoNtkPEQ",
+      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwicGF5bG9hZCI6IkJrOUpJbFJ1eFF1WStjY0o3L09qZWdmdmFwSWdVQ29XZDdtQkg4UTZueDd4V2FlVG5va0JVSDVBVTYzZnI4MExqRG5lcGgxdTUydEJqWFJCeG9RYmV2UHdFNmorYkROUEpVTHF5Y1M5SVNRQzdEVy82S3pCR1IvRU1MZ01aWi9EeFZITCtOVmM2VWdTbDdvU2ZMRlpKT0VhQU80NnpyUWUzVEFLamUvOEFpRE91eVFnRXdOYVpBZnc3aFlMTVRVS0lMWlJnTDk2YlV4aEMvWHpWNFhpYktDenlMZzJ4SWNQKytmV2h3bTFva0xwQm04d0VaNGltTnhCdnJIeWJVdGRGcS9aNFZWNDVhYXU2ZlhBMjA2UGVsYm9ZTUdMcEZPVktyZWQ1UT09IiwiaWF0IjoxNzY4NTU2ODkyLCJleHAiOjE3Njg1NjA0OTIsImp0aSI6ImFjYzoxOjE3Njg1NTY4OTI4MzY6d2ViIn0.XwINojM8i1aB6HfAUsbGIxem66AfzKT8Wmno49zvVzg",
     headers: {
-      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwiYXBwSWQiOiJkZW1vIiwiaWQiOjEsInVzZXJJZCI6ImFkbWluIiwidXNlcm5hbWUiOiJBZG1pbiIsInRlbmFudElkIjoiU0lMSyIsImd1aWQiOiJTSUxLIiwicHJpdmlsZWdlIjoicm9vdCIsInJvbGVzIjpbIkdlbmVyYWwiLCJTSUxLIl0sInNjb3BlcyI6W10sImlwIjoiMTkyLjE2OC4wLjY2IiwiZGV2aWNlVHlwZSI6IndlYiIsImlhdCI6MTc2ODU0Mzg0NCwiZXhwIjoxNzY4NTQ3NDQ0LCJqdGkiOiJhY2M6MToxNzY4NTQzODQ0OTUwOndlYiJ9.mhEzqhgchDZe2WvEQFsVlui6JaJQM9Y6IF0QoNtkPEQ`,
+      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwicGF5bG9hZCI6IkJrOUpJbFJ1eFF1WStjY0o3L09qZWdmdmFwSWdVQ29XZDdtQkg4UTZueDd4V2FlVG5va0JVSDVBVTYzZnI4MExqRG5lcGgxdTUydEJqWFJCeG9RYmV2UHdFNmorYkROUEpVTHF5Y1M5SVNRQzdEVy82S3pCR1IvRU1MZ01aWi9EeFZITCtOVmM2VWdTbDdvU2ZMRlpKT0VhQU80NnpyUWUzVEFLamUvOEFpRE91eVFnRXdOYVpBZnc3aFlMTVRVS0lMWlJnTDk2YlV4aEMvWHpWNFhpYktDenlMZzJ4SWNQKytmV2h3bTFva0xwQm04d0VaNGltTnhCdnJIeWJVdGRGcS9aNFZWNDVhYXU2ZlhBMjA2UGVsYm9ZTUdMcEZPVktyZWQ1UT09IiwiaWF0IjoxNzY4NTU2ODkyLCJleHAiOjE3Njg1NjA0OTIsImp0aSI6ImFjYzoxOjE3Njg1NTY4OTI4MzY6d2ViIn0.XwINojM8i1aB6HfAUsbGIxem66AfzKT8Wmno49zvVzg`,
       "Content-Type": "application/json",
     },
   },
@@ -17,9 +17,8 @@ export const report = {
   privilege: "*",
   blocked: false,
   rowlink: false,
-  rowsPerPage: 10,
+  rowsPerPage: 20,
   uiswitcher: true,
-  policy: "leadbook.tab.access",
   custombar: false,
   showExtraColumn: "checkbox",
   DEBUG: false,
@@ -28,20 +27,9 @@ export const report = {
   },
   source: {
     type: "sql",
-    table: "leads_tbl",
-    cols: "leads_tbl.*",
-    where: {
-      "(DATE(leads_tbl.created_on)< CURDATE())": "RAW",
-    },
-    limit: 500,
+    queryid: "w8HCwecSFxoB",
   },
-  script: "lead",
-  actions: {
-    "forms@lead.main": {
-      label: "Add Lead",
-      policy: "leadbook.view.access",
-    },
-  },
+  actions: {},
   rules: {
     row_class: {
       lead_status: {
@@ -50,37 +38,7 @@ export const report = {
     },
   },
   buttons: {
-    "infoview@lead.main_view/{id}": {
-      label: "View My Lead",
-      icon: "fa fa-eye",
-      class: "leads-lead",
-      policy: "leadbook.view.access",
-    },
-    "forms@lead.main/update/{id}": {
-      label: "Edit My Lead",
-      icon: "fa fa-pencil",
-      class: "leads-lead",
-      policy: "leadbook.update.access",
-    },
-    "forms@lead.add_follow_up": {
-      label: "Add FOLLOW UP",
-      icon: "fa fa-plus",
-      policy: "leadbook.create.access",
-    },
-    more: {
-      "forms@lead.add_actions/create/{id}": {
-        label: "Add Actions",
-        icon: "fa fa-code",
-        class: "next-action-btn",
-        policy: "leadbook.create.access",
-      },
-      "forms@lead.add_mom/create/{id}": {
-        label: "Add MOM",
-        icon: "fa fa-plus",
-        class: "next-action-btn",
-        policy: "leadbook.create.access",
-      },
-    },
+    more: {},
   },
   smartfilter: {
     type: "list",
@@ -211,39 +169,35 @@ export const report = {
       sortable: true,
       searchable: true,
       hidden: false,
-      group: "a",
     },
     lead_date: {
       label: "Date",
       hidden: true,
       formatter: "date",
       sortable: true,
-      searchable: false,
+      searchable: true,
       filter: {
         type: "date",
       },
-      group: "a",
     },
-    "lead_followup.follow_up_date": {
+    follow_up_date: {
       label: "Follow Up Date",
       hidden: true,
       formatter: "date",
       sortable: true,
-      searchable: false,
+      searchable: true,
       filter: {
         type: "date",
       },
-      group: "c",
     },
-    "lead_followup.follow_up_time": {
+    follow_up_time: {
       label: "Follow Up Time",
       hidden: true,
       sortable: true,
-      searchable: false,
+      searchable: true,
       filter: {
         type: "time",
       },
-      group: "a",
     },
     followup_remark: {
       label: "Follow Remark",
@@ -254,14 +208,13 @@ export const report = {
       filter: {
         type: "text",
       },
-      group: "c",
     },
     "lead_actions.date": {
       label: "Action Date",
       hidden: true,
       formatter: "date",
       sortable: true,
-      searchable: false,
+      searchable: true,
       filter: {
         type: "date",
       },
@@ -308,12 +261,7 @@ export const report = {
       formatter: "pretty",
       filter: {
         type: "dataSelectorFromUniques",
-        nofilter: "--",
-        table: "do_lists",
-        columns: "title,value",
-        where: {
-          groupid: "lead_priority",
-        },
+        queryid: "R5BMc07T_QnJ",
       },
     },
     lead_status: {
@@ -325,15 +273,7 @@ export const report = {
       groupable: true,
       filter: {
         type: "dataSelectorFromTable",
-        nofilter: "--",
-        table: "leads_tbl",
-        columns:
-          "CONCAT(UPPER(SUBSTRING(lead_status, 1, 1)), LOWER(SUBSTRING(lead_status, 2))) as title, lead_status as value",
-        groupby: "lead_status",
-        where: {
-          "lead_status NOT IN ('dead', 'Converted', 'order', 'bad', 'lost', 'junk', 'closed')":
-            "RAW",
-        },
+        queryid: "g-iRMHV1y9hz",
       },
     },
     lead_type: {
@@ -344,12 +284,7 @@ export const report = {
       formatter: "pretty",
       filter: {
         type: "dataSelectorFromUniques",
-        nofilter: "--",
-        table: "do_lists",
-        columns: "title,value",
-        where: {
-          groupid: "lead_type",
-        },
+        queryid: "fWmThqJb2Bw-",
       },
     },
     net_amount: {
@@ -392,14 +327,14 @@ export const report = {
       label: "Created By",
       hidden: true,
       sortable: true,
-      searchable: false,
+      searchable: true,
     },
     created_on: {
       label: "Created On",
       hidden: true,
       formatter: "date",
       sortable: true,
-      searchable: false,
+      searchable: true,
       filter: {
         type: "date",
       },
@@ -408,12 +343,12 @@ export const report = {
       label: "Updated By",
       hidden: true,
       sortable: true,
-      searchable: false,
+      searchable: true,
     },
     edited_on: {
       label: "Updated On",
       sortable: true,
-      searchable: false,
+      searchable: true,
       formatter: "date",
       filter: {
         type: "date",
@@ -456,4 +391,8 @@ export const report = {
     },
     unilink: "lead.main",
   },
+  script:
+    "ZnVuY3Rpb24gdGVzdChkYXRhKSB7CiAgY29uc29sZS5sb2coeyBkYXRhIH0pOwogIGFsZXJ0KCJ0aGlzIGlzIHRlc3QgZnVuY3Rpb24gZnJvbSBBUEkgc2NyaXB0Iik7Cn0K",
+  module_refid: "lead.main",
+  module_type: "reports",
 };

@@ -2,7 +2,15 @@ import { Copy, MoreVertical } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import ShimmerTableRow from "./loadings/ShimmerTableRow";
 import copyToClipboard from "../helpers/copyToClipboard";
+const getRowValue = (row, key) => {
+  if (key in row) return row[key];
 
+  const lastKey = key.split(".").pop();
+  if (lastKey in row) return row[lastKey];
+  const match = Object.keys(row).find((k) => k.split(".").pop() === lastKey);
+
+  return match ? row[match] : undefined;
+};
 const TableView = ({
   config,
   paginatedGroupedData,
@@ -154,8 +162,10 @@ const TableView = ({
                           className={`${
                             style?.th || "px-2 py-2 text-xs font-bold uppercase"
                           } 
-          ${col.sortable ? "cursor-pointer hover:bg-gray-100" : ""} 
-          ${fixedClass} ${col?.classes}`}
+                        ${
+                          col.sortable ? "cursor-pointer hover:bg-gray-100" : ""
+                        } 
+                        ${fixedClass} ${col?.classes}`}
                           style={col.style ? parseStyle(col.style) : {}}
                           onClick={() => col.sortable && handleSort(key)}
                         >
@@ -197,14 +207,14 @@ const TableView = ({
                       let dynamicRowClass = "";
 
                       Object.entries(rowRules).forEach(([field, valueMap]) => {
-                        const fieldValue = row[field];
+                        const fieldValue = getRowValue(row, field);
                         if (valueMap && fieldValue && valueMap[fieldValue]) {
                           dynamicRowClass += ` ${valueMap[fieldValue]}`;
                         }
                       });
                       return (
                         <tr
-                          id={`${reportTitle}_tr_${row.id}`}
+                          id={`${reportTitle}_tr_${getRowValue(row, "id")}`}
                           key={rowIndex}
                           className={`${style?.tr || "hover:bg-secondary"} 
                             ${rowClickSelection ? "cursor-pointer" : ""} 
@@ -216,7 +226,8 @@ const TableView = ({
                             }
                             ${dynamicRowClass.trim()}`}
                           onClick={() =>
-                            rowClickSelection && handleSelectRow(row.id)
+                            rowClickSelection &&
+                            handleSelectRow(getRowValue(row, "id"))
                           }
                         >
                           {hasButtons && (
@@ -248,9 +259,10 @@ const TableView = ({
                                         e.preventDefault();
                                         e.stopPropagation();
                                         setOpenDropdown(
-                                          openDropdown === row.id
+                                          openDropdown ===
+                                            getRowValue(row, "id")
                                             ? null
-                                            : row.id
+                                            : getRowValue(row, "id")
                                         );
                                       }}
                                       className="inline-flex items-center px-1 py-1 text-xs font-medium text-gray-700 rounded hover:bg-gray-200"
@@ -259,7 +271,8 @@ const TableView = ({
                                       <MoreVertical className="w-4 h-4" />
                                     </button>
 
-                                    {openDropdown === row.id && (
+                                    {openDropdown ===
+                                      getRowValue(row, "id") && (
                                       <div
                                         ref={dropdownRef}
                                         onMouseDown={(e) => e.stopPropagation()}
@@ -314,8 +327,12 @@ const TableView = ({
                             >
                               <input
                                 type="checkbox"
-                                checked={selectedRows.has(row.id)}
-                                onChange={() => handleSelectRow(row.id)}
+                                checked={selectedRows.has(
+                                  getRowValue(row, "id")
+                                )}
+                                onChange={() =>
+                                  handleSelectRow(getRowValue(row, "id"))
+                                }
                                 className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                               />
                             </td>
@@ -334,13 +351,29 @@ const TableView = ({
                             const valueMap = colRules[key];
                             let dynamicColClass = "";
 
-                            if (valueMap && row[key] && valueMap[row[key]]) {
-                              dynamicColClass = valueMap[row[key]];
+                            if (
+                              valueMap &&
+                              getRowValue(row, key) &&
+                              valueMap[getRowValue(row, key)]
+                            ) {
+                              dynamicColClass = valueMap[getRowValue(row, key)];
                             }
-
+                            console.log(
+                              "0000000000000000000000000000000000000000"
+                            );
+                            console.log({ key });
+                            console.log(
+                              getRowValue(row, key),
+                              col.formatter,
+                              row,
+                              col
+                            );
                             return (
                               <td
-                                id={`${reportTitle}_tr_${row.id}_${key}`}
+                                id={`${reportTitle}_tr_${getRowValue(
+                                  row,
+                                  "id"
+                                )}_${key}`}
                                 key={key}
                                 className={`${
                                   style?.td ||
@@ -356,7 +389,7 @@ const TableView = ({
                                     }
                                   >
                                     {formatCellValue(
-                                      row[key],
+                                      getRowValue(row, key),
                                       col.formatter,
                                       row,
                                       col
@@ -366,15 +399,16 @@ const TableView = ({
                                   <button
                                     onClick={() =>
                                       copyToClipboard(
-                                        row[key] || "",
-                                        `${row.id}-${key}`,
+                                        getRowValue(row, key) || "",
+                                        `${getRowValue(row, "id")}-${key}`,
                                         setCopiedCell
                                       )
                                     }
                                     className="absolute -right-4 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity ml-2 p-1 rounded bg-gray-50 hover:bg-gray-100 cursor-pointer"
                                     title="Copy"
                                   >
-                                    {copiedCell === `${row.id}-${key}` ? (
+                                    {copiedCell ===
+                                    `${getRowValue(row, "id")}-${key}` ? (
                                       <>
                                         <span className="text-xs text-gray-600">
                                           Copied!

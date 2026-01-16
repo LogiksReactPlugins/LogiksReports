@@ -63,7 +63,15 @@ import getPathKey from "../../helpers/getPathKey";
 import GalleryView from "../GalleryView";
 import GanttView from "../GanttView";
 import GmapView from "../GmapView";
+const getRowValue = (row, key) => {
+  if (key in row) return row[key];
 
+  const lastKey = key.split(".").pop();
+  if (lastKey in row) return row[lastKey];
+  const match = Object.keys(row).find((k) => k.split(".").pop() === lastKey);
+
+  return match ? row[match] : undefined;
+};
 // Main Reports Component
 export default function Reports({
   report: reportJSON,
@@ -299,7 +307,9 @@ export default function Reports({
         }
         const axiosObject = {
           method: config?.source?.method || "post",
-          url: config?.source?.url || config?.endPoints.runQuery,
+          url:
+            config?.source?.url ||
+            `${config?.endPoints?.baseURL}${config?.endPoints.runQuery}`,
           headers: config?.source?.headers || config?.endPoints?.headers,
           data: {
             queryid: config?.source?.queryid,
@@ -544,7 +554,7 @@ export default function Reports({
     if (selectAll) {
       setSelectedRows(new Set());
     } else {
-      const allRowIds = currentData.map((row) => row.id);
+      const allRowIds = currentData.map((row) => getRowValue(row, "id"));
       setSelectedRows(new Set(allRowIds));
     }
     setSelectAll(!selectAll);
