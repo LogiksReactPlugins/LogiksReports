@@ -400,7 +400,9 @@ export default function Reports({
 
           const axiosObject = {
             method: config?.source?.method || "post",
-            url: config?.source?.url || config?.endPoints.runQuery,
+            url:
+              config?.source?.url ||
+              `${config?.endPoints?.baseURL}${config?.endPoints.runQuery}`,
             headers: config?.source?.headers || config?.endPoints?.headers,
             data: {
               queryid: config?.source?.queryid,
@@ -985,6 +987,7 @@ export default function Reports({
         <CardView
           style={style?.cards}
           config={config}
+          getRowValue={getRowValue}
           paginatedGroupedData={paginatedGroupedData}
           hasButtons={hasButtons}
           visibleButtons={visibleButtons}
@@ -1003,6 +1006,7 @@ export default function Reports({
         <GalleryView
           style={style?.cards}
           config={config}
+          getRowValue={getRowValue}
           paginatedGroupedData={paginatedGroupedData}
           hasButtons={hasButtons}
           visibleButtons={visibleButtons}
@@ -1020,6 +1024,7 @@ export default function Reports({
       ) : currentView === "kanban" ? (
         <KanbanView
           config={config}
+          getRowValue={getRowValue}
           filteredAndSortedData={filteredAndSortedData}
           hasButtons={hasButtons}
           visibleButtons={visibleButtons}
@@ -1039,12 +1044,18 @@ export default function Reports({
         <GanttView
           paginatedGroupedData={paginatedGroupedData}
           config={config}
+          getRowValue={getRowValue}
         />
       ) : currentView === "gmap" ? (
-        <GmapView reportConfig={config} data={dummyData} />
+        <GmapView
+          reportConfig={config}
+          getRowValue={getRowValue}
+          data={dummyData}
+        />
       ) : currentView === "calendar" ? (
         <CalendarView
           config={config}
+          getRowValue={getRowValue}
           filteredAndSortedData={filteredAndSortedData}
           hasButtons={hasButtons}
           visibleButtons={visibleButtons}
@@ -1064,6 +1075,7 @@ export default function Reports({
         <TableView
           style={style?.table}
           config={config}
+          getRowValue={getRowValue}
           paginatedGroupedData={paginatedGroupedData}
           visibleColumns={visibleColumns}
           hasButtons={hasButtons}
@@ -1098,6 +1110,7 @@ export default function Reports({
         <SettingPopup
           setSettingsOpen={setSettingsOpen}
           config={config}
+          getRowValue={getRowValue}
           setConfig={setConfig}
         />
       )}

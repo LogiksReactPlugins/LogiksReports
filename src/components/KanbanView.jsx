@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect } from "react";
 import {
   DndContext,
   closestCenter,
@@ -8,18 +8,21 @@ import {
   DragOverlay,
   useDroppable,
   useDraggable,
-} from '@dnd-kit/core';
+} from "@dnd-kit/core";
 import {
   SortableContext,
   verticalListSortingStrategy,
   useSortable,
   sortableKeyboardCoordinates,
-  arrayMove
-} from '@dnd-kit/sortable';
+  arrayMove,
+} from "@dnd-kit/sortable";
 
-import { CSS } from '@dnd-kit/utilities';
-import { User, Calendar, Tag, MoreHorizontal, Plus, Copy } from 'lucide-react';
-import copyToClipboard, { formatCardContent, formatKanbanCardContent } from '../helpers/copyToClipboard';
+import { CSS } from "@dnd-kit/utilities";
+import { User, Calendar, Tag, MoreHorizontal, Plus, Copy } from "lucide-react";
+import copyToClipboard, {
+  formatCardContent,
+  formatKanbanCardContent,
+} from "../helpers/copyToClipboard";
 
 const KanbanView = ({
   config,
@@ -35,16 +38,17 @@ const KanbanView = ({
   toggleDropdown,
   setOpenDropdown,
   getIconComponent,
-  kanbanGroupBy
+  kanbanGroupBy,
+  getRowValue,
 }) => {
-  console.log({ kanbanGroupBy })
+  console.log({ kanbanGroupBy });
   const { kanban, datagrid } = config;
   const sensors = useSensors(useSensor(PointerSensor));
 
   const groupedData = useMemo(() => {
     if (!kanbanGroupBy || !filteredAndSortedData.length) return {};
     return filteredAndSortedData.reduce((acc, row) => {
-      const groupValue = row[kanbanGroupBy] || 'Unassigned';
+      const groupValue = getRowValue(row, kanbanGroupBy) || "Unassigned";
       if (!acc[groupValue]) acc[groupValue] = [];
       acc[groupValue].push(row);
       return acc;
@@ -56,58 +60,65 @@ const KanbanView = ({
   const [overId, setOverId] = useState(null);
 
   useEffect(() => {
-    setColumnsData(groupedData)
-  }, [groupedData])
+    setColumnsData(groupedData);
+  }, [groupedData]);
 
   const getCardColor = (row) => {
-    const colorKey = row[kanban?.colmap?.color];
+    const colorKey = getRowValue(row, kanban?.colmap?.color);
     const colorClass = kanban?.colormap?.[colorKey];
     const map = {
-      card_green: 'bg-green-50 border-green-200',
-      card_red: 'bg-red-50 border-red-200',
-      card_blue: 'bg-blue-50 border-blue-200',
-      card_yellow: 'bg-yellow-50 border-yellow-200',
-      card_purple: 'bg-purple-50 border-purple-200',
-      card_indigo: 'bg-indigo-50 border-indigo-200',
-      card_pink: 'bg-pink-50 border-pink-200',
-      card_gray: 'bg-gray-50 border-gray-200'
+      card_green: "bg-green-50 border-green-200",
+      card_red: "bg-red-50 border-red-200",
+      card_blue: "bg-blue-50 border-blue-200",
+      card_yellow: "bg-yellow-50 border-yellow-200",
+      card_purple: "bg-purple-50 border-purple-200",
+      card_indigo: "bg-indigo-50 border-indigo-200",
+      card_pink: "bg-pink-50 border-pink-200",
+      card_gray: "bg-gray-50 border-gray-200",
     };
-    return map[colorClass] || 'bg-white border-gray-200';
+    return map[colorClass] || "bg-white border-gray-200";
   };
 
-  const getCardValue = (row, field) => row[kanban?.colmap?.[field]] || row[field] || '';
+  const getCardValue = (row, field) =>
+    getRowValue(row, kanban?.colmap?.[field]) || getRowValue(row, field) || "";
   const handleDragEnd = (event) => {
     const { active, over } = event;
     setOverId(null);
     if (!over || !activeCard) return;
 
-    const fromCol = Object.keys(columnsData).find(col =>
-      columnsData[col].some(card => card.id === activeCard.id)
+    const fromCol = Object.keys(columnsData).find((col) =>
+      columnsData[col].some((card) => card.id === activeCard.id)
     );
     const toCol = over.data.current?.columnId || over.id; // fallback to column id if card id missing
 
     if (!fromCol || !toCol) return;
 
     if (fromCol === toCol) {
-      const oldIndex = columnsData[fromCol].findIndex(card => card.id === active.id);
-      const newIndex = columnsData[toCol].findIndex(card => card.id === over.id);
+      const oldIndex = columnsData[fromCol].findIndex(
+        (card) => card.id === active.id
+      );
+      const newIndex = columnsData[toCol].findIndex(
+        (card) => card.id === over.id
+      );
       if (oldIndex !== newIndex && newIndex !== -1) {
-        setColumnsData(prev => ({
+        setColumnsData((prev) => ({
           ...prev,
-          [fromCol]: arrayMove(prev[fromCol], oldIndex, newIndex)
+          [fromCol]: arrayMove(prev[fromCol], oldIndex, newIndex),
         }));
       }
     } else {
-      const fromList = [...columnsData[fromCol]].filter(card => card.id !== activeCard.id);
+      const fromList = [...columnsData[fromCol]].filter(
+        (card) => card.id !== activeCard.id
+      );
       const toList = [...columnsData[toCol]];
-      const overIndex = toList.findIndex(card => card.id === over.id);
+      const overIndex = toList.findIndex((card) => card.id === over.id);
 
       toList.splice(overIndex >= 0 ? overIndex : toList.length, 0, activeCard);
 
-      setColumnsData(prev => ({
+      setColumnsData((prev) => ({
         ...prev,
         [fromCol]: fromList,
-        [toCol]: toList
+        [toCol]: toList,
       }));
     }
 
@@ -115,23 +126,32 @@ const KanbanView = ({
   };
 
   const SortableCard = ({ row, columnId }) => {
-    const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-      id: row.id,
-      data: { columnId }
+    const {
+      attributes,
+      listeners,
+      setNodeRef,
+      transform,
+      transition,
+      isDragging,
+    } = useSortable({
+      id: getRowValue(row, "id"),
+      data: { columnId },
     });
     const [copiedCell, setCopiedCell] = useState(null);
 
     const style = {
       transform: CSS.Transform.toString(transform),
       transition,
-      zIndex: isDragging ? 50 : 'auto'
+      zIndex: isDragging ? 50 : "auto",
     };
 
     return (
       <div
         ref={setNodeRef}
         style={style}
-        className={`${getCardColor(row)}  group relative border rounded-lg p-1 shadow-sm cursor-pointer hover:shadow-md transition-shadow duration-200 space-y-2`}
+        className={`${getCardColor(
+          row
+        )}  group relative border rounded-lg p-1 shadow-sm cursor-pointer hover:shadow-md transition-shadow duration-200 space-y-2`}
         onClick={() => setActiveCard(row)}
       >
         <div className="flex items-start gap-1">
@@ -141,10 +161,10 @@ const KanbanView = ({
             {...listeners}
             className="cursor-grab active:cursor-grabbing"
           >
-            {getCardValue(row, 'avatar') ? (
+            {getCardValue(row, "avatar") ? (
               <img
                 className="h-8 w-8 rounded-full object-cover"
-                src={getCardValue(row, 'avatar')}
+                src={getCardValue(row, "avatar")}
                 alt="Avatar"
               />
             ) : (
@@ -161,39 +181,38 @@ const KanbanView = ({
             {...listeners}
           >
             <h4 className="text-sm font-medium text-gray-900 truncate">
-              {getCardValue(row, 'title') || row.name || 'Untitled'}
+              {getCardValue(row, "title") || "Untitled"}
             </h4>
-            {getCardValue(row, 'descs') && (
+            {getCardValue(row, "descs") && (
               <p className="text-xs text-gray-500 line-clamp-2 h-[2rem]">
-                {getCardValue(row, 'descs')}
+                {getCardValue(row, "descs")}
               </p>
             )}
-
           </div>
 
           {/* Counter (not draggable) */}
-          {getCardValue(row, 'counter') && (
+          {getCardValue(row, "counter") && (
             <div className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-              {getCardValue(row, 'counter')}
+              {getCardValue(row, "counter")}
             </div>
           )}
         </div>
 
         {/* Category (not draggable) */}
-        {getCardValue(row, 'category') && (
+        {getCardValue(row, "category") && (
           <div>
             <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
               <Tag className="w-3 h-3 mr-1" />
-              {getCardValue(row, 'category')}
+              {getCardValue(row, "category")}
             </span>
           </div>
         )}
 
         {/* Due Date (not draggable) */}
-        {getCardValue(row, 'due_date') && (
+        {getCardValue(row, "due_date") && (
           <div className="flex items-center text-xs text-gray-500">
             <Calendar className="w-3 h-3 mr-1" />
-            {new Date(getCardValue(row, 'due_date')).toLocaleDateString()}
+            {new Date(getCardValue(row, "due_date")).toLocaleDateString()}
           </div>
         )}
 
@@ -222,14 +241,14 @@ const KanbanView = ({
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      toggleDropdown(row.id);
+                      toggleDropdown(getRowValue(row, "id"));
                     }}
                     className="inline-flex items-center p-1 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-blue-500"
                   >
                     <MoreHorizontal className="w-3 h-3" />
                   </button>
 
-                  {openDropdown === row.id && (
+                  {openDropdown === getRowValue(row, "id") && (
                     <div className="absolute right-0 mt-1 w-44 bg-white border border-gray-200 rounded-md shadow-lg z-50">
                       <div className="py-1">
                         {visibleButtons.slice(5).map(([buttonKey, button]) => (
@@ -243,7 +262,9 @@ const KanbanView = ({
                             className="flex items-center gap-2 w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
                             title={button.label}
                           >
-                            <div className="flex-shrink-0">{getIconComponent(button.icon)}</div>
+                            <div className="flex-shrink-0">
+                              {getIconComponent(button.icon)}
+                            </div>
                             <span className="truncate">{button.label}</span>
                           </button>
                         ))}
@@ -258,7 +279,9 @@ const KanbanView = ({
                             className="flex items-center gap-2 w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
                             title={button.label}
                           >
-                            <div className="flex-shrink-0">{getIconComponent(button.icon)}</div>
+                            <div className="flex-shrink-0">
+                              {getIconComponent(button.icon)}
+                            </div>
                             <span className="truncate">{button.label}</span>
                           </button>
                         ))}
@@ -267,31 +290,31 @@ const KanbanView = ({
                   )}
                 </div>
               )}
-         <button
-  onClick={() => {
-    const content = formatKanbanCardContent(row, getCardValue);
-    console.log({content})
-    copyToClipboard(content, `${row.id}-${columnId}`, setCopiedCell);
-  }}
-  className="inline-flex items-center absolute cursor-pointer right-2 bottom-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-gray-500 hover:text-gray-900"
-  title="Copy card content"
->
-  {copiedCell === `${row.id}-${columnId}` ? (
-    <span className="text-xs text-gray-600">Copied!</span>
-  ) : (
-    <Copy className="w-4 h-4 text-gray-600" />
-  )}
-</button>
-
-
-
+              <button
+                onClick={() => {
+                  const content = formatKanbanCardContent(row, getCardValue);
+                  console.log({ content });
+                  copyToClipboard(
+                    content,
+                    `${getRowValue(row, "id")}-${columnId}`,
+                    setCopiedCell
+                  );
+                }}
+                className="inline-flex items-center absolute cursor-pointer right-2 bottom-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-gray-500 hover:text-gray-900"
+                title="Copy card content"
+              >
+                {copiedCell === `${getRowValue(row, "id")}-${columnId}` ? (
+                  <span className="text-xs text-gray-600">Copied!</span>
+                ) : (
+                  <Copy className="w-4 h-4 text-gray-600" />
+                )}
+              </button>
             </div>
           </div>
         )}
       </div>
     );
   };
-
 
   const DroppableColumn = ({ id, cards }) => {
     const { setNodeRef: setColumnRef } = useDroppable({ id });
@@ -301,18 +324,23 @@ const KanbanView = ({
         <div className="bg-muted px-2 py-1 border-b border-gray-200 rounded-t-lg">
           <div className="flex justify-between items-center">
             <h3 className="font-medium text-secondary truncate">{id}</h3>
-            <span className="text-xs bg-gray-200 rounded-full px-2 py-1">{cards.length}</span>
+            <span className="text-xs bg-gray-200 rounded-full px-2 py-1">
+              {cards.length}
+            </span>
           </div>
         </div>
 
         <div className="bg-gray-50 p-2 thin-scrollbar space-y-2 rounded-b-lg min-h-96 max-h-150 overflow-y-auto">
-          <SortableContext items={cards.map(card => card.id)} strategy={verticalListSortingStrategy}>
+          <SortableContext
+            items={cards.map((card) => card.id)}
+            strategy={verticalListSortingStrategy}
+          >
             {cards.length === 0 ? (
               <div className="min-h-[50px] rounded border border-dashed border-gray-300 flex items-center justify-center text-gray-400">
                 Drop here
               </div>
             ) : (
-              cards.map(card => (
+              cards.map((card) => (
                 <SortableCard key={card.id} row={card} columnId={id} />
               ))
             )}
@@ -322,8 +350,7 @@ const KanbanView = ({
     );
   };
 
-
-  if (!filteredAndSortedData.length>0) {
+  if (!filteredAndSortedData.length > 0) {
     return (
       <div className="flex items-center justify-center h-64 text-gray-500">
         <div className="text-center">
@@ -339,7 +366,9 @@ const KanbanView = ({
       collisionDetection={closestCenter}
       onDragEnd={handleDragEnd}
       onDragStart={({ active }) => {
-        const card = filteredAndSortedData.find(row => row.id === active.id);
+        const card = filteredAndSortedData.find(
+          (row) => getRowValue(row, "id") === active.id
+        );
         setActiveCard(card);
       }}
       onDragOver={({ over }) => {
@@ -349,13 +378,25 @@ const KanbanView = ({
       <div className="p-2 overflow-hidden">
         <div className="flex gap-2  overflow-x-auto pb-4">
           {Object.keys(columnsData).map((colKey) => (
-            <DroppableColumn key={colKey} id={colKey} cards={columnsData[colKey]} />
+            <DroppableColumn
+              key={colKey}
+              id={colKey}
+              cards={columnsData[colKey]}
+            />
           ))}
         </div>
         <DragOverlay>
           {activeCard && (
-            <div className={`${getCardColor(activeCard)} border rounded-lg p-3 shadow-md w-72`}>
-              <div className="text-sm font-medium truncate">{getCardValue(activeCard, 'title') || activeCard.name || 'Untitled'}</div>
+            <div
+              className={`${getCardColor(
+                activeCard
+              )} border rounded-lg p-3 shadow-md w-72`}
+            >
+              <div className="text-sm font-medium truncate">
+                {getCardValue(activeCard, "title") ||
+                  activeCard.name ||
+                  "Untitled"}
+              </div>
             </div>
           )}
         </DragOverlay>

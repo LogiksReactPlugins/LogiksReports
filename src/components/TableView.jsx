@@ -2,15 +2,7 @@ import { Copy, MoreVertical } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import ShimmerTableRow from "./loadings/ShimmerTableRow";
 import copyToClipboard from "../helpers/copyToClipboard";
-const getRowValue = (row, key) => {
-  if (key in row) return row[key];
 
-  const lastKey = key.split(".").pop();
-  if (lastKey in row) return row[lastKey];
-  const match = Object.keys(row).find((k) => k.split(".").pop() === lastKey);
-
-  return match ? row[match] : undefined;
-};
 const TableView = ({
   config,
   paginatedGroupedData,
@@ -34,6 +26,7 @@ const TableView = ({
   getIconComponent,
   style,
   loading,
+  getRowValue,
 }) => {
   const { datagrid, groupBy } = config;
   const {
@@ -358,16 +351,6 @@ const TableView = ({
                             ) {
                               dynamicColClass = valueMap[getRowValue(row, key)];
                             }
-                            console.log(
-                              "0000000000000000000000000000000000000000"
-                            );
-                            console.log({ key });
-                            console.log(
-                              getRowValue(row, key),
-                              col.formatter,
-                              row,
-                              col
-                            );
                             return (
                               <td
                                 id={`${reportTitle}_tr_${getRowValue(
