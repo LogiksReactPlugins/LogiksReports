@@ -36688,7 +36688,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Dr.canvg ? Promise.resolve(Dr.canvg) : import("./index.es-Dmnd458S.js")).catch(function(f) {
+  return (Dr.canvg ? Promise.resolve(Dr.canvg) : import("./index.es-WAyNk1vj.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
@@ -93955,10 +93955,12 @@ function L6e({
         headers: o?.source?.headers || o?.endPoints?.headers,
         data: {
           queryid: o?.source?.queryid,
-          ...Ke && {
+          ...Ke ? {
             filter: {
               [Ke]: [A, "LIKE"]
             }
+          } : {
+            filter: {}
           },
           limit: o?.rowsPerPage,
           page: g

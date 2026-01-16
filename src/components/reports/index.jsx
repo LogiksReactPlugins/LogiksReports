@@ -394,11 +394,15 @@ export default function Reports({
             headers: config?.source?.headers || config?.endPoints?.headers,
             data: {
               queryid: config?.source?.queryid,
-              ...(searchColumn && {
-                filter: {
-                  [searchColumn]: [searchTerm, "LIKE"],
-                },
-              }),
+              ...(searchColumn
+                ? {
+                    filter: {
+                      [searchColumn]: [searchTerm, "LIKE"],
+                    },
+                  }
+                : {
+                    filter: {},
+                  }),
 
               limit: config?.rowsPerPage,
               page: currentPage,
