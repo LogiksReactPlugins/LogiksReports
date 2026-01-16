@@ -622,7 +622,7 @@ export default function Reports({
     if (methods[buttonKey]) {
       methods[buttonKey](data);
     } else {
-      onButtonClick(buttonKey, data);
+      onButtonClick({ [buttonKey]: button }, data);
     }
   };
 

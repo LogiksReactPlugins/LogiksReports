@@ -36706,7 +36706,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Dr.canvg ? Promise.resolve(Dr.canvg) : import("./index.es-D298eKRA.js")).catch(function(f) {
+  return (Dr.canvg ? Promise.resolve(Dr.canvg) : import("./index.es-_IW_0Kor.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
@@ -94050,7 +94050,7 @@ function D6e({
     /* @__PURE__ */ W.jsx(wN, { className: "w-3 h-3 text-gray-400" }),
     /* @__PURE__ */ W.jsx(yN, { className: "w-3 h-3 text-gray-400 -mt-1" })
   ] }) : null, Nn = (oe) => oe ? /* @__PURE__ */ W.jsx("i", { className: `${oe}` }) : null, Jr = (oe, Se, Pe) => {
-    console.log("Button clicked:", oe, Se, Pe), t[oe] ? t[oe](Pe) : i(oe, Pe);
+    console.log("Button clicked:", oe, Se, Pe), t[oe] ? t[oe](Pe) : i({ [oe]: Se }, Pe);
   }, vn = (oe) => {
     T(I === oe ? null : oe);
   }, Pr = Object.entries(sr).filter(([oe, Se]) => Se.groupable && !Se.hidden).map(([oe, Se]) => ({ key: oe, label: Se.label })), vt = o?.showExtraColumn, ae = Object.entries(sr).filter(
