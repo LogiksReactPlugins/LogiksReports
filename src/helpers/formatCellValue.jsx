@@ -5,6 +5,7 @@ export default function formatCellValue(
   formatter,
   record = {},
   columnInfo = {},
+  config,
 ) {
   if (!value && value !== false) return "";
 
@@ -145,14 +146,17 @@ export default function formatCellValue(
 
     case "photo":
     case "picture":
-    case "media":
+    case "image":
+    case "media": {
+      const src =
+        typeof value === "string" && /^https?:\/\//i.test(value)
+          ? value
+          : `${config?.endPoints?.filePreview}/${value}`;
+
       return (
-        <img
-          src={value}
-          alt="media"
-          className="w-12 h-12 rounded object-cover"
-        />
+        <img src={src} alt="media" className="w-12 h-12 rounded object-cover" />
       );
+    }
 
     case "file":
     case "attachment": {

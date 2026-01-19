@@ -382,6 +382,7 @@ const TableView = ({
                                       col.formatter,
                                       row,
                                       col,
+                                      config,
                                     )}
                                   </div>
 
