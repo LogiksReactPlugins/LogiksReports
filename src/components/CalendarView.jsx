@@ -65,14 +65,14 @@ const CalendarView = ({
     rows.forEach((row) => {
       Object.entries(dateColumns).forEach(([colKey, color]) => {
         const rawDate = getRowValue(row, colKey);
-        // console.log({rawDate})
+        // // console.log({rawDate})
         if (!rawDate) return;
 
         const date = new Date(rawDate);
         if (isNaN(date.getTime())) return;
 
         const dateKey = `${date.getFullYear()}-${String(
-          date.getMonth() + 1
+          date.getMonth() + 1,
         ).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 
         const event = {
@@ -98,13 +98,13 @@ const CalendarView = ({
         calendarEventsMap[dateKey].push(event);
       });
     });
-    console.log({ calendarEventsMap });
+    // console.log({ calendarEventsMap });
     return calendarEventsMap;
   }
 
   const calendarEventsMap = useMemo(
     () => buildCalendarEvents(config),
-    [config]
+    [config],
   );
 
   const navigateMonth = (direction) => {
@@ -136,7 +136,7 @@ const CalendarView = ({
       const date = new Date(currentYear, currentMonth, day);
       const dateKey = `${currentYear}-${String(currentMonth + 1).padStart(
         2,
-        "0"
+        "0",
       )}-${String(day).padStart(2, "0")}`;
       const isToday = date.toDateString() === today.toDateString();
 
@@ -170,7 +170,7 @@ const CalendarView = ({
   const selectedDateEvents = selectedDate
     ? calendarEventsMap[
         `${selectedDate.getFullYear()}-${String(
-          selectedDate.getMonth() + 1
+          selectedDate.getMonth() + 1,
         ).padStart(2, "0")}-${String(selectedDate.getDate()).padStart(2, "0")}`
       ] || []
     : [];
@@ -205,7 +205,7 @@ const CalendarView = ({
                       value={currentMonth}
                       onChange={(e) =>
                         setCurrentDate(
-                          new Date(currentYear, parseInt(e.target.value), 1)
+                          new Date(currentYear, parseInt(e.target.value), 1),
                         )
                       }
                       className="appearance-none outline-0 bg-transparent text-action text-md font-semibold pr-6  cursor-pointer transition-colors"
@@ -243,7 +243,7 @@ const CalendarView = ({
                       value={currentYear}
                       onChange={(e) =>
                         setCurrentDate(
-                          new Date(parseInt(e.target.value), currentMonth, 1)
+                          new Date(parseInt(e.target.value), currentMonth, 1),
                         )
                       }
                       className="appearance-none bg-transparent text-md font-semibold text-action pr-6 focus:outline-none cursor-pointer hover:text-blue-600 transition-colors"
@@ -394,8 +394,8 @@ const CalendarView = ({
                     dayObj?.isToday
                       ? "text-blue-600"
                       : dayObj?.isCurrentMonth
-                      ? "text-gray-900"
-                      : "text-gray-400"
+                        ? "text-gray-900"
+                        : "text-gray-400"
                   }
                 `}
                 >
@@ -414,7 +414,7 @@ const CalendarView = ({
                       }}
                       title={`${event?.title} - ${event?.eventType?.replace(
                         /_/g,
-                        " "
+                        " ",
                       )}`}
                     >
                       {event?.title}
@@ -537,7 +537,7 @@ const CalendarView = ({
                                           handleButtonClick(
                                             buttonKey,
                                             button,
-                                            event
+                                            event,
                                           );
                                           setOpenDropdown(null);
                                         }}

@@ -72,6 +72,18 @@ const getRowValue = (row, key) => {
 
   return match ? row[match] : undefined;
 };
+const DATE_OPERATORS = [
+  { label: "Is", value: "eq" },
+  { label: "Between", value: "between" },
+  { label: "Today", value: "today" },
+  { label: "Yesterday", value: "yesterday" },
+  { label: "This Week", value: "this_week" },
+  { label: "Last Week", value: "last_week" },
+  { label: "This Month", value: "this_month" },
+  { label: "Last Month", value: "last_month" },
+  { label: "This Year", value: "this_year" },
+];
+
 // Main Reports Component
 export default function Reports({
   report: reportJSON,
@@ -106,9 +118,22 @@ export default function Reports({
   const [totalPages, setTotalPages] = useState(0);
   const [currentData, setCurrentData] = useState([]);
   const [searchColumn, setSearchColumn] = useState("");
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [activeDateCol, setActiveDateCol] = useState(null);
+  const [dateRange, setDateRange] = useState({ start: "", end: "" });
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [searchColumnLabel, setSearchColumnLabel] = useState();
+  const [dateOperator, setDateOperator] = useState("");
+
+  useEffect(() => {
+    setCurrentPage(0);
+    setRowsPerPage(config?.rowsPerPage);
+  }, [config?.rowsPerPage]);
+
   useEffect(() => {
     setCurrentData(data || []);
   }, [data]);
+
   useEffect(() => {
     if (!currentView) return;
     updateLocalOverride("template", currentView, reportJSON);
@@ -127,7 +152,7 @@ export default function Reports({
           },
         };
         const { data } = await axios(axiosObject);
-        console.log({ data });
+        // console.log({ data });
         setDebuggData(data);
       })();
       setDebuggerEnable(true);
@@ -150,8 +175,8 @@ export default function Reports({
     const localOverrides =
       JSON.parse(
         localStorage.getItem(
-          `${CONSTANTS.REPORT_LOCALSTORAGE_PRIFIX}${STORAGE_KEY}`
-        )
+          `${CONSTANTS.REPORT_LOCALSTORAGE_PRIFIX}${STORAGE_KEY}`,
+        ),
       ) || {};
     let history = localOverrides.template_history
       ? JSON.parse(localOverrides.template_history)
@@ -167,7 +192,7 @@ export default function Reports({
 
     localStorage.setItem(
       `${CONSTANTS.REPORT_LOCALSTORAGE_PRIFIX}${STORAGE_KEY}`,
-      JSON.stringify(updated)
+      JSON.stringify(updated),
     );
     setCurrentView(view);
   }
@@ -191,22 +216,22 @@ export default function Reports({
   ];
 
   const availableViews = allViews.filter(
-    (v) => v.key === "table" || (reportJSON && reportJSON[v.key])
+    (v) => v.key === "table" || (reportJSON && reportJSON[v.key]),
   );
 
   const STORAGE_KEY = getPathKey();
   const localOverrides =
     JSON.parse(
       localStorage.getItem(
-        `${CONSTANTS.REPORT_LOCALSTORAGE_PRIFIX}${STORAGE_KEY}`
-      )
+        `${CONSTANTS.REPORT_LOCALSTORAGE_PRIFIX}${STORAGE_KEY}`,
+      ),
     ) || {};
   const history = localOverrides.template_history
     ? JSON.parse(localOverrides.template_history)
     : [];
 
   const validHistory = history.filter((k) =>
-    availableViews.some((v) => v.key === k)
+    availableViews.some((v) => v.key === k),
   );
 
   const activeViewKeys = [
@@ -214,10 +239,10 @@ export default function Reports({
   ].slice(0, 3);
 
   const activeViews = availableViews.filter((v) =>
-    activeViewKeys.includes(v.key)
+    activeViewKeys.includes(v.key),
   );
   const otherViews = availableViews.filter(
-    (v) => !activeViewKeys.includes(v.key)
+    (v) => !activeViewKeys.includes(v.key),
   );
 
   // const activeKeys = history.length > 0 ? history : [currentView];
@@ -226,8 +251,8 @@ export default function Reports({
     const localOverrides =
       JSON.parse(
         localStorage.getItem(
-          `${CONSTANTS.REPORT_LOCALSTORAGE_PRIFIX}${STORAGE_KEY}`
-        )
+          `${CONSTANTS.REPORT_LOCALSTORAGE_PRIFIX}${STORAGE_KEY}`,
+        ),
       ) || {};
 
     const report = mergeConfig(reportJSON, localOverrides);
@@ -275,7 +300,7 @@ export default function Reports({
           headers: config?.source?.headers,
         };
         const { data } = await axios(axiosObject);
-        console.log({ data });
+        // console.log({ data });
         setData(data?.data || []);
         if (data.page) {
           setCurrentPage(data.page);
@@ -292,6 +317,7 @@ export default function Reports({
               where: config?.source?.where,
               join: config?.source?.join,
             },
+            srcid: config?.module_refid,
             dbkey: config?.source?.dbkey,
           };
           const axiosObject = {
@@ -301,7 +327,7 @@ export default function Reports({
             data: payload,
           };
           const { data } = await axios(axiosObject);
-          console.log({ data });
+          // console.log({ data });
           config.source.queryid = data?.queryid;
           config.source.url = `${config?.endPoints?.baseURL}${config?.endPoints.runQuery}`;
         }
@@ -314,25 +340,25 @@ export default function Reports({
           data: {
             queryid: config?.source?.queryid,
             filter: config?.source?.filter || {},
-            limit: config.rowsPerPage,
-            page: currentPage,
+            limit: rowsPerPage,
+            page: 0,
           },
         };
         const { data } = await axios(axiosObject);
 
         const responsePath = config?.source?.response || "data";
-        // console.log({config?.source?.response})
+        // // console.log({config?.source?.response})
         if (data?.page) {
           setCurrentPage(data?.page || 1);
         }
         if (data.max) {
           setTotalData(data.max);
         }
-        console.log({ data });
-        console.log({ responsePath });
+        // console.log({ data });
+        // console.log({ responsePath });
         // setData(data?.data || []);
         const result = getValueByPath(data, responsePath);
-        console.log({ result });
+        // console.log({ result });
         setData(result || []);
       } else if (reportdata) {
         setData(reportdata);
@@ -340,7 +366,7 @@ export default function Reports({
         setData(config?.rows || []);
       }
     } catch (error) {
-      console.log({ error });
+      // console.log({ error });
     } finally {
       setDataLoading(false);
     }
@@ -354,11 +380,17 @@ export default function Reports({
     setSelectedRows(new Set());
     setSelectAll(false);
     fetchAPI();
-    setSearchColumn();
+    setSearchColumn("");
+    setDateRange({ start: "", end: "" });
+    setActiveDateCol(null);
+    setDateOperator("");
+    setShowDatePicker(false);
   };
 
   useEffect(() => {
     handleReset();
+    setRowsPerPage(config?.rowsPerPage);
+    setCurrentPage(0);
   }, [config]);
 
   const buildSearchFilter = (datagrid, searchString) => {
@@ -367,7 +399,7 @@ export default function Reports({
     return Object.fromEntries(
       Object.entries(datagrid)
         .filter(([, col]) => col?.searchable === true)
-        .map(([key]) => [key, [searchString, "LIKE"]])
+        .map(([key]) => [key, [searchString, "LIKE"]]),
     );
   };
 
@@ -391,11 +423,12 @@ export default function Reports({
               url: config?.endPoints.saveQuery,
               headers: config?.endPoints?.headers,
               data: payload,
+              srcid: config?.module_refid,
             };
             const { data: saveQuerydata } = await axios(
-              axiosObjectForSaveQuery
+              axiosObjectForSaveQuery,
             );
-            console.log({ saveQuerydata });
+            // console.log({ saveQuerydata });
             config.source.queryid = saveQuerydata?.queryid;
           }
 
@@ -417,20 +450,20 @@ export default function Reports({
                     filter: {},
                   }),
               ...(groupBy && { group_by: groupBy }),
-              limit: config?.rowsPerPage,
+              limit: rowsPerPage,
               page: currentPage,
             },
           };
-          console.log({ axiosObject });
+          // console.log({ axiosObject });
           const { data } = await axios(axiosObject);
           const responsePath = config?.source?.response || "data";
-          // console.log({config?.source?.response})
+          // // console.log({config?.source?.response})
 
-          console.log({ data });
-          console.log({ responsePath });
+          // console.log({ data });
+          // console.log({ responsePath });
           // setData(data?.data || []);
           const result = getValueByPath(data, responsePath);
-          console.log({ result });
+          // console.log({ result });
           setData(result || []);
           if (data?.page) {
             setCurrentPage(data?.page || 0);
@@ -456,7 +489,7 @@ export default function Reports({
       //     }
       //     return { key, value };
       //   });
-      //   console.log({ conditions });
+      //   // console.log({ conditions });
       //   filtered = filtered.filter((row) => {
       //     return conditions.every(({ key, value }) => {
       //       const colConfig = config?.datagrid[key];
@@ -487,7 +520,7 @@ export default function Reports({
     //   });
     // }
 
-    console.log({ filtered });
+    // console.log({ filtered });
     return filtered;
   }, [config, searchTerm, sortConfig, data, currentPage]);
 
@@ -495,13 +528,13 @@ export default function Reports({
     setCurrentData(filteredAndSortedData);
   }, [searchTerm, currentPage]);
 
-  const rowsPerPage = config?.rowsPerPage || 5;
+  // const rowsPerPage = config?.rowsPerPage || 5;
   const startIndex = currentPage * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
 
   useEffect(() => {
-    setTotalPages(Math.ceil(totalData / (config?.rowsPerPage || 5)));
-  }, [totalData]);
+    setTotalPages(Math.ceil(totalData / (rowsPerPage || 5)));
+  }, [totalData, rowsPerPage]);
 
   const paginatedGroupedData = useMemo(() => {
     if (!groupBy) return { ungrouped: currentData };
@@ -533,8 +566,13 @@ export default function Reports({
     uiswitcher,
     compactMode,
   } = config;
+
   const searchableColumns = Object.entries(datagrid)
     .filter(([, col]) => col?.searchable === true)
+    .map(([key, col]) => ({ key, ...col }));
+
+  const dateRangeColumns = Object.entries(datagrid)
+    .filter(([, col]) => col?.filter?.type === "daterange")
     .map(([key, col]) => ({ key, ...col }));
 
   const handleSort = (key) => {
@@ -617,11 +655,11 @@ export default function Reports({
   };
 
   const handleButtonClick = (buttonKey, button, data) => {
-    // console.log(methods[button?.event?.click]?.(data?.id))
+    // // console.log(methods[button?.event?.click]?.(data?.id))
     // const resolvedParams = Object.values(button?.params || {}).map(key => data?.[key]);
     // methods[button?.event?.click]?.(...resolvedParams);
-    // console.log('METHOD--',methods[button?.event?.click])
-    console.log("Button clicked:", buttonKey, button, data);
+    // // console.log('METHOD--',methods[button?.event?.click])
+    // console.log("Button clicked:", buttonKey, button, data);
     if (methods[buttonKey]) {
       methods[buttonKey](data);
     } else {
@@ -639,7 +677,7 @@ export default function Reports({
 
   const showExtraColumn = config?.showExtraColumn;
   const visibleColumns = Object.entries(datagrid).filter(
-    ([key, col]) => !col.hidden
+    ([key, col]) => !col.hidden,
   );
   const visibleButtons = buttons
     ? Object.entries(buttons).filter(([k]) => k !== "more")
@@ -648,7 +686,7 @@ export default function Reports({
   const hasButtons = visibleButtons.length > 0 || moreButtons.length > 0;
 
   const handleExport = async (type) => {
-    console.log("Exporting as:", type);
+    // console.log("Exporting as:", type);
     try {
       setLoading(type);
       await exportTable(type);
@@ -686,7 +724,8 @@ export default function Reports({
                 `text-xl font-semibold text-gray-900 flex-shrink-0`
               }
             >
-              {title} {title && <span className="text-sm">({totalData})</span>}{" "}
+              {title}{" "}
+              {title && <span className="text-sm">({totalData})</span>}{" "}
             </h1>
             <div className="flex">
               {actions &&
@@ -732,8 +771,8 @@ export default function Reports({
                       toolbar?.export === false
                         ? false
                         : Array.isArray(toolbar?.export)
-                        ? toolbar.export.includes(key)
-                        : CONSTANTS.DEFAULT_EXPORTS.includes(key)
+                          ? toolbar.export.includes(key)
+                          : CONSTANTS.DEFAULT_EXPORTS.includes(key),
                     ).map((key) => (
                       <li key={key}>
                         <button
@@ -786,15 +825,9 @@ export default function Reports({
             " report-search-container flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-4"
           }
         >
-          <div className="flex items-center gap-3 flex-1 lg:max-w-sm">
-            <button
-              onClick={handleReset}
-              className="inline-flex h-9 cursor-pointer items-center px-3 text-sm font-medium bg-action rounded-md flex-shrink-0"
-            >
-              <RotateCcw className="w-4 h-4 mr-1" />
-            </button>
+          <div className="flex items-center gap-3 flex-1">
             {toolbar?.search !== false && (
-              <div className="flex items-center gap-2 flex-1">
+              <div className="flex items-center  lg:max-w-sm flex-1 border border-gray-300 rounded-md overflow-hidden focus-within:ring-1 focus-within:ring-gray-300">
                 {/* SEARCH */}
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
@@ -803,27 +836,125 @@ export default function Reports({
                     placeholder="Search..."
                     value={searchTerm}
                     onChange={(e) => handleSearch(e.target.value)}
-                    className="w-full h-9 pl-9 pr-4 py-1 text-slate-600 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-gray-300"
+                    className="w-full h-9 pl-9 pr-4 py-1 text-slate-600 outline-none border-none"
                   />
                 </div>
 
-                {/* SEARCHABLE COLUMNS DROPDOWN */}
                 <select
-                  className="h-9 px-3 text-sm border border-gray-300 rounded-md bg-white text-slate-600 focus:outline-none focus:ring-1 focus:ring-gray-300"
-                  onChange={(e) => setSearchColumn(e.target.value)}
-                  defaultValue=""
+                  style={{
+                    width: `${Math.min((searchColumnLabel?.length || 8) + 6, 14)}ch`,
+                  }}
+                  className="h-9 px-3 text-sm bg-white text-slate-600 outline-none border-none border-l border-gray-300"
+                  onChange={(e) => {
+                    const label = e.target.options[e.target.selectedIndex].text;
+                    setSearchColumn(e.target.value);
+                    setSearchColumnLabel(label);
+                  }}
+                  value={searchColumn}
                 >
-                  <option value="" disabled>
-                    Search by
-                  </option>
+                  <option value="">Search by</option>
                   {searchableColumns.map((col) => (
                     <option key={col.key} value={col.key}>
                       {col.label}
                     </option>
                   ))}
                 </select>
+
+                <button
+                  onClick={handleReset}
+                  className="inline-flex h-9 cursor-pointer items-center px-3 text-sm font-medium bg-action rounded-md flex-shrink-0"
+                >
+                  <RotateCcw className="w-4 h-4 mr-1" />
+                </button>
               </div>
             )}
+            <div className=" flex">
+              {dateRangeColumns.length == 1 && (
+                <button
+                  onClick={() => {
+                    setActiveDateCol(
+                      dateRangeColumns.length === 1
+                        ? dateRangeColumns[0].key
+                        : null,
+                    );
+                    setShowDatePicker(true);
+                  }}
+                  className="h-9 border border-gray-200 rounded-md"
+                >
+                  {" "}
+                  Date Range{" "}
+                </button>
+              )}{" "}
+              {dateRangeColumns.length > 1 && (
+                <select
+                  value={activeDateCol ?? ""}
+                  onChange={(e) => {
+                    setActiveDateCol(e.target.value);
+                    setShowDatePicker(true);
+                  }}
+                  className="h-9 border border-gray-200 rounded-md"
+                >
+                  {" "}
+                  <option value=""> Select column </option>{" "}
+                  {dateRangeColumns.map((c) => (
+                    <option key={c.key} value={c.key}>
+                      {" "}
+                      {c.label}{" "}
+                    </option>
+                  ))}{" "}
+                </select>
+              )}
+              {activeDateCol && (
+                <select
+                  className="h-9 border border-gray-200 rounded-md"
+                  value={dateOperator}
+                  onChange={(e) => {
+                    setDateOperator(e.target.value);
+                    setDateRange({ start: "", end: "" });
+                  }}
+                >
+                  <option value="">Select condition</option>
+                  {DATE_OPERATORS.map((op) => (
+                    <option key={op.value} value={op.value}>
+                      {op.label}
+                    </option>
+                  ))}
+                </select>
+              )}
+              {dateOperator === "eq" && (
+                <input
+                  type="date"
+                  value={dateRange.start}
+                  onChange={(e) =>
+                    setDateRange({ start: e.target.value, end: "" })
+                  }
+                />
+              )}
+              {dateOperator === "between" && (
+                <>
+                  <input
+                    type="date"
+                    value={dateRange.start}
+                    max={dateRange.end || undefined}
+                    onChange={(e) =>
+                      setDateRange((p) => ({
+                        ...p,
+                        start: e.target.value,
+                        end: p.end && e.target.value > p.end ? "" : p.end,
+                      }))
+                    }
+                  />
+                  <input
+                    type="date"
+                    value={dateRange.end}
+                    min={dateRange.start || undefined}
+                    onChange={(e) =>
+                      setDateRange((p) => ({ ...p, end: e.target.value }))
+                    }
+                  />
+                </>
+              )}
+            </div>
           </div>
 
           <div className="flex flex-col self-end sm:flex-row sm:items-center gap-3 lg:gap-4">
@@ -858,7 +989,7 @@ export default function Reports({
                             <option key={key} value={key}>
                               {col.label}
                             </option>
-                          )
+                          ),
                         )
                       : groupableColumns.map((col) => (
                           <option key={col.key} value={col.key}>

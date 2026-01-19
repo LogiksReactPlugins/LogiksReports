@@ -5,9 +5,9 @@ export const report = {
     baseURL: "http://192.168.0.20:9999",
     debuggUrl: `http://192.168.0.20:9999/api/query/raw`,
     accessToken:
-      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwicGF5bG9hZCI6IkJrOUpJbFJ1eFF1WStjY0o3L09qZWdmdmFwSWdVQ29XZDdtQkg4UTZueDd4V2FlVG5va0JVSDVBVTYzZnI4MExqRG5lcGgxdTUydEJqWFJCeG9RYmV2UHdFNmorYkROUEpVTHF5Y1M5SVNRQzdEVy82S3pCR1IvRU1MZ01aWi9EeFZITCtOVmM2VWdTbDdvU2ZMRlpKT0VhQU80NnpyUWUzVEFLamUvOEFpRE91eVFnRXdOYVpBZnc3aFlMTVRVS0lMWlJnTDk2YlV4aEMvWHpWNFhpYktDenlMZzJ4SWNQKytmV2h3bTFva0xwQm04d0VaNGltTnhCdnJIeWJVdGRGcS9aNFZWNDVhYXU2ZlhBMjA2UGVsYm9ZTUdMcEZPVktyZWQ1UT09IiwiaWF0IjoxNzY4NTU2ODkyLCJleHAiOjE3Njg1NjA0OTIsImp0aSI6ImFjYzoxOjE3Njg1NTY4OTI4MzY6d2ViIn0.XwINojM8i1aB6HfAUsbGIxem66AfzKT8Wmno49zvVzg",
+      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwicGF5bG9hZCI6Ild5OTBVOU8vREhlQis4eWVkWGsrOVNKVlBkRkhHNjkzT1VNVDYyVjhLcHZqYmVWKzBmM1JMZ3lOZUtsWnlDMGlLR0dXVlc0WFgvSVU5RW1xdVE2NnNiKzJNNi8yYlJ6QXRkQjJBY3JrOVNvQWg1d0hpc3dmSHBpZjhTTHh2MkhINFZvL1BjL2o1TVNGcTJCSlhJbzlsc0RCRlUxRzNtOGlhTVJUYXAwSHBKNHAwVmpRVmJDMUhYMGdyOFhJQXBqTzVEQU81UVR1aVFVNXRHZUpPcEYyVkNmd3hiRFJKbEhaODZNVE0rNDQwSWt5Y3M3OG13eHBrcGVRZTBSQXVjMHFiaTVnZUJlSGpBMXJmaDlOYjgyYjZ3YmFNQ2JMQ0hjQUk1U05pTHc9IiwiaWF0IjoxNzY4ODE2MDU2LCJleHAiOjE3Njg4MTk2NTYsImp0aSI6ImFjYzoxOjE3Njg4MTYwNTYzNjk6d2ViIn0.oEV7ypZTwZrOXgopfkScIqz2IWRxI48y2uCKAJKT_60",
     headers: {
-      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwicGF5bG9hZCI6IkJrOUpJbFJ1eFF1WStjY0o3L09qZWdmdmFwSWdVQ29XZDdtQkg4UTZueDd4V2FlVG5va0JVSDVBVTYzZnI4MExqRG5lcGgxdTUydEJqWFJCeG9RYmV2UHdFNmorYkROUEpVTHF5Y1M5SVNRQzdEVy82S3pCR1IvRU1MZ01aWi9EeFZITCtOVmM2VWdTbDdvU2ZMRlpKT0VhQU80NnpyUWUzVEFLamUvOEFpRE91eVFnRXdOYVpBZnc3aFlMTVRVS0lMWlJnTDk2YlV4aEMvWHpWNFhpYktDenlMZzJ4SWNQKytmV2h3bTFva0xwQm04d0VaNGltTnhCdnJIeWJVdGRGcS9aNFZWNDVhYXU2ZlhBMjA2UGVsYm9ZTUdMcEZPVktyZWQ1UT09IiwiaWF0IjoxNzY4NTU2ODkyLCJleHAiOjE3Njg1NjA0OTIsImp0aSI6ImFjYzoxOjE3Njg1NTY4OTI4MzY6d2ViIn0.XwINojM8i1aB6HfAUsbGIxem66AfzKT8Wmno49zvVzg`,
+      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwicGF5bG9hZCI6Ild5OTBVOU8vREhlQis4eWVkWGsrOVNKVlBkRkhHNjkzT1VNVDYyVjhLcHZqYmVWKzBmM1JMZ3lOZUtsWnlDMGlLR0dXVlc0WFgvSVU5RW1xdVE2NnNiKzJNNi8yYlJ6QXRkQjJBY3JrOVNvQWg1d0hpc3dmSHBpZjhTTHh2MkhINFZvL1BjL2o1TVNGcTJCSlhJbzlsc0RCRlUxRzNtOGlhTVJUYXAwSHBKNHAwVmpRVmJDMUhYMGdyOFhJQXBqTzVEQU81UVR1aVFVNXRHZUpPcEYyVkNmd3hiRFJKbEhaODZNVE0rNDQwSWt5Y3M3OG13eHBrcGVRZTBSQXVjMHFiaTVnZUJlSGpBMXJmaDlOYjgyYjZ3YmFNQ2JMQ0hjQUk1U05pTHc9IiwiaWF0IjoxNzY4ODE2MDU2LCJleHAiOjE3Njg4MTk2NTYsImp0aSI6ImFjYzoxOjE3Njg4MTYwNTYzNjk6d2ViIn0.oEV7ypZTwZrOXgopfkScIqz2IWRxI48y2uCKAJKT_60`,
       "Content-Type": "application/json",
     },
   },
@@ -27,7 +27,12 @@ export const report = {
   },
   source: {
     type: "sql",
-    queryid: "w8HCwecSFxoB",
+    table: "leads_tbl",
+    cols: "leads_tbl.*",
+    where: {
+      "(DATE(leads_tbl.created_on)< CURDATE())": "RAW",
+    },
+    limit: 500,
   },
   actions: {},
   rules: {
@@ -336,7 +341,7 @@ export const report = {
       sortable: true,
       searchable: true,
       filter: {
-        type: "date",
+        type: "daterange",
       },
     },
     edited_by: {
@@ -351,7 +356,7 @@ export const report = {
       searchable: true,
       formatter: "date",
       filter: {
-        type: "date",
+        type: "daterange",
       },
       hidden: true,
     },

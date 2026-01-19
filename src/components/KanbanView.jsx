@@ -41,7 +41,7 @@ const KanbanView = ({
   kanbanGroupBy,
   getRowValue,
 }) => {
-  console.log({ kanbanGroupBy });
+  // console.log({ kanbanGroupBy });
   const { kanban, datagrid } = config;
   const sensors = useSensors(useSensor(PointerSensor));
 
@@ -87,7 +87,7 @@ const KanbanView = ({
     if (!over || !activeCard) return;
 
     const fromCol = Object.keys(columnsData).find((col) =>
-      columnsData[col].some((card) => card.id === activeCard.id)
+      columnsData[col].some((card) => card.id === activeCard.id),
     );
     const toCol = over.data.current?.columnId || over.id; // fallback to column id if card id missing
 
@@ -95,10 +95,10 @@ const KanbanView = ({
 
     if (fromCol === toCol) {
       const oldIndex = columnsData[fromCol].findIndex(
-        (card) => card.id === active.id
+        (card) => card.id === active.id,
       );
       const newIndex = columnsData[toCol].findIndex(
-        (card) => card.id === over.id
+        (card) => card.id === over.id,
       );
       if (oldIndex !== newIndex && newIndex !== -1) {
         setColumnsData((prev) => ({
@@ -108,7 +108,7 @@ const KanbanView = ({
       }
     } else {
       const fromList = [...columnsData[fromCol]].filter(
-        (card) => card.id !== activeCard.id
+        (card) => card.id !== activeCard.id,
       );
       const toList = [...columnsData[toCol]];
       const overIndex = toList.findIndex((card) => card.id === over.id);
@@ -150,7 +150,7 @@ const KanbanView = ({
         ref={setNodeRef}
         style={style}
         className={`${getCardColor(
-          row
+          row,
         )}  group relative border rounded-lg p-1 shadow-sm cursor-pointer hover:shadow-md transition-shadow duration-200 space-y-2`}
         onClick={() => setActiveCard(row)}
       >
@@ -293,11 +293,11 @@ const KanbanView = ({
               <button
                 onClick={() => {
                   const content = formatKanbanCardContent(row, getCardValue);
-                  console.log({ content });
+                  // console.log({ content });
                   copyToClipboard(
                     content,
                     `${getRowValue(row, "id")}-${columnId}`,
-                    setCopiedCell
+                    setCopiedCell,
                   );
                 }}
                 className="inline-flex items-center absolute cursor-pointer right-2 bottom-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-gray-500 hover:text-gray-900"
@@ -367,7 +367,7 @@ const KanbanView = ({
       onDragEnd={handleDragEnd}
       onDragStart={({ active }) => {
         const card = filteredAndSortedData.find(
-          (row) => getRowValue(row, "id") === active.id
+          (row) => getRowValue(row, "id") === active.id,
         );
         setActiveCard(card);
       }}
@@ -389,7 +389,7 @@ const KanbanView = ({
           {activeCard && (
             <div
               className={`${getCardColor(
-                activeCard
+                activeCard,
               )} border rounded-lg p-3 shadow-md w-72`}
             >
               <div className="text-sm font-medium truncate">

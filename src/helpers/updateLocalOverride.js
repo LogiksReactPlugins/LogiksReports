@@ -4,15 +4,14 @@ import getPathKey from "./getPathKey";
 // export default function updateLocalOverride(key, value) {
 //   const STORAGE_KEY=getPathKey()
 //   const existing = JSON.parse(localStorage.getItem(`${CONSTANTS.REPORT_LOCALSTORAGE_PRIFIX}${STORAGE_KEY}`)) || {};
-// console.log({existing})
+// // console.log({existing})
 // const updated = { ...existing, [key]: value };
 // localStorage.setItem(`${CONSTANTS.REPORT_LOCALSTORAGE_PRIFIX}${STORAGE_KEY}`, JSON.stringify(updated));
-// console.log({updated})
+// // console.log({updated})
 // }
 
-
-export default function updateLocalOverride(key, value,baseConfig) {
- const STORAGE_KEY = getPathKey();
+export default function updateLocalOverride(key, value, baseConfig) {
+  const STORAGE_KEY = getPathKey();
   const fullKey = `${CONSTANTS.REPORT_LOCALSTORAGE_PRIFIX}${STORAGE_KEY}`;
 
   // Load existing overrides

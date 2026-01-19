@@ -21,17 +21,15 @@ const copyToClipboard = (text, cellKey, setCopiedCell) => {
   }
 };
 
-
-
 export const formatCardContent = (row, datagrid) => {
   let content = [];
-  console.log({ "ROWWWWWW": row })
+  // console.log({ "ROWWWWWW": row })
 
   Object.entries(row).forEach(([key, value]) => {
     if (value === null || value === undefined || key === "id") return;
 
     const column = datagrid[key];
-    console.log({ datagrid })
+    // console.log({ datagrid })
     if (!column || column.hidden) return;
 
     let displayVal = value;
@@ -42,7 +40,7 @@ export const formatCardContent = (row, datagrid) => {
     }
 
     content.push(`${column.label || key}: ${displayVal}`);
-    console.log(`${column.label || key}: ${displayVal}`);
+    // console.log(`${column.label || key}: ${displayVal}`);
   });
 
   return content.join("\n");
@@ -86,6 +84,5 @@ export const formatKanbanCardContent = (row, getCardValue) => {
 
   return content.trim();
 };
-
 
 export default copyToClipboard;

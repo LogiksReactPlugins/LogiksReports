@@ -26,8 +26,8 @@ const RecenterMap = ({ lat, lng }) => {
 
 const GmapView = ({ reportConfig, data }) => {
   const [currentLocation, setCurrentLocation] = useState(null);
-    // console.log({reportConfig,data})
-    // console.log(reportConfig.gmap.colmap)
+  // // console.log({reportConfig,data})
+  // // console.log(reportConfig.gmap.colmap)
   const colMap = {
     title: "title",
     descs: "descs",
@@ -39,8 +39,7 @@ const GmapView = ({ reportConfig, data }) => {
 
   const zoom = reportConfig?.gmap?.zoom || 2;
   const template =
-    reportConfig?.gmap?.template ||
-    `<div><h1>$title</h1><p>$descs</p></div>`;
+    reportConfig?.gmap?.template || `<div><h1>$title</h1><p>$descs</p></div>`;
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -69,7 +68,7 @@ const GmapView = ({ reportConfig, data }) => {
     <div className="h-[100vh] w-full relative z-0">
       <MapContainer
         center={defaultCenter}
-        zoom={zoom} 
+        zoom={zoom}
         style={{ height: "100%", width: "100%" }}
       >
         <TileLayer
