@@ -744,14 +744,14 @@ export default function Reports({
     return <i className={`${iconStr}`}></i>;
   };
 
-  const handleButtonClick = (buttonKey, button, data) => {
+  const handleButtonClick = (buttonKey, button, data, tr) => {
     // // console.log(methods[button?.event?.click]?.(data?.id))
     // const resolvedParams = Object.values(button?.params || {}).map(key => data?.[key]);
     // methods[button?.event?.click]?.(...resolvedParams);
     // // console.log('METHOD--',methods[button?.event?.click])
     // console.log("Button clicked:", buttonKey, button, data);
     if (methods[buttonKey]) {
-      methods[buttonKey](data);
+      methods[buttonKey]({ data, tr });
     } else {
       onButtonClick({ [buttonKey]: button }, data);
     }

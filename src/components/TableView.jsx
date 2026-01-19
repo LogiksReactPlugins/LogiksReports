@@ -236,7 +236,12 @@ const TableView = ({
                                     key={buttonKey}
                                     onClick={(e) => {
                                       e.stopPropagation();
-                                      handleButtonClick(buttonKey, button, row);
+                                      handleButtonClick(
+                                        buttonKey,
+                                        button,
+                                        row,
+                                        e.currentTarget.closest("tr"),
+                                      );
                                     }}
                                     className="inline-flex items-center px-2 py-1 text-xs font-medium rounded cursor-pointer text-action"
                                     title={resolveTitle(button.label, row)}
@@ -282,6 +287,7 @@ const TableView = ({
                                                   buttonKey,
                                                   button,
                                                   row,
+                                                  e.currentTarget.closest("tr"),
                                                 );
                                                 setOpenDropdown(null);
                                               }}
