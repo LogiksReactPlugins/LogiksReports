@@ -4,7 +4,7 @@ export default function formatCellValue(
   value,
   formatter,
   record = {},
-  columnInfo = {}
+  columnInfo = {},
 ) {
   if (!value && value !== false) return "";
 
@@ -86,7 +86,8 @@ export default function formatCellValue(
           rel="noopener noreferrer"
           className="text-blue-600 underline"
         >
-          {value}
+          Link
+          {/* {value} */}
         </a>
       ) : null;
 
@@ -113,7 +114,7 @@ export default function formatCellValue(
       return value ? (
         <a
           href={`https://www.google.com/maps/place/${encodeURIComponent(
-            value
+            value,
           )}`}
           target="_blank"
           rel="noopener noreferrer"
@@ -147,7 +148,7 @@ export default function formatCellValue(
     case "media":
       return (
         <img
-          src={value || "/images/noimg.png"}
+          src={value}
           alt="media"
           className="w-12 h-12 rounded object-cover"
         />
@@ -198,7 +199,7 @@ export default function formatCellValue(
         case "pretty":
           val = val.replace(
             /\w\S*/g,
-            (w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()
+            (w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase(),
           );
           break;
 
@@ -293,7 +294,7 @@ export default function formatCellValue(
         // Replace %field% with record[field]
         return columnInfo.template.replace(
           /%([\w.-]+)%/g,
-          (_, key) => record[key] ?? ""
+          (_, key) => record[key] ?? "",
         );
       }
       return String(value);

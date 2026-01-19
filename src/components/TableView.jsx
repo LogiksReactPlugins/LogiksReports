@@ -145,9 +145,9 @@ const TableView = ({
                         (fixFirstColumn && colIndex === 0)
                           ? "sticky left-0 bg-white z-10"
                           : fixLastColumn &&
-                            colIndex === visibleColumns.length - 1
-                          ? "sticky right-0 bg-white z-10"
-                          : "";
+                              colIndex === visibleColumns.length - 1
+                            ? "sticky right-0 bg-white z-10"
+                            : "";
 
                       return (
                         <th
@@ -255,7 +255,7 @@ const TableView = ({
                                           openDropdown ===
                                             getRowValue(row, "id")
                                             ? null
-                                            : getRowValue(row, "id")
+                                            : getRowValue(row, "id"),
                                         );
                                       }}
                                       className="inline-flex items-center px-1 py-1 text-xs font-medium text-gray-700 rounded hover:bg-gray-200"
@@ -281,14 +281,14 @@ const TableView = ({
                                                 handleButtonClick(
                                                   buttonKey,
                                                   button,
-                                                  row
+                                                  row,
                                                 );
                                                 setOpenDropdown(null);
                                               }}
                                               className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                               title={resolveTitle(
                                                 button.label,
-                                                row
+                                                row,
                                               )}
                                             >
                                               <span className="flex-shrink-0">
@@ -297,11 +297,11 @@ const TableView = ({
                                               <span className="truncate text-left w-full">
                                                 {resolveTitle(
                                                   button.label,
-                                                  row
+                                                  row,
                                                 )}
                                               </span>
                                             </button>
-                                          )
+                                          ),
                                         )}
                                       </div>
                                     )}
@@ -321,7 +321,7 @@ const TableView = ({
                               <input
                                 type="checkbox"
                                 checked={selectedRows.has(
-                                  getRowValue(row, "id")
+                                  getRowValue(row, "id"),
                                 )}
                                 onChange={() =>
                                   handleSelectRow(getRowValue(row, "id"))
@@ -336,9 +336,9 @@ const TableView = ({
                               (fixFirstColumn && colIndex === 0)
                                 ? "sticky left-0 bg-white z-10"
                                 : fixLastColumn &&
-                                  colIndex === visibleColumns.length - 1
-                                ? "sticky right-0 bg-white z-10"
-                                : "";
+                                    colIndex === visibleColumns.length - 1
+                                  ? "sticky right-0 bg-white z-10"
+                                  : "";
 
                             const colRules = config?.rules?.col_class || {};
                             const valueMap = colRules[key];
@@ -355,7 +355,7 @@ const TableView = ({
                               <td
                                 id={`${reportTitle}_tr_${getRowValue(
                                   row,
-                                  "id"
+                                  "id",
                                 )}_${key}`}
                                 key={key}
                                 className={`${
@@ -375,18 +375,67 @@ const TableView = ({
                                       getRowValue(row, key),
                                       col.formatter,
                                       row,
-                                      col
+                                      col,
                                     )}
                                   </div>
 
                                   <button
-                                    onClick={() =>
+                                    onClick={() => {
+                                      let copyValue = getRowValue(row, key);
+
+                                      switch (
+                                        (col.formatter || "").toLowerCase()
+                                      ) {
+                                        case "date": {
+                                          const d = new Date(copyValue);
+                                          copyValue = isNaN(d.getTime())
+                                            ? ""
+                                            : d.toLocaleDateString();
+                                          break;
+                                        }
+                                        case "datetime": {
+                                          const d = new Date(copyValue);
+                                          copyValue = isNaN(d.getTime())
+                                            ? ""
+                                            : d.toLocaleString();
+                                          break;
+                                        }
+                                        case "time": {
+                                          const d = new Date(copyValue);
+                                          copyValue = isNaN(d.getTime())
+                                            ? ""
+                                            : d.toLocaleTimeString();
+                                          break;
+                                        }
+                                        case "month": {
+                                          const m = Number(copyValue);
+                                          copyValue =
+                                            m >= 1 && m <= 12
+                                              ? new Date(
+                                                  2000,
+                                                  m - 1,
+                                                ).toLocaleString(undefined, {
+                                                  month: "long",
+                                                })
+                                              : "";
+                                          break;
+                                        }
+                                        case "checkbox":
+                                          copyValue = copyValue ? "Yes" : "No";
+                                          break;
+                                        default:
+                                          copyValue =
+                                            copyValue != null
+                                              ? String(copyValue)
+                                              : "";
+                                      }
+
                                       copyToClipboard(
-                                        getRowValue(row, key) || "",
+                                        copyValue,
                                         `${getRowValue(row, "id")}-${key}`,
-                                        setCopiedCell
-                                      )
-                                    }
+                                        setCopiedCell,
+                                      );
+                                    }}
                                     className="absolute -right-4 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity ml-2 p-1 rounded bg-gray-50 hover:bg-gray-100 cursor-pointer"
                                     title="Copy"
                                   >

@@ -408,7 +408,19 @@ export default function Reports({
 
     let filtered = data;
     // const searchFilter = buildSearchFilter(config?.datagrid, searchTerm);
-    if (searchTerm || currentPage) {
+    const dateFilter =
+      activeDateCol && dateOperator
+        ? {
+            [activeDateCol]:
+              dateOperator === "between"
+                ? [[dateRange.start, dateRange.end], "range"]
+                : dateOperator === "eq"
+                  ? [dateRange.start, "like"]
+                  : [[dateRange.start, dateRange.end], "range"],
+          }
+        : {};
+
+    if (searchTerm || currentPage || dateFilter) {
       if (config?.source?.type === "sql") {
         (async () => {
           if (!config?.source?.queryid) {
@@ -440,15 +452,12 @@ export default function Reports({
             headers: config?.source?.headers || config?.endPoints?.headers,
             data: {
               queryid: config?.source?.queryid,
-              ...(searchColumn
-                ? {
-                    filter: {
-                      [searchColumn]: [searchTerm, "LIKE"],
-                    },
-                  }
-                : {
-                    filter: {},
-                  }),
+              filter: {
+                ...(searchColumn && searchTerm
+                  ? { [searchColumn]: [searchTerm, "LIKE"] }
+                  : {}),
+                ...dateFilter,
+              },
               ...(groupBy && { group_by: groupBy }),
               limit: rowsPerPage,
               page: currentPage,
@@ -522,11 +531,92 @@ export default function Reports({
 
     // console.log({ filtered });
     return filtered;
-  }, [config, searchTerm, sortConfig, data, currentPage]);
+  }, [
+    config,
+    searchTerm,
+    sortConfig,
+    data,
+    currentPage,
+    dateRange.start,
+    dateRange.end,
+    dateOperator,
+  ]);
 
   useEffect(() => {
     setCurrentData(filteredAndSortedData);
-  }, [searchTerm, currentPage]);
+  }, [searchTerm, currentPage, dateRange.start, dateRange.end]);
+
+  useEffect(() => {
+    if (!dateOperator) return;
+
+    const today = new Date();
+    const ymd = (d) => d.toISOString().slice(0, 10);
+
+    const startOfWeek = (d) => {
+      const x = new Date(d);
+      x.setDate(d.getDate() - d.getDay());
+      return x;
+    };
+
+    const endOfWeek = (d) => {
+      const x = startOfWeek(d);
+      x.setDate(x.getDate() + 6);
+      return x;
+    };
+
+    let start = "";
+    let end = "";
+
+    switch (dateOperator) {
+      case "today":
+        start = end = ymd(today);
+        break;
+
+      case "yesterday": {
+        const d = new Date(today);
+        d.setDate(d.getDate() - 1);
+        start = end = ymd(d);
+        break;
+      }
+
+      case "this_week":
+        start = ymd(startOfWeek(today));
+        end = ymd(endOfWeek(today));
+        break;
+
+      case "last_week": {
+        const d = new Date(today);
+        d.setDate(d.getDate() - 7);
+        start = ymd(startOfWeek(d));
+        end = ymd(endOfWeek(d));
+        break;
+      }
+
+      case "this_month":
+        start = ymd(new Date(today.getFullYear(), today.getMonth(), 1));
+        end = ymd(new Date(today.getFullYear(), today.getMonth() + 1, 0));
+        break;
+
+      case "last_month":
+        start = ymd(new Date(today.getFullYear(), today.getMonth() - 1, 1));
+        end = ymd(new Date(today.getFullYear(), today.getMonth(), 0));
+        break;
+
+      case "this_year":
+        start = ymd(new Date(today.getFullYear(), 0, 1));
+        end = ymd(new Date(today.getFullYear(), 11, 31));
+        break;
+
+      case "eq":
+      case "between":
+        return; // ⛔ wait for user input
+
+      default:
+        return;
+    }
+    console.log({ start, end });
+    setDateRange({ start, end });
+  }, [dateOperator]);
 
   // const rowsPerPage = config?.rowsPerPage || 5;
   const startIndex = currentPage * rowsPerPage;
@@ -868,7 +958,7 @@ export default function Reports({
                 </button>
               </div>
             )}
-            <div className=" flex">
+            <div className=" flex gap-2">
               {dateRangeColumns.length == 1 && (
                 <button
                   onClick={() => {
@@ -924,6 +1014,7 @@ export default function Reports({
               {dateOperator === "eq" && (
                 <input
                   type="date"
+                  className="h-9 border border-gray-200 rounded-md"
                   value={dateRange.start}
                   onChange={(e) =>
                     setDateRange({ start: e.target.value, end: "" })
@@ -934,6 +1025,7 @@ export default function Reports({
                 <>
                   <input
                     type="date"
+                    className="h-9 border border-gray-200 rounded-md"
                     value={dateRange.start}
                     max={dateRange.end || undefined}
                     onChange={(e) =>
@@ -946,6 +1038,7 @@ export default function Reports({
                   />
                   <input
                     type="date"
+                    className="h-9 border border-gray-200 rounded-md"
                     value={dateRange.end}
                     min={dateRange.start || undefined}
                     onChange={(e) =>
