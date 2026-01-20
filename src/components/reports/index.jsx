@@ -123,12 +123,18 @@ export default function Reports({
   const [dateRange, setDateRange] = useState({ start: "", end: "" });
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchColumnLabel, setSearchColumnLabel] = useState();
-  const [dateOperator, setDateOperator] = useState("");
+  const [dateOperator, setDateOperator] = useState("eq");
+  const [filterTabs, setFilterTabs] = useState({});
+  const debounceRef = useRef(null);
 
   useEffect(() => {
     setCurrentPage(0);
     setRowsPerPage(config?.rowsPerPage);
   }, [config?.rowsPerPage]);
+
+  useEffect(() => {
+    console.log({ filterTabs });
+  }, [filterTabs]);
 
   useEffect(() => {
     setCurrentData(data || []);
@@ -383,7 +389,8 @@ export default function Reports({
     setSearchColumn("");
     setDateRange({ start: "", end: "" });
     setActiveDateCol(null);
-    setDateOperator("");
+    setDateOperator("eq");
+    setFilterTabs({});
     setShowDatePicker(false);
   };
 
@@ -453,9 +460,12 @@ export default function Reports({
             data: {
               queryid: config?.source?.queryid,
               filter: {
-                ...(searchColumn && searchTerm
-                  ? { [searchColumn]: [searchTerm, "LIKE"] }
-                  : {}),
+                ...Object.fromEntries(
+                  Object.entries(filterTabs || {}).map(([key, { value }]) => [
+                    key,
+                    [value, "LIKE"],
+                  ]),
+                ),
                 ...dateFilter,
               },
               ...(groupBy && { group_by: groupBy }),
@@ -915,7 +925,7 @@ export default function Reports({
             " report-search-container flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-4"
           }
         >
-          <div className="flex items-center gap-3 flex-1">
+          <div className="flex items-center gap-3 flex-1 items-start">
             {toolbar?.search !== false && (
               <div className="flex items-center  lg:max-w-sm flex-1 border border-gray-300 rounded-md overflow-hidden focus-within:ring-1 focus-within:ring-gray-300">
                 {/* SEARCH */}
@@ -925,7 +935,20 @@ export default function Reports({
                     type="search"
                     placeholder="Search..."
                     value={searchTerm}
-                    onChange={(e) => handleSearch(e.target.value)}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      handleSearch(val);
+
+                      if (searchColumn && searchColumnLabel) {
+                        setFilterTabs((prev) => ({
+                          ...prev,
+                          [searchColumn]: {
+                            label: searchColumnLabel,
+                            value: val,
+                          },
+                        }));
+                      }
+                    }}
                     className="w-full h-9 pl-9 pr-4 py-1 text-slate-600 outline-none border-none"
                   />
                 </div>
@@ -937,6 +960,9 @@ export default function Reports({
                   className="h-9 px-3 text-sm bg-white text-slate-600 outline-none border-none border-l border-gray-300"
                   onChange={(e) => {
                     const label = e.target.options[e.target.selectedIndex].text;
+                    if (searchColumn) {
+                      handleSearch("");
+                    }
                     setSearchColumn(e.target.value);
                     setSearchColumnLabel(label);
                   }}
@@ -1011,7 +1037,7 @@ export default function Reports({
                   ))}
                 </select>
               )}
-              {dateOperator === "eq" && (
+              {activeDateCol && dateOperator === "eq" && (
                 <input
                   type="date"
                   className="h-9 border border-gray-200 rounded-md"
@@ -1157,6 +1183,43 @@ export default function Reports({
               )}
             </div>
           </div>
+        </div>
+
+        <div className="search-filter-tabs flex gap-1 mt-1">
+          {Object.entries(filterTabs).map(([key, { label, value }]) => (
+            <span
+              key={key}
+              onClick={() => {
+                setSearchColumn(key);
+                setSearchColumnLabel(label);
+                setSearchTerm(value);
+                handleSearch(value);
+              }}
+              className="flex items-center gap-1 px-2 py-1 text-xs bg-gray-200 rounded cursor-pointer hover:bg-gray-300"
+            >
+              <span className="font-medium">{label}:</span>
+              <span className="truncate max-w-[120px]">{value}</span>
+
+              <button
+                className="ml-1 cursor-pointer text-gray-600 hover:text-red-600"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setFilterTabs((prev) => {
+                    const next = { ...prev };
+                    delete next[key];
+                    return next;
+                  });
+
+                  if (searchColumn === key) {
+                    setSearchTerm("");
+                    handleSearch("");
+                  }
+                }}
+              >
+                ✕
+              </button>
+            </span>
+          ))}
         </div>
       </div>
       {/* Pagination */}

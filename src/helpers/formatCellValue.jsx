@@ -25,10 +25,11 @@ export default function formatCellValue(
 
       return (
         <span title={String(value)}>
-          {invalid ? "Invalid Date" : d.toLocaleDateString()}
+          {invalid ? "Invalid Date" : d.toLocaleDateString("en-GB")}
         </span>
       );
     }
+
     case "month": {
       const month = Number(value);
       const invalid = !Number.isInteger(month) || month < 1 || month > 12;
@@ -37,19 +38,20 @@ export default function formatCellValue(
         <span title={String(value)}>
           {invalid
             ? "Invalid Month"
-            : new Date(2000, month - 1).toLocaleString(undefined, {
+            : new Date(2000, month - 1).toLocaleString("en-GB", {
                 month: "long",
               })}
         </span>
       );
     }
+
     case "time": {
       const d = new Date(value);
       const invalid = isNaN(d.getTime());
 
       return (
         <span title={String(value)}>
-          {invalid ? "Invalid Time" : d.toLocaleTimeString()}
+          {invalid ? "Invalid Time" : d.toLocaleTimeString("en-GB")}
         </span>
       );
     }
@@ -60,7 +62,7 @@ export default function formatCellValue(
 
       return (
         <span title={String(value)}>
-          {invalid ? "Invalid Date" : d.toLocaleString()}
+          {invalid ? "Invalid Date" : d.toLocaleString("en-GB")}
         </span>
       );
     }
