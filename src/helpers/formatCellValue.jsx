@@ -87,7 +87,7 @@ export default function formatCellValue(
           rel="noopener noreferrer"
           className="text-blue-600 underline"
         >
-          Link
+          LINK
           {/* {value} */}
         </a>
       ) : null;
@@ -146,17 +146,14 @@ export default function formatCellValue(
 
     case "photo":
     case "picture":
-    case "image":
-    case "media": {
-      const src =
-        typeof value === "string" && /^https?:\/\//i.test(value)
-          ? value
-          : `${config?.endPoints?.filePreview}/${value}`;
-
+    case "media":
       return (
-        <img src={src} alt="media" className="w-12 h-12 rounded object-cover" />
+        <img
+          src={value || "/images/noimg.png"}
+          alt="media"
+          className="w-12 h-12 rounded object-cover"
+        />
       );
-    }
 
     case "file":
     case "attachment": {
@@ -170,7 +167,7 @@ export default function formatCellValue(
       return (
         <div className="flex flex-col gap-1">
           {links.map((link, idx) => (
-            <AttachmentPopup key={idx} url={link} index={idx} />
+            <AttachmentPopup key={idx} url={link} index={idx} config={config} />
           ))}
         </div>
       );
@@ -372,10 +369,52 @@ function ContentPopup({ abstract, content }) {
   );
 }
 
-function AttachmentPopup({ url, index }) {
+function AttachmentPopup({ url, index, config }) {
   const [open, setOpen] = React.useState(false);
+  const [previewUrl, setPreviewUrl] = React.useState(null);
+  const [loading, setLoading] = React.useState(false);
 
   const fileName = url.split("/").pop();
+  const isHttp = /^https?:\/\//i.test(url);
+
+  React.useEffect(() => {
+    if (!open || isHttp) return;
+
+    let revokedUrl;
+
+    const loadPreview = async () => {
+      try {
+        setLoading(true);
+
+        const res = await fetch(
+          `${config.endPoints.preview}?uri=${encodeURIComponent(url)}`,
+          {
+            headers: config?.endPoints?.headers,
+          },
+        );
+
+        if (!res.ok) throw new Error("Preview fetch failed");
+
+        const blob = await res.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        revokedUrl = blobUrl;
+        setPreviewUrl(blobUrl);
+      } catch (e) {
+        console.error("Preview load failed", e);
+        setPreviewUrl(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadPreview();
+
+    return () => {
+      if (revokedUrl) URL.revokeObjectURL(revokedUrl);
+    };
+  }, [open, url, isHttp, config]);
+
+  const finalUrl = isHttp ? url : previewUrl;
 
   return (
     <>
@@ -383,14 +422,15 @@ function AttachmentPopup({ url, index }) {
         className="text-blue-600 underline cursor-pointer text-sm"
         onClick={() => setOpen(true)}
       >
-        {fileName || `File ${index + 1}`}
+        {/* {fileName || `File ${index + 1}`} */}
+        LINK
       </span>
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
           <div className="bg-white max-w-3xl w-full rounded shadow-lg p-4 relative max-h-[80vh] overflow-y-auto">
             <button
-              className="absolute top-2 right-2 cursor-pointer text-gray-500 bg-gray-200 px-2 py-1 hover:text-gray-800"
+              className="absolute top-2 right-2 cursor-pointer text-gray-500 bg-gray-200 px-2 py-1"
               onClick={() => setOpen(false)}
             >
               ✕
@@ -400,23 +440,21 @@ function AttachmentPopup({ url, index }) {
               {fileName}
             </div>
 
-            {/* File preview */}
-            <iframe
-              src={url}
-              title={fileName}
-              className="w-full h-[60vh] border border-slate-200 rounded"
-            />
+            {loading && (
+              <div className="text-sm text-gray-500">Loading preview…</div>
+            )}
 
-            <div className="mt-3 text-right">
-              <a
-                href={url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 underline text-sm"
-              >
-                Open in new tab
-              </a>
-            </div>
+            {!loading && finalUrl && (
+              <iframe
+                src={finalUrl}
+                title={fileName}
+                className="w-full h-[60vh] border border-slate-200 rounded"
+              />
+            )}
+
+            {!loading && !finalUrl && (
+              <div className="text-sm text-red-500">Preview not available</div>
+            )}
           </div>
         </div>
       )}
