@@ -805,7 +805,7 @@ export default function Reports({
       }`}
     >
       {" "}
-      <div className=" px-3 sm:px-3 py-2 report-header">
+      <div className="  py-2 report-header">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="flex space-x-2">
             <h1

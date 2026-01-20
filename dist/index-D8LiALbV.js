@@ -36932,7 +36932,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Pr.canvg ? Promise.resolve(Pr.canvg) : import("./index.es-CJWy94IT.js")).catch(function(f) {
+  return (Pr.canvg ? Promise.resolve(Pr.canvg) : import("./index.es-C-08hqLw.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
@@ -94394,7 +94394,7 @@ function D6e({
       className: `bg-white report-root ${Un === void 0 || Un === !0 ? "compact" : "wide"}`,
       children: [
         " ",
-        /* @__PURE__ */ W.jsxs("div", { className: " px-3 sm:px-3 py-2 report-header", children: [
+        /* @__PURE__ */ W.jsxs("div", { className: "  py-2 report-header", children: [
           /* @__PURE__ */ W.jsxs("div", { className: "flex flex-col md:flex-row md:items-center md:justify-between gap-4", children: [
             /* @__PURE__ */ W.jsxs("div", { className: "flex space-x-2", children: [
               /* @__PURE__ */ W.jsxs(
