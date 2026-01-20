@@ -337,6 +337,8 @@ export default function Reports({
           config.source.queryid = data?.queryid;
           config.source.url = `${config?.endPoints?.baseURL}${config?.endPoints.runQuery}`;
         }
+        const refid = config?.endPoints?.refid;
+
         const axiosObject = {
           method: config?.source?.method || "post",
           url:
@@ -348,6 +350,7 @@ export default function Reports({
             filter: config?.source?.filter || {},
             limit: rowsPerPage,
             page: 0,
+            ...(refid ? { refid } : {}),
           },
         };
         const { data } = await axios(axiosObject);
@@ -450,6 +453,7 @@ export default function Reports({
             // console.log({ saveQuerydata });
             config.source.queryid = saveQuerydata?.queryid;
           }
+          const refid = config?.endPoints?.refid;
 
           const axiosObject = {
             method: config?.source?.method || "post",
@@ -469,6 +473,7 @@ export default function Reports({
                 ...dateFilter,
               },
               ...(groupBy && { group_by: groupBy }),
+              ...(refid ? { refid } : {}),
               limit: rowsPerPage,
               page: currentPage,
             },
@@ -619,7 +624,7 @@ export default function Reports({
 
       case "eq":
       case "between":
-        return; // ⛔ wait for user input
+        return;
 
       default:
         return;
