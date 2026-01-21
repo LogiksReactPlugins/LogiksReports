@@ -308,12 +308,8 @@ export default function Reports({
         const { data } = await axios(axiosObject);
         // console.log({ data });
         setData(data?.data || []);
-        if (data.page) {
-          setCurrentPage(data.page);
-        }
-        if (data.max) {
-          setTotalData(data.max);
-        }
+        setCurrentPage(data.page || 0);
+        setTotalData(data.max || 0);
       } else if (config?.source?.type === "sql") {
         if (!config?.source?.queryid) {
           const payload = {
@@ -357,12 +353,8 @@ export default function Reports({
 
         const responsePath = config?.source?.response || "data";
         // // console.log({config?.source?.response})
-        if (data?.page) {
-          setCurrentPage(data?.page || 1);
-        }
-        if (data.max) {
-          setTotalData(data.max);
-        }
+        setCurrentPage(data?.page || 0);
+        setTotalData(data.max || 0);
         // console.log({ data });
         // console.log({ responsePath });
         // setData(data?.data || []);
@@ -476,6 +468,9 @@ export default function Reports({
               ...(refid ? { refid } : {}),
               limit: rowsPerPage,
               page: currentPage,
+              ...(sortConfig
+                ? { orderby: `${sortConfig?.key} ${sortConfig?.direction}` }
+                : {}),
             },
           };
           // console.log({ axiosObject });
@@ -489,12 +484,8 @@ export default function Reports({
           const result = getValueByPath(data, responsePath);
           // console.log({ result });
           setData(result || []);
-          if (data?.page) {
-            setCurrentPage(data?.page || 0);
-          }
-          if (data.max) {
-            setTotalData(data.max);
-          }
+          setCurrentPage(data?.page || 0);
+          setTotalData(data.max || 0);
         })();
       }
       // const advancedSearch = searchTerm.includes(":");
@@ -555,11 +546,12 @@ export default function Reports({
     dateRange.start,
     dateRange.end,
     dateOperator,
+    sortConfig,
   ]);
 
   useEffect(() => {
     setCurrentData(filteredAndSortedData);
-  }, [searchTerm, currentPage, dateRange.start, dateRange.end]);
+  }, [searchTerm, currentPage, dateRange.start, dateRange.end, sortConfig]);
 
   useEffect(() => {
     if (!dateOperator) return;
@@ -683,12 +675,11 @@ export default function Reports({
   const handleSort = (key) => {
     const column = datagrid[key];
     if (!column.sortable) return;
-
+    setCurrentPage(0);
     setSortConfig((prev) => ({
       key,
       direction: prev.key === key && prev.direction === "asc" ? "desc" : "asc",
     }));
-    setCurrentPage(0);
   };
 
   const handleSearch = (term) => {
@@ -1257,7 +1248,7 @@ export default function Reports({
                   onClick={() =>
                     setCurrentPage((prev) => Math.min(prev + 1, totalPages))
                   }
-                  disabled={currentPage === totalPages}
+                  disabled={currentPage === totalPages - 1}
                   className="inline-flex cursor-pointer items-center px-1 py-0.5 text-sm font-medium text-action  rounded-md   disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <span className="hidden sm:inline">Next</span>
