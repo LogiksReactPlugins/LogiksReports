@@ -209,11 +209,14 @@ const TableView = ({
                               <th key={key} className="px-2 py-1">
                                 <input
                                   type="date"
-                                  value={filters[key] || ""}
+                                  value={filters[key]?.value || ""}
                                   onChange={(e) =>
                                     setFilters((p) => ({
                                       ...p,
-                                      [key]: e.target.value,
+                                      [key]: {
+                                        type: col.filter.type,
+                                        value: e.target.value,
+                                      },
                                     }))
                                   }
                                   className="w-full border rounded px-2 py-1 text-xs"
@@ -235,11 +238,12 @@ const TableView = ({
                             return (
                               <th key={key} className="px-2 py-1">
                                 <select
-                                  value={filters[key] ?? ""}
+                                  value={filters[key]?.value ?? ""}
                                   onChange={(e) =>
                                     setFilters((p) => ({
                                       ...p,
-                                      [key]: e.target.value,
+                                      [key]:{  type: col.filter.type,
+                                        value: e.target.value,},
                                     }))
                                   }
                                   className="w-full border rounded px-2 py-1 text-xs"
