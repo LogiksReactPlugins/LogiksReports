@@ -220,10 +220,17 @@ const TableView = ({
                                 />
                               </th>
                             );
-
                           case "select": {
-                            const options =
-                              filter.options || selectOptions[key] || {};
+                            const rawOptions = filter.options ?? {};
+
+                            // normalize options to { [key]: label }
+                            const options = Array.isArray(rawOptions)
+                              ? rawOptions.reduce((acc, item) => {
+                                  const [key, value] = Object.entries(item)[0];
+                                  acc[value] = value;
+                                  return acc;
+                                }, {})
+                              : rawOptions;
 
                             return (
                               <th key={key} className="px-2 py-1">
@@ -240,6 +247,7 @@ const TableView = ({
                                   <option value="">
                                     {filter.nofilter || "--"}
                                   </option>
+
                                   {Object.entries(options).map(
                                     ([val, label]) => (
                                       <option key={val} value={val}>
