@@ -39,6 +39,9 @@ export const report = {
     desc: {
       label: "CONTENT At",
       formatter: "content",
+      filter: {
+        type: "text",
+      },
     },
     attachment: {
       label: "attacghmnent At",

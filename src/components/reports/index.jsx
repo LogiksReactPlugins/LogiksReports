@@ -125,7 +125,10 @@ export default function Reports({
   const [searchColumnLabel, setSearchColumnLabel] = useState();
   const [dateOperator, setDateOperator] = useState("eq");
   const [filterTabs, setFilterTabs] = useState({});
+  const [showTableFilters, setShowTableFilters] = useState(false);
   const debounceRef = useRef(null);
+  const [filters, setFilters] = useState({});
+  const [selectOptions, setSelectOptions] = useState({});
 
   useEffect(() => {
     setCurrentPage(0);
@@ -175,7 +178,42 @@ export default function Reports({
       }
     }
   }, [currentView, config, kanbanGroupBy]);
+  const fetchSelectOptions = async (filterConfig) => {
+    const payload = {};
 
+    if (filterConfig.queryid) payload.queryid = filterConfig.queryid;
+    if (filterConfig.groupid) payload.groupid = filterConfig.groupid;
+
+    const res = await fetch("/api/common/select-options", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await res.json();
+    return data || {};
+  };
+  const visibleColumns = useMemo(
+    () =>
+      Object.entries(config?.datagrid || {}).filter(([, col]) => !col.hidden),
+    [config?.datagrid],
+  );
+
+  useEffect(() => {
+    console.log({ filters });
+  }, [filters]);
+
+  // useEffect(() => {
+  //   if (!showTableFilters || !visibleColumns) return;
+
+  //   visibleColumns?.forEach(async ([key, col]) => {
+  //     const filter = col.filter;
+  //     if (filter?.type === "select" && !filter.options) {
+  //       const options = await fetchSelectOptions(filter);
+  //       setSelectOptions((prev) => ({ ...prev, [key]: options }));
+  //     }
+  //   });
+  // }, [showTableFilters, visibleColumns]);
   function setViewHistory(view) {
     const STORAGE_KEY = getPathKey();
     const localOverrides =
@@ -462,13 +500,23 @@ export default function Reports({
                     [value, "LIKE"],
                   ]),
                 ),
+                ...Object.fromEntries(
+                  Object.entries(filters || {}).map(
+                    ([key, { type, value }]) => {
+                      if (type == "text") {
+                        return [key, [value, "LIKE"]];
+                      }
+                      return [key, value];
+                    },
+                  ),
+                ),
                 ...dateFilter,
               },
               ...(groupBy && { group_by: groupBy }),
               ...(refid ? { refid } : {}),
               limit: rowsPerPage,
               page: currentPage,
-              ...(sortConfig
+              ...(sortConfig?.key
                 ? { orderby: `${sortConfig?.key} ${sortConfig?.direction}` }
                 : {}),
             },
@@ -547,11 +595,19 @@ export default function Reports({
     dateRange.end,
     dateOperator,
     sortConfig,
+    filters,
   ]);
 
   useEffect(() => {
     setCurrentData(filteredAndSortedData);
-  }, [searchTerm, currentPage, dateRange.start, dateRange.end, sortConfig]);
+  }, [
+    searchTerm,
+    currentPage,
+    dateRange.start,
+    dateRange.end,
+    sortConfig,
+    filters,
+  ]);
 
   useEffect(() => {
     if (!dateOperator) return;
@@ -772,9 +828,7 @@ export default function Reports({
     .map(([key, col]) => ({ key, label: col.label }));
 
   const showExtraColumn = config?.showExtraColumn;
-  const visibleColumns = Object.entries(datagrid).filter(
-    ([key, col]) => !col.hidden,
-  );
+
   const visibleButtons = buttons
     ? Object.entries(buttons).filter(([k]) => k !== "more")
     : [];
@@ -1177,6 +1231,12 @@ export default function Reports({
                   <Settings className="w-4 h-4" />
                 </button>
               )}
+              <button
+                onClick={() => setShowTableFilters(true)}
+                className={`inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md transition-colors  bg-action cursor-pointer`}
+              >
+                <FilterIcon className="w-4 h-4" />
+              </button>
             </div>
           </div>
         </div>
@@ -1381,6 +1441,10 @@ export default function Reports({
           renderSortIcon={renderSortIcon}
           getIconComponent={getIconComponent}
           loading={dataLoading}
+          showTableFilters={showTableFilters}
+          selectOption={selectOptions}
+          filters={filters}
+          setFilters={setFilters}
         />
       )}
       {/* Click outside to close dropdown */}

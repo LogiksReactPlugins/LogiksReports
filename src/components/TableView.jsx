@@ -27,6 +27,10 @@ const TableView = ({
   style,
   loading,
   getRowValue,
+  showTableFilters,
+  selectOptions,
+  filters,
+  setFilters,
 }) => {
   const { datagrid, groupBy } = config;
   const {
@@ -170,6 +174,90 @@ const TableView = ({
                       );
                     })}
                   </tr>
+                  {showTableFilters && (
+                    <tr className="bg-gray-50">
+                      {hasButtons && <th />}
+                      {showExtraColumn === "checkbox" && <th />}
+
+                      {visibleColumns.map(([key, col]) => {
+                        const filter = col.filter;
+                        if (!filter) return <th key={key} />;
+
+                        switch (filter.type) {
+                          case "text":
+                            return (
+                              <th key={key} className="px-2 py-1">
+                                <input
+                                  type="text"
+                                  value={filters[key]?.value || ""}
+                                  onChange={(e) =>
+                                    setFilters((p) => ({
+                                      ...p,
+                                      [key]: {
+                                        type: col.filter.type,
+                                        value: e.target.value,
+                                      },
+                                    }))
+                                  }
+                                  className="w-full border rounded px-2 py-1 text-xs"
+                                />
+                              </th>
+                            );
+
+                          case "date":
+                            return (
+                              <th key={key} className="px-2 py-1">
+                                <input
+                                  type="date"
+                                  value={filters[key] || ""}
+                                  onChange={(e) =>
+                                    setFilters((p) => ({
+                                      ...p,
+                                      [key]: e.target.value,
+                                    }))
+                                  }
+                                  className="w-full border rounded px-2 py-1 text-xs"
+                                />
+                              </th>
+                            );
+
+                          case "select": {
+                            const options =
+                              filter.options || selectOptions[key] || {};
+
+                            return (
+                              <th key={key} className="px-2 py-1">
+                                <select
+                                  value={filters[key] ?? ""}
+                                  onChange={(e) =>
+                                    setFilters((p) => ({
+                                      ...p,
+                                      [key]: e.target.value,
+                                    }))
+                                  }
+                                  className="w-full border rounded px-2 py-1 text-xs"
+                                >
+                                  <option value="">
+                                    {filter.nofilter || "--"}
+                                  </option>
+                                  {Object.entries(options).map(
+                                    ([val, label]) => (
+                                      <option key={val} value={val}>
+                                        {label}
+                                      </option>
+                                    ),
+                                  )}
+                                </select>
+                              </th>
+                            );
+                          }
+
+                          default:
+                            return <th key={key} />;
+                        }
+                      })}
+                    </tr>
+                  )}
                 </thead>
 
                 <tbody
