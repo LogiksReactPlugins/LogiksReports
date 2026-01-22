@@ -135,7 +135,6 @@ export default function Reports({
     setRowsPerPage(config?.rowsPerPage);
   }, [config?.rowsPerPage]);
 
-
   useEffect(() => {
     setCurrentData(data || []);
   }, [data]);
@@ -423,6 +422,7 @@ export default function Reports({
     setFilterTabs({});
     setShowDatePicker(false);
     setFilters({});
+    setShowTableFilters(false);
   };
 
   useEffect(() => {
@@ -1230,7 +1230,7 @@ export default function Reports({
                 </button>
               )}
               <button
-                onClick={() => setShowTableFilters(true)}
+                onClick={() => setShowTableFilters((prev) => !prev)}
                 className={`inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md transition-colors  bg-action cursor-pointer`}
               >
                 <FilterIcon className="w-4 h-4" />
