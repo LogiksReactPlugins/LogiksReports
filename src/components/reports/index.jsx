@@ -135,9 +135,6 @@ export default function Reports({
     setRowsPerPage(config?.rowsPerPage);
   }, [config?.rowsPerPage]);
 
-  useEffect(() => {
-    console.log({ filterTabs });
-  }, [filterTabs]);
 
   useEffect(() => {
     setCurrentData(data || []);
@@ -425,6 +422,7 @@ export default function Reports({
     setDateOperator("eq");
     setFilterTabs({});
     setShowDatePicker(false);
+    setFilters({});
   };
 
   useEffect(() => {
