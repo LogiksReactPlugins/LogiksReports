@@ -919,7 +919,10 @@ function Reports({
                 Object.entries(actions).map(([key, action]) => (
                   <button
                     onClick={() =>
-                      handleButtonClick(key, action, { ids: [...selectedRows] })
+                      handleButtonClick(key, action, {
+                        ids: [...selectedRows],
+                        count: selectedRows.length,
+                      })
                     }
                     key={key}
                     className="inline-flex items-center px-2 py-1 text-sm font-medium cursor-pointer bg-action rounded-md"
