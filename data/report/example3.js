@@ -47,6 +47,7 @@ export const report = {
     "infoview@test.main/{hashid}": {
       label: "View Info",
       icon: "fa fa-eye",
+      lgksPrompt: "CONFIRMATIOOOOOOOnn {persona_code} ",
     },
     more: {
       "forms@edit/{hashid}": {

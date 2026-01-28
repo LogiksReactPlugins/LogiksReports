@@ -5,9 +5,9 @@ export const report = {
     baseURL: "http://192.168.0.20:9999",
     debuggUrl: `http://192.168.0.20:9999/api/query/raw`,
     accessToken:
-      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwicGF5bG9hZCI6IjNmYS9LSFFURDcrWFV6MGhncDZuYzdmWUQ4UzFCb3RmcmdURFhHdElZSmJzR2RmZzUvYkg5WHNhc3ZiNDNlcEExOG9hdkNUanpKVGVqZXhseTlwWWwyOHhmV0s1bU1WR1JUeWhXVEwrYXFBMFZCYkZpZjB0QThrUG1jY09qV1ZqNFZNWlBJTmRSMmg5VmZVR2xuM0tENWhYcDRCY2p4TzVCTnd6Q3VoVHlaYTg4eWFVekZuUVFwbkphYUhLZXd1VVJQd1dHclNYcDk2M29hZzdoTXo0V2V4TDl0dmh6VldzK1RTbjFaM3FLVyszYXIxT0tOUFFlMGFCdDhuTjZmL2N4RlpDZVVSRiszakgyNDlObTE0QzZIRTNqMi9vbTJCTXQ2aEdtdz09IiwiaWF0IjoxNzY5MDY1NDg0LCJleHAiOjE3NjkwNjkwODQsImp0aSI6ImFjYzoxOjE3NjkwNjU0ODQ3MTM6d2ViIn0.QGGI2XAif1KjFMIMdcrN3mnuTYx7yGEMDRy_qljhddM",
+      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwicGF5bG9hZCI6Im9Md0IxWVk3WkRsaEl3QTE5d1UxM0JjR0pKN2cyd3I3QUdaZG4valpCQU5VU2RXcUJud0QzZFVhNlpQeExpWHY1OWd6U3dBLzVnQ3pyeVRTVnNxL0pJME9rTW1qRXJhT1hEQmFVSGFUUHZSeS8wd2VHMHphUW5ieVZvR1NmRjUwcDlrWkhsSHJnNVRtYUI4Sm9Db1JSRUFtRVJMWVNkaUovbUxrTnNIa0V1RjlCbVY0QkIvZ0QrcitjSVphL1lPNC91MUZ0Y0lpOTNUTUd5VWxlVEVGZ0xTVVBUMS9HMFVpSnJFTlQwUDFGdUhHRXhmd1M1cjZMTWtvbW0weFZ1UjNNSjRaWUY4NnVJalpVM2JZWUpXSkh0clRyb0RZcXNLTkpwZGhmZmM9IiwiaWF0IjoxNzY5NDg4NzkyLCJleHAiOjE3Njk0OTIzOTIsImp0aSI6ImFjYzoxOjE3Njk0ODg3OTIyMDE6d2ViIn0.0QucFhKH5XCHTX9vVxh8ko-XwYoGHxPsyy3Nxv2FSEk",
     headers: {
-      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwicGF5bG9hZCI6IjNmYS9LSFFURDcrWFV6MGhncDZuYzdmWUQ4UzFCb3RmcmdURFhHdElZSmJzR2RmZzUvYkg5WHNhc3ZiNDNlcEExOG9hdkNUanpKVGVqZXhseTlwWWwyOHhmV0s1bU1WR1JUeWhXVEwrYXFBMFZCYkZpZjB0QThrUG1jY09qV1ZqNFZNWlBJTmRSMmg5VmZVR2xuM0tENWhYcDRCY2p4TzVCTnd6Q3VoVHlaYTg4eWFVekZuUVFwbkphYUhLZXd1VVJQd1dHclNYcDk2M29hZzdoTXo0V2V4TDl0dmh6VldzK1RTbjFaM3FLVyszYXIxT0tOUFFlMGFCdDhuTjZmL2N4RlpDZVVSRiszakgyNDlObTE0QzZIRTNqMi9vbTJCTXQ2aEdtdz09IiwiaWF0IjoxNzY5MDY1NDg0LCJleHAiOjE3NjkwNjkwODQsImp0aSI6ImFjYzoxOjE3NjkwNjU0ODQ3MTM6d2ViIn0.QGGI2XAif1KjFMIMdcrN3mnuTYx7yGEMDRy_qljhddM`,
+      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwicGF5bG9hZCI6Im9Md0IxWVk3WkRsaEl3QTE5d1UxM0JjR0pKN2cyd3I3QUdaZG4valpCQU5VU2RXcUJud0QzZFVhNlpQeExpWHY1OWd6U3dBLzVnQ3pyeVRTVnNxL0pJME9rTW1qRXJhT1hEQmFVSGFUUHZSeS8wd2VHMHphUW5ieVZvR1NmRjUwcDlrWkhsSHJnNVRtYUI4Sm9Db1JSRUFtRVJMWVNkaUovbUxrTnNIa0V1RjlCbVY0QkIvZ0QrcitjSVphL1lPNC91MUZ0Y0lpOTNUTUd5VWxlVEVGZ0xTVVBUMS9HMFVpSnJFTlQwUDFGdUhHRXhmd1M1cjZMTWtvbW0weFZ1UjNNSjRaWUY4NnVJalpVM2JZWUpXSkh0clRyb0RZcXNLTkpwZGhmZmM9IiwiaWF0IjoxNzY5NDg4NzkyLCJleHAiOjE3Njk0OTIzOTIsImp0aSI6ImFjYzoxOjE3Njk0ODg3OTIyMDE6d2ViIn0.0QucFhKH5XCHTX9vVxh8ko-XwYoGHxPsyy3Nxv2FSEk`,
       "Content-Type": "application/json",
     },
   },
@@ -174,6 +174,7 @@ export const report = {
       sortable: true,
       searchable: true,
       hidden: false,
+      groupable: true,
     },
     lead_date: {
       label: "Date",
@@ -367,32 +368,18 @@ export const report = {
   },
   kanban: {
     colkeys: {
-      lead_status: {
+      title: {
         label: "Status",
         table: "leads_tbl",
         columns: "lead_status as title,lead_status as value",
       },
-      lead_type: {
-        label: "Type",
-        table: "leads_tbl",
-        columns: "lead_type as title,lead_type as value",
-      },
-      net_amount: {
-        label: "Net Amount",
-        table: "leads_tbl",
-        columns: "net_amount as title,net_amount as value",
-      },
-      customer_type: {
-        label: "Customer Type",
-        table: "leads_tbl",
-        columns: "customer_type as title,customer_type as value",
+      created_on: {
+        label: "Created On",
       },
     },
     colmap: {
       title: "title",
-      descs: "newContact",
-      tag: "lead_status",
-      due_date: "lead_date",
+      due_date: "created_on",
     },
     unilink: "lead.main",
   },

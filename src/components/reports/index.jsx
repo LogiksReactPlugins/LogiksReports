@@ -63,10 +63,11 @@ import getPathKey from "../../helpers/getPathKey";
 import GalleryView from "../GalleryView";
 import GanttView from "../GanttView";
 import GmapView from "../GmapView";
+import { ModalProvider, useModal } from "../../helpers/ModalContext";
 const getRowValue = (row, key) => {
   if (key in row) return row[key];
-
-  const lastKey = key.split(".").pop();
+  console.log({ key });
+  const lastKey = key?.split(".").pop();
   if (lastKey in row) return row[lastKey];
   const match = Object.keys(row).find((k) => k.split(".").pop() === lastKey);
 
@@ -85,7 +86,7 @@ const DATE_OPERATORS = [
 ];
 
 // Main Reports Component
-export default function Reports({
+function Reports({
   report: reportJSON,
   style,
   methods,
@@ -129,6 +130,7 @@ export default function Reports({
   const debounceRef = useRef(null);
   const [filters, setFilters] = useState({});
   const [selectOptions, setSelectOptions] = useState({});
+  const { openConfirm, openPrompt, openAlert } = useModal();
 
   useEffect(() => {
     setCurrentPage(0);
@@ -803,17 +805,54 @@ export default function Reports({
     if (!iconStr) return null;
     return <i className={`${iconStr}`}></i>;
   };
+  const getRowValue = (row, key) => {
+    if (key in row) return row[key];
+    const lastKey = key.split(".").pop();
+    if (lastKey in row) return row[lastKey];
+    const match = Object.keys(row).find((k) => k.split(".").pop() === lastKey);
+    return match ? row[match] : undefined;
+  };
+  function resolvePlaceholders(template, rowData = {}) {
+    return template.replace(/\{([^}]+)\}/g, (_, key) => {
+      return getRowValue(rowData, key) !== undefined
+        ? getRowValue(rowData, key)
+        : `{${key}}`;
+    });
+  }
 
-  const handleButtonClick = (buttonKey, button, data, tr) => {
+  const handleButtonClick = async (buttonKey, button, data, tr) => {
     // // console.log(methods[button?.event?.click]?.(data?.id))
     // const resolvedParams = Object.values(button?.params || {}).map(key => data?.[key]);
     // methods[button?.event?.click]?.(...resolvedParams);
     // // console.log('METHOD--',methods[button?.event?.click])
     // console.log("Button clicked:", buttonKey, button, data);
+    let promptResponse = null;
+
+    if (button.lgksConfirm) {
+      const ok = await openConfirm(
+        resolvePlaceholders(button.lgksConfirm, data),
+      );
+      if (!ok) return;
+    }
+
+    if (button.lgksPrompt) {
+      promptResponse = await openPrompt(
+        resolvePlaceholders(button.lgksPrompt, data),
+      );
+      if (promptResponse === null) return;
+    }
+
+    if (button.lgksAlert) {
+      await openAlert(resolvePlaceholders(button.lgksAlert, data));
+    }
+
     if (methods[buttonKey]) {
       methods[buttonKey]({ data, tr });
     } else {
-      onButtonClick({ [buttonKey]: button }, data);
+      onButtonClick(
+        { [buttonKey]: { ...button, prompt_response: promptResponse } },
+        data,
+      );
     }
   };
 
@@ -1291,7 +1330,7 @@ export default function Reports({
               <div className="flex items-center justify-center sm:justify-end md:gap-2">
                 <button
                   onClick={() =>
-                    setCurrentPage((prev) => Math.max(prev - 1, 1))
+                    setCurrentPage((prev) => Math.max(prev - 1, 0))
                   }
                   disabled={currentPage === 0}
                   className="inline-flex cursor-pointer items-center px-1 py-0.5 text-sm font-medium text-action  rounded-md   disabled:opacity-50 disabled:cursor-not-allowed"
@@ -1343,6 +1382,7 @@ export default function Reports({
           setOpenDropdown={setOpenDropdown}
           getIconComponent={getIconComponent}
           loading={dataLoading}
+          currentData={currentData}
         />
       ) : currentView === "gallery" ? (
         <GalleryView
@@ -1381,6 +1421,7 @@ export default function Reports({
           getIconComponent={getIconComponent}
           kanbanGroupBy={kanbanGroupBy}
           loading={dataLoading}
+          currentData={currentData}
         />
       ) : currentView === "gantt" ? (
         <GanttView
@@ -1461,5 +1502,13 @@ export default function Reports({
         />
       )}
     </div>
+  );
+}
+
+export default function ReportsWithProviders(props) {
+  return (
+    <ModalProvider>
+      <Reports {...props} />
+    </ModalProvider>
   );
 }
