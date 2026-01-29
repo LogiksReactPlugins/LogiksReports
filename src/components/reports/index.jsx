@@ -1487,6 +1487,7 @@ function Reports({
           selectOption={selectOptions}
           filters={filters}
           setFilters={setFilters}
+          resolvePlaceholders={resolvePlaceholders}
         />
       )}
       {/* Click outside to close dropdown */}

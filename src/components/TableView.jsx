@@ -31,6 +31,7 @@ const TableView = ({
   selectOptions,
   filters,
   setFilters,
+  resolvePlaceholders,
 }) => {
   const { datagrid, groupBy } = config;
   const {
@@ -58,14 +59,6 @@ const TableView = ({
     return () => document.removeEventListener("mousedown", handleOutsideClick);
   }, [openDropdown]);
 
-  const resolveTitle = (title, row) => {
-    if (!title) return "";
-    if (title.startsWith("{") && title.endsWith("}")) {
-      const key = title.slice(1, -1);
-      return row?.[key] ?? "";
-    }
-    return title;
-  };
   const buildGroupedHeaders = () => {
     const groups = [];
     let current = null;
@@ -242,8 +235,10 @@ const TableView = ({
                                   onChange={(e) =>
                                     setFilters((p) => ({
                                       ...p,
-                                      [key]:{  type: col.filter.type,
-                                        value: e.target.value,},
+                                      [key]: {
+                                        type: col.filter.type,
+                                        value: e.target.value,
+                                      },
                                     }))
                                   }
                                   className="w-full border rounded px-2 py-1 text-xs"
@@ -344,7 +339,10 @@ const TableView = ({
                                       );
                                     }}
                                     className="inline-flex items-center px-2 py-1 text-xs font-medium rounded cursor-pointer text-action"
-                                    title={resolveTitle(button.label, row)}
+                                    title={resolvePlaceholders(
+                                      button.label,
+                                      row,
+                                    )}
                                   >
                                     {getIconComponent(button.icon)}
                                   </button>
@@ -392,7 +390,7 @@ const TableView = ({
                                                 setOpenDropdown(null);
                                               }}
                                               className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                              title={resolveTitle(
+                                              title={resolvePlaceholders(
                                                 button.label,
                                                 row,
                                               )}
@@ -401,7 +399,7 @@ const TableView = ({
                                                 {getIconComponent(button.icon)}
                                               </span>
                                               <span className="truncate text-left w-full">
-                                                {resolveTitle(
+                                                {resolvePlaceholders(
                                                   button.label,
                                                   row,
                                                 )}
