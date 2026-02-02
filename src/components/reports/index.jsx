@@ -826,6 +826,7 @@ function Reports({
     // methods[button?.event?.click]?.(...resolvedParams);
     // // console.log('METHOD--',methods[button?.event?.click])
     // console.log("Button clicked:", buttonKey, button, data);
+
     let promptResponse = null;
 
     if (button.lgksConfirm) {

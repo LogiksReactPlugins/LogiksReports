@@ -475,12 +475,39 @@ const TableView = ({
                                         : "truncate max-w-xs sm:max-w-none"
                                     }
                                   >
-                                    {formatCellValue(
-                                      getRowValue(row, key),
-                                      col.formatter,
-                                      row,
-                                      col,
-                                      config,
+                                    {col.unilink ? (
+                                      <button
+                                        type="button"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          handleButtonClick(
+                                            col.unilink,
+                                            col,
+                                            row,
+                                            e.currentTarget.closest("tr"),
+                                          );
+                                        }}
+                                        className="text-blue-600 hover:underline cursor-pointer text-left"
+                                        title={String(
+                                          getRowValue(row, key) ?? "",
+                                        )}
+                                      >
+                                        {formatCellValue(
+                                          getRowValue(row, key),
+                                          col.formatter,
+                                          row,
+                                          col,
+                                          config,
+                                        )}
+                                      </button>
+                                    ) : (
+                                      formatCellValue(
+                                        getRowValue(row, key),
+                                        col.formatter,
+                                        row,
+                                        col,
+                                        config,
+                                      )
                                     )}
                                   </div>
 

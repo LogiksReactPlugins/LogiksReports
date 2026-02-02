@@ -134,6 +134,7 @@ export const report = {
       formatter: "date",
       hidden: true,
       searchable: false,
+      unilink: "handelTrig",
     },
     persona_descs: {
       label: "persona descs",

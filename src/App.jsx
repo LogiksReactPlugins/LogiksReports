@@ -9,7 +9,7 @@ export default function App() {
     actionHandler(actionKey, rowData);
   }, []);
   const handelTrig = () => {
-    // console.log("DONE TRIG");
+    console.log("DONE TRIG");
   };
   const handelTrig2 = () => {
     // console.log("handelTrig2");
