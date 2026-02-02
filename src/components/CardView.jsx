@@ -68,12 +68,27 @@ const CardView = ({
               paginatedGroupedData[groupKey]?.map((row, rowIndex) => (
                 <div
                   key={rowIndex}
-                  className={
+                  onClick={
+                    cards?.unilink
+                      ? (e) => {
+                          e.stopPropagation();
+                          handleButtonClick(
+                            cards.unilink,
+                            {
+                              from: "card",
+                            },
+                            row,
+                            e.currentTarget,
+                          );
+                        }
+                      : undefined
+                  }
+                  className={`${
                     style?.card ||
                     `border relative rounded-lg shadow-sm group hover:shadow-md transition-shadow duration-200 report-card ${getCardColor(
-                      row
+                      row,
                     )}`
-                  }
+                  } ${cards?.unilink ? "cursor-pointer hover:ring-1 hover:ring-blue-300" : ""}`}
                 >
                   <button
                     onClick={() => {
@@ -81,7 +96,7 @@ const CardView = ({
                       copyToClipboard(
                         content,
                         `${getRowValue(row, "id")}-${rowIndex}`,
-                        setCopiedCell
+                        setCopiedCell,
                       );
                     }}
                     className="inline-flex items-center absolute cursor-pointer right-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-gray-500 hover:text-gray-900"
@@ -172,7 +187,7 @@ const CardView = ({
                       <div className="flex items-center justify-end text-xs text-gray-500 mb-2">
                         <Calendar className="w-3 h-3 mr-1" />
                         {new Date(
-                          getCardValue(row, "due_date")
+                          getCardValue(row, "due_date"),
                         ).toLocaleDateString()}
                       </div>
                     )}
@@ -247,7 +262,7 @@ const CardView = ({
                                           handleButtonClick(
                                             buttonKey,
                                             button,
-                                            row
+                                            row,
                                           );
                                           setOpenDropdown(null);
                                         }}
@@ -269,7 +284,7 @@ const CardView = ({
                                         handleButtonClick(
                                           buttonKey,
                                           button,
-                                          row
+                                          row,
                                         );
                                         setOpenDropdown(null);
                                       }}

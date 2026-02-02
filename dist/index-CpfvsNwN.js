@@ -556,9 +556,19 @@ const Nee = [
         children: e[C] && e[C]?.length > 0 ? e[C]?.map((S, D) => /* @__PURE__ */ z.jsxs(
           "div",
           {
-            className: h?.card || `border relative rounded-lg shadow-sm group hover:shadow-md transition-shadow duration-200 report-card ${x(
+            onClick: v?.unilink ? (T) => {
+              T.stopPropagation(), u(
+                v.unilink,
+                {
+                  from: "card"
+                },
+                S,
+                T.currentTarget
+              );
+            } : void 0,
+            className: `${h?.card || `border relative rounded-lg shadow-sm group hover:shadow-md transition-shadow duration-200 report-card ${x(
               S
-            )}`,
+            )}`} ${v?.unilink ? "cursor-pointer hover:ring-1 hover:ring-blue-300" : ""}`,
             children: [
               /* @__PURE__ */ z.jsx(
                 "button",
@@ -37036,7 +37046,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Or.canvg ? Promise.resolve(Or.canvg) : import("./index.es-NvLDO-wp.js")).catch(function(f) {
+  return (Or.canvg ? Promise.resolve(Or.canvg) : import("./index.es-DhwhFy5c.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
