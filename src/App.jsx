@@ -11,8 +11,9 @@ export default function App() {
   const handelTrig = () => {
     console.log("DONE TRIG");
   };
-  const handelTrig2 = () => {
+  const handelTrig2 = (data) => {
     // console.log("handelTrig2");
+    return <div>{data}</div>;
   };
   return (
     <>

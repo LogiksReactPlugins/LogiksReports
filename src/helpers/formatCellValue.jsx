@@ -6,9 +6,12 @@ export default function formatCellValue(
   record = {},
   columnInfo = {},
   config,
+  methods,
 ) {
   if (!value && value !== false) return "";
-
+  if (formatter && typeof methods[formatter] === "function") {
+    return methods[formatter](value, record, columnInfo, config);
+  }
   switch (formatter?.toLowerCase()) {
     case "checkbox":
       return (

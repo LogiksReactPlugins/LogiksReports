@@ -1489,6 +1489,7 @@ function Reports({
           filters={filters}
           setFilters={setFilters}
           resolvePlaceholders={resolvePlaceholders}
+          methods={methods}
         />
       )}
       {/* Click outside to close dropdown */}

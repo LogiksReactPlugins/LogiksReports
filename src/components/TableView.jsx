@@ -32,6 +32,7 @@ const TableView = ({
   filters,
   setFilters,
   resolvePlaceholders,
+  methods,
 }) => {
   const { datagrid, groupBy } = config;
   const {
@@ -498,6 +499,7 @@ const TableView = ({
                                           row,
                                           col,
                                           config,
+                                          methods,
                                         )}
                                       </button>
                                     ) : (
@@ -507,6 +509,7 @@ const TableView = ({
                                         row,
                                         col,
                                         config,
+                                        methods,
                                       )
                                     )}
                                   </div>

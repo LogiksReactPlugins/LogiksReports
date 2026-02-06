@@ -95,6 +95,7 @@ export const report = {
       label: "persona code",
       sortable: true,
       searchable: true,
+      formatter: "handelTrig2",
     },
     status: {
       label: "status",
