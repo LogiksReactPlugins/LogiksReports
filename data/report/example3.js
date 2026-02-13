@@ -9,7 +9,7 @@ export const report = {
   template: "table",
   custombar: false,
   showExtraColumn: "checkbox",
-
+  aggregatePosition: "both",
   // "settings":false,
   // "filters":false,
   source: {
@@ -84,6 +84,10 @@ export const report = {
       classes: "",
       style: "width:50px;",
       method: "test1",
+      aggregate: {
+        type: "max",
+        label: "Avg product price",
+      },
     },
 
     persona_avatar: {

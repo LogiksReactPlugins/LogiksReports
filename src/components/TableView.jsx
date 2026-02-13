@@ -77,6 +77,106 @@ const TableView = ({
 
     return groups;
   };
+  const getAggregateValue = (key, col, rows = []) => {
+    if (!col?.aggregate?.type || !Array.isArray(rows)) return null;
+
+    const rawType = col.aggregate.type;
+
+    const getNumericValues = (columnKey) =>
+      rows
+        .map((row) => {
+          const val = getRowValue(row, columnKey);
+          return typeof val === "number" ? val : Number(val);
+        })
+        .filter((val) => !isNaN(val));
+
+    const calculateBase = (type, columnKey) => {
+      const values = getNumericValues(columnKey);
+
+      switch (type) {
+        case "SUM":
+          return values.reduce((a, b) => a + b, 0);
+
+        case "AVG":
+          return values.length
+            ? values.reduce((a, b) => a + b, 0) / values.length
+            : 0;
+
+        case "MIN":
+          return values.length ? Math.min(...values) : 0;
+
+        case "MAX":
+          return values.length ? Math.max(...values) : 0;
+
+        case "COUNT":
+          return rows.length;
+
+        default:
+          return 0;
+      }
+    };
+
+    if (typeof rawType === "string" && /^[a-z]+$/i.test(rawType)) {
+      return calculateBase(rawType.toUpperCase(), key);
+    }
+
+    if (typeof rawType === "string") {
+      let expression = rawType;
+
+      expression = expression.replace(
+        /(sum|avg|min|max|count)\((.*?)\)/gi,
+        (_, fn, columnKey) => {
+          const value = calculateBase(fn.toUpperCase(), columnKey.trim());
+          return Number(value);
+        },
+      );
+
+      try {
+        if (!/^[0-9+\-*/().\s]+$/.test(expression)) return 0;
+
+        return Function(`"use strict"; return (${expression})`)();
+      } catch {
+        return 0;
+      }
+    }
+
+    return null;
+  };
+
+  const renderAggregateRow = (rows) => {
+    return (
+      <tr className="bg-gray-100 font-semibold sticky bottom-0 z-20 report-aggregate-row">
+        {hasButtons && <td />}
+        {showExtraColumn === "checkbox" && <td />}
+
+        {visibleColumns.map(([key, col], colIndex) => {
+          const fixedClass =
+            (fixFirstTwoColumns && colIndex < 2) ||
+            (fixFirstColumn && colIndex === 0)
+              ? "sticky left-0 bg-gray-100 z-20"
+              : fixLastColumn && colIndex === visibleColumns.length - 1
+                ? "sticky right-0 bg-gray-100 z-20"
+                : "";
+
+          if (!col.aggregate) {
+            return <td key={key} className={fixedClass} />;
+          }
+
+          return (
+            <td key={key} className={`px-2 py-2 text-sm ${fixedClass}`}>
+              <div className="flex flex-col">
+                <span className="text-xs text-gray-500">
+                  {col.aggregate.label}
+                </span>
+                <span>{getAggregateValue(key, col, rows)}</span>
+              </div>
+            </td>
+          );
+        })}
+      </tr>
+    );
+  };
+
   return (
     <div className="overflow-hidden">
       <div className="overflow-x-auto">
@@ -273,6 +373,11 @@ const TableView = ({
                     style?.tbody || "bg-white divide-y divide-gray-200"
                   }
                 >
+                  {(loading && config.aggregatePosition === "top") ||
+                  config.aggregatePosition === "both"
+                    ? renderAggregateRow(paginatedGroupedData[groupKey] || [])
+                    : null}
+
                   {loading ? (
                     // Show shimmer while loading
                     <>
@@ -606,6 +711,10 @@ const TableView = ({
                       </td>
                     </tr>
                   )}
+
+                  {!loading && config.aggregatePosition !== "top"
+                    ? renderAggregateRow(paginatedGroupedData[groupKey] || [])
+                    : null}
                 </tbody>
               </table>
             </div>
