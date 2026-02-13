@@ -224,6 +224,7 @@ export const report = {
     gender: {
       label: "Gender",
       searchable: true,
+      groupable: true,
       filter: {
         type: "select",
         options: {

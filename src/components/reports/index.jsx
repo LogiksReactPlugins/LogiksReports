@@ -1490,6 +1490,7 @@ function Reports({
           setFilters={setFilters}
           resolvePlaceholders={resolvePlaceholders}
           methods={methods}
+          groupBy={groupBy}
         />
       )}
       {/* Click outside to close dropdown */}
