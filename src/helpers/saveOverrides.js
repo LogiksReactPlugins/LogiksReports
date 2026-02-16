@@ -12,12 +12,7 @@ export default function saveOverrides(config) {
     fixFirstColumn: config.fixFirstColumn,
     fixFirstTwoColumns: config.fixFirstTwoColumns,
     fixLastColumn: config.fixLastColumn,
-    datagrid: Object.fromEntries(
-      Object.entries(config.datagrid).map(([key, col]) => [
-        key,
-        { hidden: col.hidden },
-      ]),
-    ),
+    datagrid: config.datagrid,
   };
   const STORAGE_KEY = getPathKey();
   localStorage.setItem(
