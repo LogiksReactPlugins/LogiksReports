@@ -6983,8 +6983,8 @@ function cie() {
   })(gx)), gx.exports;
 }
 cie();
-function Om(r = window.location.pathname) {
-  return r;
+function Om() {
+  return window.location.hash.replace(/^#/, "") || "/";
 }
 function fie(r) {
   const e = {
@@ -7004,7 +7004,10 @@ function fie(r) {
       ])
     )
   }, t = Om();
-  localStorage.setItem(`${Ac.REPORT_LOCALSTORAGE_PRIFIX}${t}`, JSON.stringify(e));
+  localStorage.setItem(
+    `${Ac.REPORT_LOCALSTORAGE_PRIFIX}${t}`,
+    JSON.stringify(e)
+  );
 }
 function hie({ config: r, setConfig: e, setSettingsOpen: t }) {
   const [n, i] = Xt(""), [a, o] = Xt({ ...r }), [s, l] = Xt("default"), [u, A] = Xt(
@@ -37152,7 +37155,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Or.canvg ? Promise.resolve(Or.canvg) : import("./index.es-ApXFj0zI.js")).catch(function(f) {
+  return (Or.canvg ? Promise.resolve(Or.canvg) : import("./index.es-ebqy3neX.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
