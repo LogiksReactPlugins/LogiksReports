@@ -7315,8 +7315,17 @@ function pie(r, e) {
 }
 function gie(r, e, t = {}, n = {}, i, a) {
   if (!r && r !== !1) return "";
-  if (e && typeof a[e] == "function")
-    return a[e](r, t, n, i);
+  if (e && typeof a[e] == "function") {
+    const o = a[e](r, t, n, i);
+    return /* @__PURE__ */ V.jsx(
+      "div",
+      {
+        dangerouslySetInnerHTML: {
+          __html: o ?? ""
+        }
+      }
+    );
+  }
   switch (e?.toLowerCase()) {
     case "checkbox":
       return /* @__PURE__ */ V.jsx(
@@ -37156,7 +37165,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Or.canvg ? Promise.resolve(Or.canvg) : import("./index.es-BUsheLB_.js")).catch(function(f) {
+  return (Or.canvg ? Promise.resolve(Or.canvg) : import("./index.es-oaKo3fgd.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;

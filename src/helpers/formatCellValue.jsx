@@ -10,7 +10,15 @@ export default function formatCellValue(
 ) {
   if (!value && value !== false) return "";
   if (formatter && typeof methods[formatter] === "function") {
-    return methods[formatter](value, record, columnInfo, config);
+    const formatted = methods[formatter](value, record, columnInfo, config);
+
+    return (
+      <div
+        dangerouslySetInnerHTML={{
+          __html: formatted ?? "",
+        }}
+      />
+    );
   }
   switch (formatter?.toLowerCase()) {
     case "checkbox":
