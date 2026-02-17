@@ -926,7 +926,10 @@ function Reports({
                       })
                     }
                     key={key}
-                    className="inline-flex items-center px-2 py-1 text-sm font-medium cursor-pointer bg-action rounded-md"
+                    className={
+                      action?.class ??
+                      "inline-flex items-center px-2 py-1 text-sm font-medium cursor-pointer bg-action rounded-md"
+                    }
                   >
                     {getIconComponent(action?.icon)}
                     {action?.label}
