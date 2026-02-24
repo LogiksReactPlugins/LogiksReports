@@ -1072,7 +1072,7 @@ function Reports({
 
                 <button
                   onClick={handleReset}
-                  className="inline-flex h-9 cursor-pointer items-center px-3 text-sm font-medium bg-action rounded-md flex-shrink-0"
+                  className="inline-flex h-8 cursor-pointer items-center px-3 text-sm font-medium bg-action rounded-md flex-shrink-0"
                 >
                   <RotateCcw className="w-4 h-4 mr-1" />
                 </button>

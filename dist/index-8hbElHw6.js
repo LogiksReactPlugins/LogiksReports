@@ -37167,7 +37167,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Or.canvg ? Promise.resolve(Or.canvg) : import("./index.es-Byv23oYL.js")).catch(function(f) {
+  return (Or.canvg ? Promise.resolve(Or.canvg) : import("./index.es-DN1vQ95z.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
@@ -94918,7 +94918,7 @@ function v6e({
                       "button",
                       {
                         onClick: Ur,
-                        className: "inline-flex h-9 cursor-pointer items-center px-3 text-sm font-medium bg-action rounded-md flex-shrink-0",
+                        className: "inline-flex h-8 cursor-pointer items-center px-3 text-sm font-medium bg-action rounded-md flex-shrink-0",
                         children: /* @__PURE__ */ V.jsx(bee, { className: "w-4 h-4 mr-1" })
                       }
                     )
