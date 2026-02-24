@@ -1089,10 +1089,10 @@ function Reports({
                     );
                     setShowDatePicker(true);
                   }}
-                  className="h-9 border border-gray-200 rounded-md"
+                  className="h-9 border border-gray-200 rounded-md px-1"
                 >
-                  {" "}
-                  Date Range{" "}
+                 <i class="fa-regular fa-calendar-days"></i> 
+                  Date Range
                 </button>
               )}{" "}
               {dateRangeColumns.length > 1 && (

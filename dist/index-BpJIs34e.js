@@ -794,7 +794,7 @@ const Nee = [
       }
     };
     if (typeof oe == "string" && /^[a-z]+$/i.test(oe))
-      return Xe(oe.toUpperCase(), Ce);
+      return Number(Xe(oe.toUpperCase(), Ce).toFixed(2));
     if (typeof oe == "string") {
       let tt = oe;
       tt = tt.replace(
@@ -805,7 +805,9 @@ const Nee = [
         }
       );
       try {
-        return /^[0-9+\-*/().\s]+$/.test(tt) ? Function(`"use strict"; return (${tt})`)() : 0;
+        return /^[0-9+\-*/().\s]+$/.test(tt) ? Number(
+          Function(`"use strict"; return (${tt})`)().toFixed(2)
+        ) : 0;
       } catch {
         return 0;
       }
@@ -37165,7 +37167,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Or.canvg ? Promise.resolve(Or.canvg) : import("./index.es-2k8yjo1U.js")).catch(function(f) {
+  return (Or.canvg ? Promise.resolve(Or.canvg) : import("./index.es-Byv23oYL.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
@@ -94930,11 +94932,10 @@ function v6e({
                             lt.length === 1 ? lt[0].key : null
                           ), Oe(!0);
                         },
-                        className: "h-9 border border-gray-200 rounded-md",
+                        className: "h-9 border border-gray-200 rounded-md px-1",
                         children: [
-                          " ",
-                          "Date Range",
-                          " "
+                          /* @__PURE__ */ V.jsx("i", { class: "fa-regular fa-calendar-days" }),
+                          "Date Range"
                         ]
                       }
                     ),

@@ -130,7 +130,7 @@ const TableView = ({
     };
 
     if (typeof rawType === "string" && /^[a-z]+$/i.test(rawType)) {
-      return calculateBase(rawType.toUpperCase(), key);
+      return Number(calculateBase(rawType.toUpperCase(), key).toFixed(2));
     }
 
     if (typeof rawType === "string") {
@@ -147,7 +147,9 @@ const TableView = ({
       try {
         if (!/^[0-9+\-*/().\s]+$/.test(expression)) return 0;
 
-        return Function(`"use strict"; return (${expression})`)();
+        return Number(
+              Function(`"use strict"; return (${expression})`)().toFixed(2)
+            );
       } catch {
         return 0;
       }
