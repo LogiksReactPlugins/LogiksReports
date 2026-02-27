@@ -34,6 +34,7 @@ const TableView = ({
   resolvePlaceholders,
   methods,
   groupBy,
+  errorMsg
 }) => {
   const { datagrid } = config;
   const {
@@ -778,7 +779,10 @@ const TableView = ({
                             }
                             className="px-4 py-6 text-center text-sm text-gray-500"
                           >
-                            No data available
+                            {errorMsg
+                              ? "Something went wrong while fetching the data. Please refresh or try again later."
+                              : "There’s no data to display yet."
+                            }
                           </td>
                         </tr>
                       )}

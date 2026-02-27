@@ -131,7 +131,7 @@ function Reports({
   const [filters, setFilters] = useState({});
   const [selectOptions, setSelectOptions] = useState({});
   const { openConfirm, openPrompt, openAlert } = useModal();
-
+  const [errorMsg,setErrorMsg]=useState("")
   useEffect(() => {
     setCurrentPage(0);
     setRowsPerPage(config?.rowsPerPage);
@@ -334,6 +334,7 @@ function Reports({
   };
   const fetchAPI = async () => {
     setDataLoading(true);
+    setErrorMsg("")
     try {
       if (config?.source?.type === "API") {
         const axiosObject = {
@@ -404,6 +405,7 @@ function Reports({
       }
     } catch (error) {
       // console.log({ error });
+      setErrorMsg(error)
     } finally {
       setDataLoading(false);
     }
@@ -1032,7 +1034,6 @@ function Reports({
                     onChange={(e) => {
                       const val = e.target.value;
                       handleSearch(val);
-
                       if (searchColumn && searchColumnLabel) {
                         setFilterTabs((prev) => ({
                           ...prev,
@@ -1390,6 +1391,7 @@ function Reports({
           getIconComponent={getIconComponent}
           loading={dataLoading}
           currentData={currentData}
+          errorMsg={errorMsg}
         />
       ) : currentView === "gallery" ? (
         <GalleryView
@@ -1409,7 +1411,8 @@ function Reports({
           setOpenDropdown={setOpenDropdown}
           getIconComponent={getIconComponent}
           loading={dataLoading}
-        />
+          errorMsg={errorMsg}
+        />  
       ) : currentView === "kanban" ? (
         <KanbanView
           config={config}
@@ -1429,18 +1432,21 @@ function Reports({
           kanbanGroupBy={kanbanGroupBy}
           loading={dataLoading}
           currentData={currentData}
+          errorMsg={errorMsg}
         />
       ) : currentView === "gantt" ? (
         <GanttView
           paginatedGroupedData={paginatedGroupedData}
           config={config}
           getRowValue={getRowValue}
+          errorMsg={errorMsg}
         />
       ) : currentView === "gmap" ? (
         <GmapView
           reportConfig={config}
           getRowValue={getRowValue}
           data={dummyData}
+          errorMsg={errorMsg}
         />
       ) : currentView === "calendar" ? (
         <CalendarView
@@ -1460,6 +1466,7 @@ function Reports({
           getIconComponent={getIconComponent}
           kanbanGroupBy={kanbanGroupBy}
           loading={dataLoading}
+          errorMsg={errorMsg}
         />
       ) : (
         <TableView
@@ -1494,6 +1501,7 @@ function Reports({
           resolvePlaceholders={resolvePlaceholders}
           methods={methods}
           groupBy={groupBy}
+        errorMsg={errorMsg}
         />
       )}
       {/* Click outside to close dropdown */}
