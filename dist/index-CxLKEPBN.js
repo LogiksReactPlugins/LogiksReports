@@ -7569,7 +7569,7 @@ function yie({ url: r, index: e, config: t }) {
         if (!d.ok) throw new Error("Preview fetch failed");
         const v = d.headers.get("content-type") || "", g = await d.blob(), m = URL.createObjectURL(g);
         if (f = m, o(m), !v.startsWith("image/") && !v.includes("pdf")) {
-          i(!1);
+          setTimeout(() => i(!1), 300);
           return;
         }
       } catch (d) {
@@ -37171,7 +37171,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Ur.canvg ? Promise.resolve(Ur.canvg) : import("./index.es-DL8Lag-Z.js")).catch(function(f) {
+  return (Ur.canvg ? Promise.resolve(Ur.canvg) : import("./index.es-DHModVyd.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
