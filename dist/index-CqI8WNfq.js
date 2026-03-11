@@ -997,7 +997,7 @@ const Nee = [
               {
                 className: x?.tbody || "bg-white divide-y divide-gray-200",
                 children: [
-                  b && (r.aggregatePosition === "top" || r.aggregatePosition === "both") ? wt(
+                  r.aggregatePosition === "top" || r.aggregatePosition === "both" ? wt(
                     e[Ue] || []
                   ) : null,
                   b ? (
@@ -37170,7 +37170,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Ur.canvg ? Promise.resolve(Ur.canvg) : import("./index.es-WWzDST6S.js")).catch(function(f) {
+  return (Ur.canvg ? Promise.resolve(Ur.canvg) : import("./index.es-DkfvA7Y-.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
