@@ -90,3 +90,15 @@
 .report-root.wide .py-8  { padding-top: 2.25rem !important; padding-bottom: 2.25rem !important; }
 .report-root.wide .py-9  { padding-top: 2.5rem !important;  padding-bottom: 2.5rem !important; }
 .report-root.wide .py-10 { padding-top: 2.75rem !important; padding-bottom: 2.75rem !important; }
+
+
+.toolbar-search input{
+  width: 200px;
+}
+
+@media (min-width: 700px) {
+  .toolbar-search {
+    max-width: 400px;
+    padding-right:3px
+  }
+}

@@ -465,6 +465,8 @@ function Reports({
     if (searchTerm || currentPage || dateFilter) {
       if (config?.source?.type === "sql") {
         (async () => {
+
+          console.log({searchableColumns})
           if (!config?.source?.queryid) {
             const { table, cols, join, where } = config.source;
 
@@ -486,6 +488,7 @@ function Reports({
             config.source.queryid = saveQuerydata?.queryid;
           }
           const refid = config?.endPoints?.refid;
+        const hasFilterTabs = filterTabs && Object.keys(filterTabs).length > 0;
 
           const axiosObject = {
             method: config?.source?.method || "post",
@@ -495,13 +498,19 @@ function Reports({
             headers: config?.source?.headers || config?.endPoints?.headers,
             data: {
               queryid: config?.source?.queryid,
-              filter: {
-                ...Object.fromEntries(
+              ...(!hasFilterTabs && {
+                stxt: searchTerm,
+                cols: searchableColumns.map((col) => col.key),
+            // cols:["eoffice_files_tbl.subject","eoffice_files_tbl.pending_at"]
+              }),
+                filter: {
+                 ...(hasFilterTabs &&
+                Object.fromEntries(
                   Object.entries(filterTabs || {}).map(([key, { value }]) => [
                     key,
                     [value, "LIKE"],
                   ]),
-                ),
+                )),
                 ...Object.fromEntries(
                   Object.entries(filters || {}).map(
                     ([key, { type, value }]) => {
@@ -917,7 +926,9 @@ function Reports({
               {title}{" "}
               {title && <span className="text-sm">({totalData})</span>}{" "}
             </h1>
-            <div className="flex">
+       
+          </div>
+               <div className="flex  report-action-bar">
               {actions &&
                 Object.entries(actions).map(([key, action]) => (
                   <button
@@ -938,7 +949,6 @@ function Reports({
                   </button>
                 ))}
             </div>
-          </div>
           <div className="hidden sm:flex items-center gap-2 flex-shrink-0">
             {toolbar?.print !== false && (
               <button
@@ -1023,9 +1033,9 @@ function Reports({
         >
           <div className="flex items-center gap-3 flex-1 items-start">
             {toolbar?.search !== false && (
-              <div className="flex items-center  lg:max-w-sm flex-1 border border-gray-300 rounded-md overflow-hidden focus-within:ring-1 focus-within:ring-gray-300">
+              <div className="flex items-center  flex-1 border border-gray-300 rounded-md overflow-hidden focus-within:ring-1 focus-within:ring-gray-300 toolbar-search">
                 {/* SEARCH */}
-                <div className="relative flex-1">
+                <div className="relative flex-1 search-input-div">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
                   <input
                     type="search"

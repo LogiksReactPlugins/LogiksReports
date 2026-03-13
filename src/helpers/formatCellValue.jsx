@@ -381,11 +381,11 @@ function ContentPopup({ abstract, content }) {
     </>
   );
 }
-
 function AttachmentPopup({ url, index, config }) {
   const [open, setOpen] = React.useState(false);
   const [previewUrl, setPreviewUrl] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
+  const [frameLoading, setFrameLoading] = React.useState(true);
 
   const fileName = url.split("/").pop();
   const isHttp = /^https?:\/\//i.test(url);
@@ -398,20 +398,29 @@ function AttachmentPopup({ url, index, config }) {
     const loadPreview = async () => {
       try {
         setLoading(true);
+        setFrameLoading(true);
 
         const res = await fetch(
           `${config.endPoints.preview}?uri=${encodeURIComponent(url)}`,
-          {
-            headers: config?.endPoints?.headers,
-          },
+          { headers: config?.endPoints?.headers }
         );
 
         if (!res.ok) throw new Error("Preview fetch failed");
+
+        const contentType = res.headers.get("content-type") || "";
 
         const blob = await res.blob();
         const blobUrl = URL.createObjectURL(blob);
         revokedUrl = blobUrl;
         setPreviewUrl(blobUrl);
+
+        if (
+          !contentType.startsWith("image/") &&
+          !contentType.includes("pdf")
+        ) {
+          setTimeout(() => setOpen(false), 300);
+          return;
+        }
       } catch (e) {
         console.error("Preview load failed", e);
         setPreviewUrl(null);
@@ -435,7 +444,6 @@ function AttachmentPopup({ url, index, config }) {
         className="text-blue-600 underline cursor-pointer text-sm"
         onClick={() => setOpen(true)}
       >
-        {/* {fileName || `File ${index + 1}`} */}
         LINK
       </span>
 
@@ -453,15 +461,20 @@ function AttachmentPopup({ url, index, config }) {
               {fileName}
             </div>
 
-            {loading && (
-              <div className="text-sm text-gray-500">Loading preview…</div>
+            {(loading || frameLoading) && (
+              <div className="flex items-center justify-center h-[60vh] text-sm text-gray-500">
+                Loading preview…
+              </div>
             )}
 
-            {!loading && finalUrl && (
+            {finalUrl && (
               <iframe
                 src={finalUrl}
                 title={fileName}
-                className="w-full h-[60vh] border border-slate-200 rounded"
+                onLoad={() => setFrameLoading(false)}
+                className={`w-full h-[60vh] border border-slate-200 rounded ${
+                  loading || frameLoading ? "hidden" : "block"
+                }`}
               />
             )}
 
