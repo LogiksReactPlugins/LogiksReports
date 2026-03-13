@@ -13,7 +13,7 @@ const baseRows = [
   {
     id: 2,
     attachment:
-      "https://example.com/files/report.pdf, https://example.com/files/invoice.pdf, https://example.com/files/summary.docx",
+      "https:demo.docx, https://example.com/files/invoice.pdf, https://example.com/files/summary.docx",
 
     desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with deskto",
     userid: "user002",
@@ -180,7 +180,7 @@ export const report = {
       icon: "fa fa-plus",
     },
   },
-  aggregatePosition: "both",
+  aggregatePosition: "top",
   toolbar: {
     search: true,
     print: false,
@@ -204,6 +204,10 @@ export const report = {
       label: "CONTENT At",
       formatter: "content",
       filter: { type: "text" },
+        editable: {
+    type: "text",
+    required: true
+  }
     },
 
     attachment: {
