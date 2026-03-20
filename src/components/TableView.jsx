@@ -91,6 +91,7 @@ const TableView = ({
 
     return groups;
   };
+  
   const getAggregateValue = (key, col, rows = []) => {
     if (!col?.aggregate?.type || !Array.isArray(rows)) return null;
 
@@ -159,6 +160,48 @@ const TableView = ({
     return null;
   };
 
+const formatAggregateValue = (value, format = {}) => {
+  if (value == null || isNaN(value)) return "";
+
+  const {
+    type = "number",
+    decimals,
+    compact,
+    locale = "en-IN",
+    currency = "INR",
+  } = format;
+
+  // compact format (12K, 1L, etc.)
+  if (compact) {
+    const abs = Math.abs(value);
+
+    if (locale === "en-IN") {
+      if (abs >= 1e7) return (value / 1e7).toFixed(1) + "Cr";
+      if (abs >= 1e5) return (value / 1e5).toFixed(1) + "L";
+      if (abs >= 1e3) return (value / 1e3).toFixed(1) + "K";
+    } else {
+      if (abs >= 1e9) return (value / 1e9).toFixed(1) + "B";
+      if (abs >= 1e6) return (value / 1e6).toFixed(1) + "M";
+      if (abs >= 1e3) return (value / 1e3).toFixed(1) + "K";
+    }
+  }
+
+  // currency
+  if (type === "currency") {
+    return new Intl.NumberFormat(locale, {
+      style: "currency",
+      currency,
+      minimumFractionDigits: decimals ?? 2,
+      maximumFractionDigits: decimals ?? 2,
+    }).format(value);
+  }
+
+  // normal number
+  return new Intl.NumberFormat(locale, {
+    minimumFractionDigits: decimals ?? 0,
+    maximumFractionDigits: decimals ?? decimals ?? 2,
+  }).format(value);
+};
   const renderAggregateRow = (rows) => {
     return (
       <tr className="bg-gray-100 font-semibold sticky bottom-0 z-20 report-aggregate-row">
@@ -177,6 +220,7 @@ const TableView = ({
           if (!col.aggregate) {
             return <td key={key} className={fixedClass} />;
           }
+          const rawValue = getAggregateValue(key, col, rows);
 
           return (
             <td key={key} className={`px-2 py-2 text-sm ${fixedClass}`}>
@@ -184,7 +228,7 @@ const TableView = ({
                 <span className="text-xs text-gray-500">
                   {col.aggregate.label}
                 </span>
-                <span>{getAggregateValue(key, col, rows)}</span>
+                  {formatAggregateValue(rawValue, col.aggregate?.format)}
               </div>
             </td>
           );
@@ -192,7 +236,13 @@ const TableView = ({
       </tr>
     );
   };
+const getEffectiveRows = (rows) => {
+  if (!selectedRows || selectedRows.size === 0) return rows;
 
+  return rows.filter((row) =>
+    selectedRows.has(getRowValue(row, "id"))
+  );
+};
   useEffect(() => {
     if (!groupBy) return;
 
@@ -423,11 +473,9 @@ const TableView = ({
                         style?.tbody || "bg-white divide-y divide-gray-200"
                       }
                     >
-                      {(loading && config.aggregatePosition === "top") ||
-                      config.aggregatePosition === "both"
-                        ? renderAggregateRow(
-                            paginatedGroupedData[groupKey] || [],
-                          )
+                      {!loading && (config.aggregatePosition === "top" ||
+                      config.aggregatePosition === "both")
+                        ? renderAggregateRow(getEffectiveRows(paginatedGroupedData[groupKey] || []))
                         : null}
 
                       {loading ? (
@@ -788,9 +836,7 @@ const TableView = ({
                       )}
 
                       {!loading && config.aggregatePosition !== "top"
-                        ? renderAggregateRow(
-                            paginatedGroupedData[groupKey] || [],
-                          )
+                        ? renderAggregateRow(getEffectiveRows(paginatedGroupedData[groupKey] || []))
                         : null}
                     </tbody>
                   </table>

@@ -295,6 +295,12 @@ export const report = {
       aggregate: {
         type: "MAX",
         label: "Max Salary",
+        format: {
+          type: "number", // number | compact | currency
+          decimals: 0,    // fixed decimals
+          compact: false,  // 12K / 1L
+          locale: "en-IN" // for Lakh/Crore
+        }
       },
     },
 
