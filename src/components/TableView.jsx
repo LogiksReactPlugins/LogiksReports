@@ -165,25 +165,33 @@ const formatAggregateValue = (value, format = {}) => {
 
   const {
     type = "number",
-    decimals,
+    decimals = 1, // default for compact
     compact,
     locale = "en-IN",
     currency = "INR",
   } = format;
 
-  // compact format (12K, 1L, etc.)
+  const formatWithDecimals = (num) =>
+    Number(num).toLocaleString(locale, {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    });
+
   if (compact) {
     const abs = Math.abs(value);
 
     if (locale === "en-IN") {
-      if (abs >= 1e7) return (value / 1e7).toFixed(1) + "Cr";
-      if (abs >= 1e5) return (value / 1e5).toFixed(1) + "L";
-      if (abs >= 1e3) return (value / 1e3).toFixed(1) + "K";
+      if (abs >= 1e7) return formatWithDecimals(value / 1e7) + "Cr";
+      if (abs >= 1e5) return formatWithDecimals(value / 1e5) + "L";
+      if (abs >= 1e3) return formatWithDecimals(value / 1e3) + "K";
     } else {
-      if (abs >= 1e9) return (value / 1e9).toFixed(1) + "B";
-      if (abs >= 1e6) return (value / 1e6).toFixed(1) + "M";
-      if (abs >= 1e3) return (value / 1e3).toFixed(1) + "K";
+      if (abs >= 1e9) return formatWithDecimals(value / 1e9) + "B";
+      if (abs >= 1e6) return formatWithDecimals(value / 1e6) + "M";
+      if (abs >= 1e3) return formatWithDecimals(value / 1e3) + "K";
     }
+
+    // small numbers fallback
+    return formatWithDecimals(value);
   }
 
   // currency
@@ -191,15 +199,15 @@ const formatAggregateValue = (value, format = {}) => {
     return new Intl.NumberFormat(locale, {
       style: "currency",
       currency,
-      minimumFractionDigits: decimals ?? 2,
-      maximumFractionDigits: decimals ?? 2,
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
     }).format(value);
   }
 
   // normal number
   return new Intl.NumberFormat(locale, {
-    minimumFractionDigits: decimals ?? 0,
-    maximumFractionDigits: decimals ?? decimals ?? 2,
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
   }).format(value);
 };
   const renderAggregateRow = (rows) => {

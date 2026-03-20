@@ -297,8 +297,8 @@ export const report = {
         label: "Max Salary",
         format: {
           type: "number", // number | compact | currency
-          decimals: 0,    // fixed decimals
-          compact: false,  // 12K / 1L
+          decimals: 1,    // fixed decimals
+          compact: true,  // 12K / 1L
           locale: "en-IN" // for Lakh/Crore
         }
       },
