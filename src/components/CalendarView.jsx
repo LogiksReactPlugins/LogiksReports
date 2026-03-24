@@ -24,6 +24,7 @@ const CalendarView = ({
   getIconComponent,
   getRowValue,
 }) => {
+  console.log({"CALENDER":filteredAndSortedData})
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
 
@@ -62,6 +63,7 @@ const CalendarView = ({
     const rows = config?.rows || filteredAndSortedData || [];
     const calendarEventsMap = {};
     const titleKey = config?.calendar?.colmap?.title;
+    const descKey = config?.calendar?.colmap?.descs;
     rows.forEach((row) => {
       Object.entries(dateColumns).forEach(([colKey, color]) => {
         const rawDate = getRowValue(row, colKey);
@@ -81,7 +83,7 @@ const CalendarView = ({
           eventType: getRowValue(row, colKey),
           eventColor: color,
           start: date.toISOString(),
-          description: getRowValue(row, "userid") || "",
+          description: getRowValue(row, descKey) || "",
           backgroundColor: color,
           borderColor: color,
           textColor: "#fff",
@@ -104,7 +106,7 @@ const CalendarView = ({
 
   const calendarEventsMap = useMemo(
     () => buildCalendarEvents(config),
-    [config],
+    [config,filteredAndSortedData],
   );
 
   const navigateMonth = (direction) => {

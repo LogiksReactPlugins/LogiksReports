@@ -3,11 +3,10 @@ export const report = {
     saveQuery: "http://192.168.0.20:9999/api/query/save",
     runQuery: "/api/query/run",
     baseURL: "http://192.168.0.20:9999",
-    debuggUrl: `http://192.168.0.20:9999/api/query/raw`,
-    accessToken:
-      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwicGF5bG9hZCI6InQ1RTNYM3B4WFNBbUhTdVA5a3ZBSDNiYW9XRXRlNTJrbzBtWENSQzU4KzA0Zmx6Zk5lbkFGNjNDVnc0R3ozQjh2Y1lHMzV0d0FZT1BOTjZaS2NGd2tnR1VJaWR5N2N6c0M3b3RvMVVYdUhDOGxENFN1bllHeDV5RzF2cWo1T0RtbXEvUEgzU3o0MWZ1bkYzRUlQU2ZDWEozSXIvbzF4OHJzUGJLTWxrUnFsMEVNN241R2IvY2NMRWxEb01pb0owb0J2SmczVUUzZWxuUHBnMjdiODdld3BqbGVWOTUycnQ5MUJtdDlYdXBkY0lsdVlVR0taWTgxUVV6VHEzWUM2bzU4WnJtMnVha0xaVWhLK0RmRkhrNnZ6MnVnWXBtWGp1MjZPMlYiLCJpYXQiOjE3NzMzODE4OTIsImV4cCI6MTc3MzM4NTQ5MiwianRpIjoiYWNjOjI6MTc3MzM4MTg5MjA3NDp3ZWIifQ.lFsMhErHocFT_X5w8gElLn6o4mhJ96DZlnGxc-q0veQ",
+    debuggUrl: `http://192.168.0.20:9999/api/query/view`,
+    accessToken: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwicGF5bG9hZCI6ImtGNlBRMmg3UUdOZFZRa3RVMDBLSUJPeXNaU0QvZmJYOU1pZ3k1WUpyRHRuUEtSNWpRWUJkU1MxUHFiTmgybm5aZGUvMU8rNnRXMzV2d1EzNHlyYk1hbmRnRnpqTnZid0NxK2NxTS9ZZHRheG8xeW45WUF3QnNJMEEwcHBHbDh1SVlpS3lJWmJudG5XbXNuaU5uNTlRUEY4TW11M3NwczJmemIzbFFucEtNR2JTaDZzdWFZcENuY0ZBKzVMby8yZ1VzNFRoTVJJUUJPQ0Mwalpqa3NFdFgzamFtcEtuVEtaQ2M4ZEFZSnJMZ2lybmNGUXhFYWZDU1p2MDRnMFZ1YzFwYXpvKzEwU21lTGErS3dVcDdXLzVFZXE4bG5uZHlVdEZoRytiRXc9IiwiaWF0IjoxNzc0MzU0OTE3LCJleHAiOjE3NzQzNTg1MTcsImp0aSI6ImFjYzoxOjE3NzQzNTQ5MTc0NTU6d2ViIn0.FxZIJE1q0B_ABF55goaSPKMYPiWvNijP5xqHCrrTJp8",
     headers: {
-      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwicGF5bG9hZCI6InQ1RTNYM3B4WFNBbUhTdVA5a3ZBSDNiYW9XRXRlNTJrbzBtWENSQzU4KzA0Zmx6Zk5lbkFGNjNDVnc0R3ozQjh2Y1lHMzV0d0FZT1BOTjZaS2NGd2tnR1VJaWR5N2N6c0M3b3RvMVVYdUhDOGxENFN1bllHeDV5RzF2cWo1T0RtbXEvUEgzU3o0MWZ1bkYzRUlQU2ZDWEozSXIvbzF4OHJzUGJLTWxrUnFsMEVNN241R2IvY2NMRWxEb01pb0owb0J2SmczVUUzZWxuUHBnMjdiODdld3BqbGVWOTUycnQ5MUJtdDlYdXBkY0lsdVlVR0taWTgxUVV6VHEzWUM2bzU4WnJtMnVha0xaVWhLK0RmRkhrNnZ6MnVnWXBtWGp1MjZPMlYiLCJpYXQiOjE3NzMzODE4OTIsImV4cCI6MTc3MzM4NTQ5MiwianRpIjoiYWNjOjI6MTc3MzM4MTg5MjA3NDp3ZWIifQ.lFsMhErHocFT_X5w8gElLn6o4mhJ96DZlnGxc-q0veQ`,
+      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwicGF5bG9hZCI6ImtGNlBRMmg3UUdOZFZRa3RVMDBLSUJPeXNaU0QvZmJYOU1pZ3k1WUpyRHRuUEtSNWpRWUJkU1MxUHFiTmgybm5aZGUvMU8rNnRXMzV2d1EzNHlyYk1hbmRnRnpqTnZid0NxK2NxTS9ZZHRheG8xeW45WUF3QnNJMEEwcHBHbDh1SVlpS3lJWmJudG5XbXNuaU5uNTlRUEY4TW11M3NwczJmemIzbFFucEtNR2JTaDZzdWFZcENuY0ZBKzVMby8yZ1VzNFRoTVJJUUJPQ0Mwalpqa3NFdFgzamFtcEtuVEtaQ2M4ZEFZSnJMZ2lybmNGUXhFYWZDU1p2MDRnMFZ1YzFwYXpvKzEwU21lTGErS3dVcDdXLzVFZXE4bG5uZHlVdEZoRytiRXc9IiwiaWF0IjoxNzc0MzU0OTE3LCJleHAiOjE3NzQzNTg1MTcsImp0aSI6ImFjYzoxOjE3NzQzNTQ5MTc0NTU6d2ViIn0.FxZIJE1q0B_ABF55goaSPKMYPiWvNijP5xqHCrrTJp8`,
       "Content-Type": "application/json",
     },
   },
@@ -24,7 +23,7 @@ export const report = {
   "topbar": {
     "uitype": "type1"
   },
-  "DEBUG": false,
+  "DEBUG": true,
  "source": {
             "type": "sql",
             "queryid": "reports%40eoffice.allFiles%40source"
@@ -139,4 +138,79 @@ export const report = {
     "ZnVuY3Rpb24gdGVzdChkYXRhKSB7CiAgY29uc29sZS5sb2coeyBkYXRhIH0pOwogIGFsZXJ0KCJ0aGlzIGlzIHRlc3QgZnVuY3Rpb24gZnJvbSBBUEkgc2NyaXB0Iik7Cn0K",
   module_refid: "lead.main",
   module_type: "reports",
+  cards: {
+    colmap: {
+      title: "eoffice_files_tbl.file_code",
+      descs: "eoffice_files_tbl.subject",
+      category: "eoffice_files_tbl.status",
+      due_date: "eoffice_files_tbl.created_on",
+      avatar: "persona_avatar",
+      color: "status",
+    },
+    colormap: {
+      active: "card_green",
+      under_notice: "card_red",
+      probationary: "card_blue",
+    },
+    unilink: "staff.main",
+    default_avatar: true,
+  },
+  kanban: {
+    colkeys: {
+          "eoffice_files_tbl.created_by": {
+        label: "created by",
+      },
+      "eoffice_files_tbl.file_code": {
+        label: "File code",
+      },
+  
+      editable: {
+        label: "editable",
+      },
+      status: {
+        label: "status",
+      },
+      visibility: {
+        label: "visibility",
+      },
+    },
+    colmap: {
+      title: "eoffice_files_tbl.file_code",
+      // "descs": "department",
+      department: "created_by",
+      descs: "eoffice_files_tbl.subject",
+      category: "eoffice_files_tbl.status",
+
+      due_date: "dtoe",
+      avatar: "persona_avatar",
+
+      color: "type",
+      tags: "role",
+      counter: "rating",
+    },
+    unilink: "staff.main",
+  },
+    calendar: {
+    colmap: {
+      title: "eoffice_files_tbl.file_code",
+      descs: "eoffice_files_tbl.subject",
+    },
+
+    date_col: {
+      "eoffice_files_tbl.created_on": "#333",
+      "eoffice_files_tbl.edited_on": "orange",
+    },
+    unilink: "staff.main",
+    notes_user:
+      "<div class='text-center' style='color:white;'><span style='background:#333;padding:5px;'>created on</span><span style='background:orange;padding:5px;'>edited on</span></div>",
+  },
+    gallery: {
+    colmap: {
+      avatar: "eoffice_files_tbl.file_code",
+      title: "eoffice_files_tbl.file_code",
+      descs: "eoffice_files_tbl.subject",
+      due_date: "eoffice_files_tbl.created_on",
+    },
+    unilink: "staff.main",
+  },
 };

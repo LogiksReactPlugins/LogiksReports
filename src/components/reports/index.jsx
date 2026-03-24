@@ -155,6 +155,7 @@ function Reports({
           url: config?.endPoints?.debuggUrl,
           headers: config?.endPoints?.headers,
           data: {
+            filter:{},
             ...config?.source,
           },
         };
@@ -1100,7 +1101,7 @@ function Reports({
                     );
                     setShowDatePicker(true);
                   }}
-                  className="h-9 border border-gray-200 rounded-md px-1"
+                  className="h-9 border border-gray-200 rounded-md px-1 text-sm cursor-pointer px-1"
                 >
                  <i class="fa-regular fa-calendar-days"></i> 
                   Date Range
@@ -1113,7 +1114,7 @@ function Reports({
                     setActiveDateCol(e.target.value);
                     setShowDatePicker(true);
                   }}
-                  className="h-9 border border-gray-200 rounded-md"
+                  className="h-9 border border-gray-200 rounded-md px-1 text-sm cursor-pointer"
                 >
                   {" "}
                   <option value=""> Select column </option>{" "}
@@ -1127,7 +1128,7 @@ function Reports({
               )}
               {activeDateCol && (
                 <select
-                  className="h-9 border border-gray-200 rounded-md"
+                  className="h-9 border border-gray-200 rounded-md px-1 text-sm cursor-pointer"
                   value={dateOperator}
                   onChange={(e) => {
                     setDateOperator(e.target.value);
@@ -1145,7 +1146,7 @@ function Reports({
               {activeDateCol && dateOperator === "eq" && (
                 <input
                   type="date"
-                  className="h-9 border border-gray-200 rounded-md"
+                  className="h-9 border border-gray-200 rounded-md px-1 text-sm cursor-pointer"
                   value={dateRange.start}
                   onChange={(e) =>
                     setDateRange({ start: e.target.value, end: "" })
@@ -1156,7 +1157,7 @@ function Reports({
                 <>
                   <input
                     type="date"
-                    className="h-9 border border-gray-200 rounded-md"
+                    className="h-9 border border-gray-200 rounded-md px-1 text-sm cursor-pointer"
                     value={dateRange.start}
                     max={dateRange.end || undefined}
                     onChange={(e) =>
@@ -1169,7 +1170,7 @@ function Reports({
                   />
                   <input
                     type="date"
-                    className="h-9 border border-gray-200 rounded-md"
+                    className="h-9 border border-gray-200 rounded-md px-1 text-sm cursor-pointer"
                     value={dateRange.end}
                     min={dateRange.start || undefined}
                     onChange={(e) =>
@@ -1427,7 +1428,7 @@ function Reports({
         <KanbanView
           config={config}
           getRowValue={getRowValue}
-          filteredAndSortedData={filteredAndSortedData}
+          filteredAndSortedData={paginatedGroupedData?.ungrouped}
           hasButtons={hasButtons}
           visibleButtons={visibleButtons}
           moreButtons={moreButtons}
@@ -1440,6 +1441,7 @@ function Reports({
           setOpenDropdown={setOpenDropdown}
           getIconComponent={getIconComponent}
           kanbanGroupBy={kanbanGroupBy}
+          paginatedGroupedData={paginatedGroupedData}
           loading={dataLoading}
           currentData={currentData}
           errorMsg={errorMsg}
@@ -1462,7 +1464,7 @@ function Reports({
         <CalendarView
           config={config}
           getRowValue={getRowValue}
-          filteredAndSortedData={filteredAndSortedData}
+          filteredAndSortedData={paginatedGroupedData?.ungrouped}
           hasButtons={hasButtons}
           visibleButtons={visibleButtons}
           moreButtons={moreButtons}

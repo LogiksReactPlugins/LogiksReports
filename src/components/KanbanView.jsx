@@ -40,10 +40,11 @@ const KanbanView = ({
   getIconComponent,
   kanbanGroupBy,
   getRowValue,
+  paginatedGroupedData
 }) => {
-  // console.log({ kanbanGroupBy });
   const { kanban, datagrid } = config;
   const sensors = useSensors(useSensor(PointerSensor));
+  console.log({paginatedGroupedData})
 
   const groupedData = useMemo(() => {
     if (!kanbanGroupBy || !filteredAndSortedData.length) return {};
@@ -167,11 +168,7 @@ const KanbanView = ({
                 src={getCardValue(row, "avatar")}
                 alt="Avatar"
               />
-            ) : (
-              <div className="h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center">
-                <User className="h-4 w-4 text-gray-600" />
-              </div>
-            )}
+            ) : null}
           </div>
 
           {/* Title + Description (drag handle) */}
