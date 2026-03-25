@@ -5,6 +5,8 @@ import React, {
   useRef,
   useCallback,
 } from "react";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 import {
   Search,
   Printer,
@@ -198,10 +200,6 @@ function Reports({
     [config?.datagrid],
   );
 
-  useEffect(() => {
-    console.log({ filters });
-  }, [filters]);
-
   // useEffect(() => {
   //   if (!showTableFilters || !visibleColumns) return;
 
@@ -330,9 +328,11 @@ function Reports({
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
   const getValueByPath = (obj, path) => {
     return path.split(".").reduce((acc, key) => acc?.[key], obj);
   };
+
   const fetchAPI = async () => {
     setDataLoading(true);
     setErrorMsg("")
@@ -812,6 +812,157 @@ function Reports({
       </div>
     );
   };
+const extractTextFromReactNode = (node) => {
+  if (typeof node === "string" || typeof node === "number") {
+    return String(node);
+  }
+
+  if (Array.isArray(node)) {
+    return node.map(extractTextFromReactNode).join("");
+  }
+
+  if (React.isValidElement(node)) {
+    return extractTextFromReactNode(node.props.children);
+  }
+
+  return "";
+};
+const handleExportAll = async (type = "excel") => {
+  try {
+    if (!config?.source?.queryid) {
+      const { table, cols, join, where } = config.source;
+
+      const { data: saveQuerydata } = await axios({
+        method: "POST",
+        url: config?.endPoints.saveQuery,
+        headers: config?.endPoints?.headers,
+        data: {
+          query: { table, cols, join, where },
+          dbkey: config?.source?.dbkey,
+        },
+      });
+
+      config.source.queryid = saveQuerydata?.queryid;
+    }
+
+    const refid = config?.endPoints?.refid;
+    const hasFilterTabs = filterTabs && Object.keys(filterTabs).length > 0;
+
+    const dateFilter =
+      activeDateCol && dateOperator
+        ? {
+            [activeDateCol]:
+              dateOperator === "between"
+                ? [[dateRange.start, dateRange.end], "range"]
+                : dateOperator === "eq"
+                ? [dateRange.start, "like"]
+                : [[dateRange.start, dateRange.end], "range"],
+          }
+        : {};
+
+    const axiosObject = {
+      method: config?.source?.method || "post",
+      url:
+        config?.source?.url ||
+        `${config?.endPoints?.baseURL}${config?.endPoints.runQuery}`,
+      headers: config?.source?.headers || config?.endPoints?.headers,
+      data: {
+        queryid: config?.source?.queryid,
+
+        ...(!hasFilterTabs && {
+          stxt: searchTerm,
+          cols: searchableColumns.map((col) => col.key),
+        }),
+
+        filter: {
+          ...(hasFilterTabs &&
+            Object.fromEntries(
+              Object.entries(filterTabs || {}).map(([key, { value }]) => [
+                key,
+                [value, "LIKE"],
+              ])
+            )),
+
+          ...Object.fromEntries(
+            Object.entries(filters || {}).map(([key, { type, value }]) => {
+              if (type === "text") return [key, [value, "LIKE"]];
+              return [key, value];
+            })
+          ),
+
+          ...dateFilter,
+        },
+
+        ...(groupBy && { group_by: groupBy }),
+        ...(refid ? { refid } : {}),
+
+        limit: config?.exportLimit || CONSTANTS.EXPORT_LIMIT || 1000,
+        page: 0,
+
+        ...(sortConfig?.key
+          ? { orderby: `${sortConfig.key} ${sortConfig.direction}` }
+          : {}),
+      },
+    };
+
+    const { data } = await axios(axiosObject);
+    const responsePath = config?.source?.response || "data";
+    const result = getValueByPath(data, responsePath) || [];
+
+    const exportData = result.map((raw) => {
+      const obj = {};
+      visibleColumns.forEach(([key, col]) => {
+      
+        let value = getRowValue(raw, key);
+
+// apply formatter first
+const formatted = formatCellValue(
+  value,
+  col.formatter,
+  raw,
+  col,
+  config,
+  methods
+);
+
+if (React.isValidElement(formatted)) {
+  value = extractTextFromReactNode(formatted);
+} else if (typeof formatted === "string") {
+  value = formatted.replace(/<[^>]*>/g, "");
+} else if (typeof formatted === "number" || typeof formatted === "boolean") {
+  value = formatted;
+} else {
+  value = formatted != null ? String(formatted) : "";
+}
+
+obj[col.label] = value;
+      });
+
+      return obj;
+    });
+
+    const ws = XLSX.utils.json_to_sheet(exportData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Report");
+
+    const buffer = XLSX.write(wb, {
+      bookType: type === "csv" ? "csv" : "xlsx",
+      type: "array",
+    });
+
+    saveAs(
+      new Blob([buffer], {
+        type:
+          type === "csv"
+            ? "text/csv;charset=utf-8"
+            : "application/octet-stream",
+      }),
+      `export.${type === "csv" ? "csv" : "xlsx"}`
+    );
+  } catch (err) {
+    console.error("Export failed", err);
+  }
+};
 
   const getIconComponent = (iconStr) => {
     if (!iconStr) return null;
@@ -971,6 +1122,9 @@ function Reports({
                   Export
                 </button>
               )}
+
+
+
               {open && (
                 <div className="absolute right-0 z-50 mt-2 w-48 rounded-md bg-white border border-gray-200 shadow-lg">
                   <ul className="py-1 text-sm text-action">
@@ -1010,6 +1164,15 @@ function Reports({
                 </div>
               )}
             </div>
+              {toolbar?.exportAll !== false && (
+                <button
+  onClick={() => handleExportAll("excel")}
+                  className="inline-flex items-center px-3 py-1 text-sm font-medium bg-action rounded-md hover:bg-gray-100 cursor-pointer"
+                >
+                  <Upload className="w-4 h-4 mr-1" />
+                  Export All
+                </button>
+              )}
             {toolbar?.email !== false && (
               <button className="inline-flex items-center px-3 py-1 text-sm font-medium bg-action rounded-md hover:bg-gray-100 cursor-pointer">
                 <Mail className="w-4 h-4 mr-1" />
@@ -1335,8 +1498,7 @@ function Reports({
         </div>
       </div>
       {/* Pagination */}
-      {(currentView === "table" || !currentView || currentView === "cards") &&
-        totalPages > 1 && (
+      {(currentView === "table" || !currentView || currentView === "cards") && (
           <div className="px-2 md:px-6 py-1 sticky z-30 top-0 bg-white  border-y border-gray-200">
             <div className="flex flex-row items-center justify-between gap-3">
               <div className="hidden md:block text-sm text-gray-500">

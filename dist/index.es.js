@@ -1,4 +1,4 @@
-import { R as e } from "./index-DUKYH7gK.js";
+import { R as e } from "./index-C7ihwE9t.js";
 export {
   e as Reports
 };

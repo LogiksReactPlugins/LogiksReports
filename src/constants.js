@@ -10,6 +10,7 @@ const CONSTANTS={
         email: "Email Report",
     },
     EXPORT_ORDER : ["pdf", "csv", "xml", "htm", "img", "csvdown"],
-    REPORT_LOCALSTORAGE_PRIFIX:"RPT-"
+    REPORT_LOCALSTORAGE_PRIFIX:"RPT-",
+    EXPORT_LIMIT:2000
 }
 export default CONSTANTS
