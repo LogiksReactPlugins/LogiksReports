@@ -389,7 +389,7 @@ function AttachmentPopup({ url, index, config }) {
 
   const fileName = url.split("/").pop();
   const isHttp = /^https?:\/\//i.test(url);
-
+ const cleanPath = url.replace(/^[^&]*&/, "");
   React.useEffect(() => {
     if (!open || isHttp) return;
 
@@ -401,7 +401,7 @@ function AttachmentPopup({ url, index, config }) {
         setFrameLoading(true);
 
         const res = await fetch(
-          `${config.endPoints.preview}?uri=${encodeURIComponent(url)}`,
+          `${config.endPoints.preview}?uri=${encodeURIComponent(cleanPath)}`,
           { headers: config?.endPoints?.headers }
         );
 

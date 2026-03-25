@@ -7593,33 +7593,33 @@ function mie({ abstract: r, content: e }) {
   ] });
 }
 function yie({ url: r, index: e, config: t }) {
-  const [n, i] = cn.useState(!1), [a, o] = cn.useState(null), [s, l] = cn.useState(!1), [u, A] = cn.useState(!0), c = r.split("/").pop(), f = /^https?:\/\//i.test(r);
+  const [n, i] = cn.useState(!1), [a, o] = cn.useState(null), [s, l] = cn.useState(!1), [u, A] = cn.useState(!0), c = r.split("/").pop(), f = /^https?:\/\//i.test(r), h = r.replace(/^[^&]*&/, "");
   cn.useEffect(() => {
     if (!n || f) return;
-    let d;
+    let v;
     return (async () => {
       try {
         l(!0), A(!0);
-        const g = await fetch(
-          `${t.endPoints.preview}?uri=${encodeURIComponent(r)}`,
+        const m = await fetch(
+          `${t.endPoints.preview}?uri=${encodeURIComponent(h)}`,
           { headers: t?.endPoints?.headers }
         );
-        if (!g.ok) throw new Error("Preview fetch failed");
-        const m = g.headers.get("content-type") || "", y = await g.blob(), w = URL.createObjectURL(y);
-        if (d = w, o(w), !m.startsWith("image/") && !m.includes("pdf")) {
+        if (!m.ok) throw new Error("Preview fetch failed");
+        const y = m.headers.get("content-type") || "", w = await m.blob(), x = URL.createObjectURL(w);
+        if (v = x, o(x), !y.startsWith("image/") && !y.includes("pdf")) {
           setTimeout(() => i(!1), 300);
           return;
         }
-      } catch (g) {
-        console.error("Preview load failed", g), o(null);
+      } catch (m) {
+        console.error("Preview load failed", m), o(null);
       } finally {
         l(!1);
       }
     })(), () => {
-      d && URL.revokeObjectURL(d);
+      v && URL.revokeObjectURL(v);
     };
   }, [n, r, f, t]);
-  const h = f ? r : a;
+  const d = f ? r : a;
   return /* @__PURE__ */ V.jsxs(V.Fragment, { children: [
     /* @__PURE__ */ V.jsx(
       "span",
@@ -7640,16 +7640,16 @@ function yie({ url: r, index: e, config: t }) {
       ),
       /* @__PURE__ */ V.jsx("div", { className: "mb-3 text-sm font-medium text-gray-700", children: c }),
       (s || u) && /* @__PURE__ */ V.jsx("div", { className: "flex items-center justify-center h-[60vh] text-sm text-gray-500", children: "Loading preview…" }),
-      h && /* @__PURE__ */ V.jsx(
+      d && /* @__PURE__ */ V.jsx(
         "iframe",
         {
-          src: h,
+          src: d,
           title: c,
           onLoad: () => A(!1),
           className: `w-full h-[60vh] border border-slate-200 rounded ${s || u ? "hidden" : "block"}`
         }
       ),
-      !s && !h && /* @__PURE__ */ V.jsx("div", { className: "text-sm text-red-500", children: "Preview not available" })
+      !s && !d && /* @__PURE__ */ V.jsx("div", { className: "text-sm text-red-500", children: "Preview not available" })
     ] }) })
   ] });
 }
@@ -37210,7 +37210,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Or.canvg ? Promise.resolve(Or.canvg) : import("./index.es-SObpONHn.js")).catch(function(f) {
+  return (Or.canvg ? Promise.resolve(Or.canvg) : import("./index.es-C6lvEbDE.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
