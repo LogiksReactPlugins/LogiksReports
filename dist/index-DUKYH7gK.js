@@ -37210,7 +37210,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Or.canvg ? Promise.resolve(Or.canvg) : import("./index.es-C6lvEbDE.js")).catch(function(f) {
+  return (Or.canvg ? Promise.resolve(Or.canvg) : import("./index.es-P2PzZDnZ.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
@@ -94819,12 +94819,12 @@ function v6e({
       I(!1), re(null);
     }
   };
-  return te && de?.QUERY ? /* @__PURE__ */ V.jsx(
+  return te && de ? /* @__PURE__ */ V.jsx(
     "pre",
     {
       style: { whiteSpace: "pre-wrap", wordBreak: "break-word" },
       className: "p-4 debugg-query",
-      children: typeof de?.QUERY == "string" ? de?.QUERY : JSON.stringify(de?.QUERY, null, 2)
+      children: typeof de?.sql == "string" ? de?.sql : JSON.stringify(de?.query, null, 2)
     }
   ) : /* @__PURE__ */ V.jsxs(
     "div",

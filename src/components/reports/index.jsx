@@ -895,15 +895,15 @@ function Reports({
       setLoading(null);
     }
   };
-  if (debuggerEnable && debuggData?.QUERY) {
+  if (debuggerEnable && debuggData) {
     return (
       <pre
         style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}
         className="p-4 debugg-query"
       >
-        {typeof debuggData?.QUERY === "string"
-          ? debuggData?.QUERY
-          : JSON.stringify(debuggData?.QUERY, null, 2)}
+        {typeof debuggData?.sql === "string"
+          ? debuggData?.sql
+          : JSON.stringify(debuggData?.query, null, 2)}
       </pre>
     );
   }
