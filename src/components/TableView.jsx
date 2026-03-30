@@ -213,7 +213,7 @@ const formatAggregateValue = (value, format = {}) => {
   const renderAggregateRow = (rows) => {
     return (
       <tr className="bg-gray-100 font-semibold sticky bottom-0 z-20 report-aggregate-row">
-        {hasButtons && <td />}
+        {hasButtons && <td>Total : </td>}
         {showExtraColumn === "checkbox" && <td />}
 
         {visibleColumns.map(([key, col], colIndex) => {

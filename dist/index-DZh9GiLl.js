@@ -16499,7 +16499,7 @@ const ble = [
       maximumFractionDigits: at
     }).format(oe);
   }, Ze = (oe) => /* @__PURE__ */ V.jsxs("tr", { className: "bg-gray-100 font-semibold sticky bottom-0 z-20 report-aggregate-row", children: [
-    n && /* @__PURE__ */ V.jsx("td", {}),
+    n && /* @__PURE__ */ V.jsx("td", { children: "Total : " }),
     o === "checkbox" && /* @__PURE__ */ V.jsx("td", {}),
     t.map(([Oe, Ie], at) => {
       const je = re && at < 2 || ee && at === 0 ? "sticky left-0 bg-gray-100 z-20" : J && at === t.length - 1 ? "sticky right-0 bg-gray-100 z-20" : "";
@@ -22713,12 +22713,12 @@ function afe({ config: r, setConfig: e, setSettingsOpen: t }) {
     const C = parseInt(x.dataTransfer.getData("text/plain"));
     if (C === b) return;
     const S = [...u], D = S[C];
-    S.splice(C, 1), S.splice(b, 0, D), A(S);
+    S.splice(C, 1), S.splice(b, 0, D), console.log({ newOrder: S }), A(S);
   }, v = () => {
     const x = {};
     u.forEach((C) => {
       x[C] = a.datagrid[C];
-    });
+    }), console.log({ columnOrder: u }), console.log({ orderedDatagrid: x });
     const b = {
       ...a,
       datagrid: x
@@ -37211,7 +37211,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (kr.canvg ? Promise.resolve(kr.canvg) : import("./index.es-qi-bqJqL.js")).catch(function(f) {
+  return (kr.canvg ? Promise.resolve(kr.canvg) : import("./index.es-BCaBV3fg.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;

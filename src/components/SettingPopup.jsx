@@ -36,7 +36,7 @@ export default function SettingPopup({ config, setConfig, setSettingsOpen }) {
 
         newOrder.splice(dragIndex, 1);
         newOrder.splice(dropIndex, 0, draggedItem);
-
+        console.log({newOrder})
         setColumnOrder(newOrder);
     };
 
@@ -45,6 +45,8 @@ export default function SettingPopup({ config, setConfig, setSettingsOpen }) {
         columnOrder.forEach(key => {
             orderedDatagrid[key] = tempConfig.datagrid[key];
         });
+        console.log({columnOrder})
+        console.log({orderedDatagrid})
 
         const finalConfig = {
             ...tempConfig,

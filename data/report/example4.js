@@ -5,9 +5,9 @@ export const report = {
     baseURL: "http://192.168.0.20:9999",
     debuggUrl: `http://192.168.0.20:9999/api/query/view`,
     preview: `http://192.168.0.20:9999/api/files/preview`,
-    accessToken: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwicGF5bG9hZCI6IktHVEgrOWtmM0dGTXBLdldqblJwRExPalhmTVdseTZabUtXV3lhazBWblJIQzVUdUdvNEx3OUtxdUx5empSQUhSNUpPT0E0RDNFb1hiNHJ4bHFZS3A1QXBQZ3EwNGdEOU9WQ0lxR2lhVVdYNUpOcWp1WnNScTNCUFRmTGtRL1RBcThHQmxIV0o0a0hnUCtFOHFWK0l3akJiT1M2RjJPcitiRGJlYXFMRFZGbEdkdUhnTVM3Q3gxcTdKeHl3T3cwZHhvNVlEeFFXWHFyV2NvckRDT3NnTzVJQ1YxZ0NrOWRRMmtOZVVSd1Z6eVNhWjlOTXluaU1ET0QwbUR6alZwTEt2WHVqcnVQanMrUXBHZklud3VYaHBsNWU2R2pQeHBpTTlMeWJYQ1Z5IiwiaWF0IjoxNzc0NDM5MTkxLCJleHAiOjE3NzQ0NDI3OTEsImp0aSI6ImFjYzoxOjE3NzQ0MzkxOTE1NjA6d2ViIn0.xTXDvT9RqWfZSLpRUxcTzS2Y4Ob9DsTPcqSs304cZJs",
+    accessToken: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwicGF5bG9hZCI6ImhXSVduVGZMbzlySFUrQm43Q01XRUx4TTVmcHBnWExkVTA1eFlkcE5iUFFCeW9MTkh2LzBzYnVzZUJ0RDRxRjNqYXgxWVk5d0RSdVBmek1yamdhOVJGUEFaaktmTHBFeE1XNmhubm4zUlhCTXBvOG1taUFZMytNc1NqTGRlZXdScWw2ZEl4TWF0YkVmczBuZTZQQlZkYjRxT1VuZ3ZjZkFJQ3lxaXFUdndwZ05WWFdyMkI0anJCU3drcGFOa3VOdEJZNXRpUVdlRXMxenJmNzJaNVBZMVFrRzNiWmQydmJyeFhVc3drQ2orVFRDdnpYbHI3eTg0cHB0akxlYmFaUWFBNmVOU3hVa0RJV0ljWGZjRDZsVE9DSjhXUE5ueUlOb1VFc04wazg9IiwiaWF0IjoxNzc0NTE3NTcxLCJleHAiOjE3NzQ1MjExNzEsImp0aSI6ImFjYzoxOjE3NzQ1MTc1NzE5NjM6d2ViIn0.ispXJlG9YQSbQQSFy7QrdXbx1wP9ph4yd_X9yAhAd-Y",
     headers: {
-      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwicGF5bG9hZCI6IktHVEgrOWtmM0dGTXBLdldqblJwRExPalhmTVdseTZabUtXV3lhazBWblJIQzVUdUdvNEx3OUtxdUx5empSQUhSNUpPT0E0RDNFb1hiNHJ4bHFZS3A1QXBQZ3EwNGdEOU9WQ0lxR2lhVVdYNUpOcWp1WnNScTNCUFRmTGtRL1RBcThHQmxIV0o0a0hnUCtFOHFWK0l3akJiT1M2RjJPcitiRGJlYXFMRFZGbEdkdUhnTVM3Q3gxcTdKeHl3T3cwZHhvNVlEeFFXWHFyV2NvckRDT3NnTzVJQ1YxZ0NrOWRRMmtOZVVSd1Z6eVNhWjlOTXluaU1ET0QwbUR6alZwTEt2WHVqcnVQanMrUXBHZklud3VYaHBsNWU2R2pQeHBpTTlMeWJYQ1Z5IiwiaWF0IjoxNzc0NDM5MTkxLCJleHAiOjE3NzQ0NDI3OTEsImp0aSI6ImFjYzoxOjE3NzQ0MzkxOTE1NjA6d2ViIn0.xTXDvT9RqWfZSLpRUxcTzS2Y4Ob9DsTPcqSs304cZJs`,
+      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwicGF5bG9hZCI6ImhXSVduVGZMbzlySFUrQm43Q01XRUx4TTVmcHBnWExkVTA1eFlkcE5iUFFCeW9MTkh2LzBzYnVzZUJ0RDRxRjNqYXgxWVk5d0RSdVBmek1yamdhOVJGUEFaaktmTHBFeE1XNmhubm4zUlhCTXBvOG1taUFZMytNc1NqTGRlZXdScWw2ZEl4TWF0YkVmczBuZTZQQlZkYjRxT1VuZ3ZjZkFJQ3lxaXFUdndwZ05WWFdyMkI0anJCU3drcGFOa3VOdEJZNXRpUVdlRXMxenJmNzJaNVBZMVFrRzNiWmQydmJyeFhVc3drQ2orVFRDdnpYbHI3eTg0cHB0akxlYmFaUWFBNmVOU3hVa0RJV0ljWGZjRDZsVE9DSjhXUE5ueUlOb1VFc04wazg9IiwiaWF0IjoxNzc0NTE3NTcxLCJleHAiOjE3NzQ1MjExNzEsImp0aSI6ImFjYzoxOjE3NzQ1MTc1NzE5NjM6d2ViIn0.ispXJlG9YQSbQQSFy7QrdXbx1wP9ph4yd_X9yAhAd-Y`,
       "Content-Type": "application/json",
     },
   }, "schema": "1.0",
@@ -74,6 +74,11 @@ export const report = {
                 "groupable": false,
                 "style": "width:50px;",
                 "hidden": true
+            },       "conducted_by_department": {
+                "label": "Conducted By Department",
+                "sortable": true,
+                "searchable": true,
+                "formatter": "pretty"
             },
             "date": {
                 "label": "Date",
@@ -81,12 +86,7 @@ export const report = {
                 "formatter": "date",
                 "searchable": true
             },
-            "conducted_by_department": {
-                "label": "Conducted By Department",
-                "sortable": true,
-                "searchable": true,
-                "formatter": "pretty"
-            },
+     
             "user_name": {
                 "label": "Conducted By (Name)",
                 "sortable": true,
