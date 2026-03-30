@@ -211,9 +211,15 @@ const formatAggregateValue = (value, format = {}) => {
   }).format(value);
 };
   const renderAggregateRow = (rows) => {
+    let aggrigateExist=false
+  visibleColumns.forEach(([key, col], colIndex) => {
+    if(col.aggregate){
+      aggrigateExist=true
+    }
+  })
     return (
       <tr className="bg-gray-100 font-semibold sticky bottom-0 z-20 report-aggregate-row">
-        {hasButtons && <td>Total : </td>}
+        {hasButtons && <td>  {aggrigateExist && "Total :"} </td>}
         {showExtraColumn === "checkbox" && <td />}
 
         {visibleColumns.map(([key, col], colIndex) => {
