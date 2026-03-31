@@ -22791,7 +22791,7 @@ function afe({ config: r, setConfig: e, setSettingsOpen: t }) {
                                             focus:ring-gray-200 focus:border-gray-400`,
               children: [
                 /* @__PURE__ */ V.jsx("option", { value: 10, children: "10 rows" }),
-                /* @__PURE__ */ V.jsx("option", { value: 25, children: "25 rows" }),
+                /* @__PURE__ */ V.jsx("option", { value: 20, children: "20 rows" }),
                 /* @__PURE__ */ V.jsx("option", { value: 50, children: "50 rows" }),
                 /* @__PURE__ */ V.jsx("option", { value: 100, children: "100 rows" }),
                 /* @__PURE__ */ V.jsx("option", { value: 200, children: "200 rows" }),
@@ -37220,7 +37220,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (kr.canvg ? Promise.resolve(kr.canvg) : import("./index.es-1J_YqM9u.js")).catch(function(f) {
+  return (kr.canvg ? Promise.resolve(kr.canvg) : import("./index.es-C9Q70Pl9.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
@@ -94661,6 +94661,7 @@ function v6e({
             // cols:["eoffice_files_tbl.subject","eoffice_files_tbl.pending_at"]
           },
           filter: {
+            ...o?.source?.defaultFilters,
             ...Or && Object.fromEntries(
               Object.entries(sr || {}).map(([Ci, { value: Ta }]) => [
                 Ci,

@@ -140,7 +140,7 @@ export default function SettingPopup({ config, setConfig, setSettingsOpen }) {
                                             focus:ring-gray-200 focus:border-gray-400"
                                 >
                                     <option value={10}>10 rows</option>
-                                    <option value={25}>25 rows</option>
+                                    <option value={20}>20 rows</option>
                                     <option value={50}>50 rows</option>
                                     <option value={100}>100 rows</option>
                                     <option value={200}>200 rows</option>

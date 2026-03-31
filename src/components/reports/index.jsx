@@ -505,6 +505,7 @@ function Reports({
             // cols:["eoffice_files_tbl.subject","eoffice_files_tbl.pending_at"]
               }),
                 filter: {
+                  ...config?.source?.defaultFilters,
                  ...(hasFilterTabs &&
                 Object.fromEntries(
                   Object.entries(filterTabs || {}).map(([key, { value }]) => [
