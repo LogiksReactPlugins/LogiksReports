@@ -66,6 +66,7 @@ import GalleryView from "../GalleryView";
 import GanttView from "../GanttView";
 import GmapView from "../GmapView";
 import { ModalProvider, useModal } from "../../helpers/ModalContext";
+import Sidebar from "../sidebar/Sidebar";
 const getRowValue = (row, key) => {
   if (key in row) return row[key];
   console.log({ key });
@@ -134,6 +135,8 @@ function Reports({
   const [selectOptions, setSelectOptions] = useState({});
   const { openConfirm, openPrompt, openAlert } = useModal();
   const [errorMsg,setErrorMsg]=useState("")
+  const [onSidebarChange,setOnSidebarChange]=useState(null)
+
   useEffect(() => {
     setCurrentPage(0);
     setRowsPerPage(config?.rowsPerPage);
@@ -447,6 +450,16 @@ function Reports({
         .map(([key]) => [key, [searchString, "LIKE"]]),
     );
   };
+  const handleSidebarChange = (values) => {
+  const filteredValues = Object.fromEntries(
+    Object.entries(values).filter(([_, v]) => {
+      if (Array.isArray(v)) return v.length > 0;
+      return v !== "" && v !== null && v !== undefined;
+    })
+  );
+
+  setOnSidebarChange?.(filteredValues);
+};
 
   const filteredAndSortedData = useCallback(() => {
     if (!data) return [];
@@ -508,6 +521,7 @@ function Reports({
               }),
                 filter: {
                   ...config?.source?.defaultFilters,
+                  ...onSidebarChange,
                  ...(hasFilterTabs &&
                 Object.fromEntries(
                   Object.entries(filterTabs || {}).map(([key, { value }]) => [
@@ -611,6 +625,7 @@ function Reports({
     dateOperator,
     sortConfig,
     filters,
+    onSidebarChange
   ]);
 
   useEffect(() => {
@@ -622,6 +637,7 @@ function Reports({
     dateRange.end,
     sortConfig,
     filters,
+    onSidebarChange
   ]);
 
   useEffect(() => {
@@ -928,17 +944,17 @@ const formatted = formatCellValue(
   methods
 );
 
-if (React.isValidElement(formatted)) {
-  value = extractTextFromReactNode(formatted);
-} else if (typeof formatted === "string") {
-  value = formatted.replace(/<[^>]*>/g, "");
-} else if (typeof formatted === "number" || typeof formatted === "boolean") {
-  value = formatted;
-} else {
-  value = formatted != null ? String(formatted) : "";
-}
+  if (React.isValidElement(formatted)) {
+    value = extractTextFromReactNode(formatted);
+  } else if (typeof formatted === "string") {
+    value = formatted.replace(/<[^>]*>/g, "");
+  } else if (typeof formatted === "number" || typeof formatted === "boolean") {
+    value = formatted;
+  } else {
+    value = formatted != null ? String(formatted) : "";
+  }
 
-obj[col.label] = value;
+  obj[col.label] = value;
       });
 
       return obj;
@@ -1500,6 +1516,15 @@ obj[col.label] = value;
           ))}
         </div>
       </div>
+      <div className="flex">
+        {
+        config.sidebar && 
+        <div className="max-w-[250px] min-w-[250px] border-r border-gray-200  max-h-screen overflow-y-auto thin-scrollbar sidebar">
+           <Sidebar config={config} onChange={handleSidebarChange}  />
+        </div>
+        }
+        <div className="flex-1 overflow-auto report">
+       
       {/* Pagination */}
       {(currentView === "table" || !currentView || currentView === "cards") && (
           <div className="px-2 md:px-6 py-1 sticky z-30 top-0 bg-white  border-y border-gray-200">
@@ -1681,6 +1706,8 @@ obj[col.label] = value;
         errorMsg={errorMsg}
         />
       )}
+       </div>
+      </div>
       {/* Click outside to close dropdown */}
       {openDropdown && (
         <div

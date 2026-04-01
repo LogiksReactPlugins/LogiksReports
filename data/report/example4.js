@@ -1,13 +1,13 @@
 export const report = {
   endPoints: {
-    saveQuery: "http://192.168.0.20:9999/api/query/save",
+saveQuery: "http://192.168.0.20:9999/api/query/save",
     runQuery: "/api/query/run",
     baseURL: "http://192.168.0.20:9999",
     debuggUrl: `http://192.168.0.20:9999/api/query/view`,
     preview: `http://192.168.0.20:9999/api/files/preview`,
-    accessToken: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwicGF5bG9hZCI6IituK0tJWHp5QTNlQ0ZqaWt6MVp2NklSbVFxODdjNS9QaHpPRTY4SXEwRk5NVGJnbVpCZUlYRUQ4ZVl0Z09scytUSmpKcVdWdCtPN29CaXB0bTc3NXJ2bDBkRVVKeXlzU1RJNlJEZmIyUWlKT1diRVlURk9Ja0dkdTlQVnR5c1Z6WFkrZ3N4dVJLQVdBUzM5VmZpQStNczI4OHhBUmtZdjFLbGVHU3p3VlhIMWYvZ0dQY3RlQksrL3M4Wk9DdXlVY0lLbnRWNzd3TEY2cFhYdUFLV1dDQ2g4d1JpUHFjNXA0b3NXb1VUempEV0VISC9nNjF5bm1TVW1xUmp2MmZpSzc4ekZBRjNnZ2ZNbzJ0OXBJREpEejFueU1RVXZ6TWFEeHhFVUtXeGZpIiwiaWF0IjoxNzc0OTQ0NTc3LCJleHAiOjE3NzQ5NDgxNzcsImp0aSI6ImFjYzoxOjE3NzQ5NDQ1Nzc5MjM6d2ViIn0.SnwSMHUoXVAIHsglaS29zf0oBi3Cjvds13Pqq737M8Y",
+    accessToken: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwicGF5bG9hZCI6IituWUgwQmlOb3MrTzRKaSs0UWFKcnV4Tml3SFRhUWxoUXRieUVRYndUWjM4WWdBdFVoMlFEaU1UVmxOcmw3VUd2YldsOWpzTjFyZng2TnhKcFpBVWFLaEZmVVFWOUd4OURFZXg5c1hkSElDSGUrRGlZcldYN1ZlSjlkeFBuNC93eVZSdzBacVRDWFdVZjdWVGJLWGcvdmxvSWZ3N1pFWnMzajZ0SlFyMTVURDZpQWtVMTdGNmxMeWJDaURRWXVRVkloRGdRZndjSkp0SjZFZlZQbzUvNHI1S29PcjhoR2ZldTNzNmlhWTA1d0pvVTc5QWZWd1NYbWV4TzgwWlIzK1VSQm1qSEU2YUtlb2RXa1ZNZlo4SkJNbm9hNFdBeTZVYjFHdEh3RldGIiwiaWF0IjoxNzc1MDQyNDAyLCJleHAiOjE3NzUwNDYwMDIsImp0aSI6ImFjYzoxOjE3NzUwNDI0MDIwNzI6d2ViIn0.z1rLGx5JFAgywk6oL53m3u7Fg-6ghqncg8ALQxUYvtU",
     headers: {
-      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwicGF5bG9hZCI6IituK0tJWHp5QTNlQ0ZqaWt6MVp2NklSbVFxODdjNS9QaHpPRTY4SXEwRk5NVGJnbVpCZUlYRUQ4ZVl0Z09scytUSmpKcVdWdCtPN29CaXB0bTc3NXJ2bDBkRVVKeXlzU1RJNlJEZmIyUWlKT1diRVlURk9Ja0dkdTlQVnR5c1Z6WFkrZ3N4dVJLQVdBUzM5VmZpQStNczI4OHhBUmtZdjFLbGVHU3p3VlhIMWYvZ0dQY3RlQksrL3M4Wk9DdXlVY0lLbnRWNzd3TEY2cFhYdUFLV1dDQ2g4d1JpUHFjNXA0b3NXb1VUempEV0VISC9nNjF5bm1TVW1xUmp2MmZpSzc4ekZBRjNnZ2ZNbzJ0OXBJREpEejFueU1RVXZ6TWFEeHhFVUtXeGZpIiwiaWF0IjoxNzc0OTQ0NTc3LCJleHAiOjE3NzQ5NDgxNzcsImp0aSI6ImFjYzoxOjE3NzQ5NDQ1Nzc5MjM6d2ViIn0.SnwSMHUoXVAIHsglaS29zf0oBi3Cjvds13Pqq737M8Y`,
+      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwicGF5bG9hZCI6IituWUgwQmlOb3MrTzRKaSs0UWFKcnV4Tml3SFRhUWxoUXRieUVRYndUWjM4WWdBdFVoMlFEaU1UVmxOcmw3VUd2YldsOWpzTjFyZng2TnhKcFpBVWFLaEZmVVFWOUd4OURFZXg5c1hkSElDSGUrRGlZcldYN1ZlSjlkeFBuNC93eVZSdzBacVRDWFdVZjdWVGJLWGcvdmxvSWZ3N1pFWnMzajZ0SlFyMTVURDZpQWtVMTdGNmxMeWJDaURRWXVRVkloRGdRZndjSkp0SjZFZlZQbzUvNHI1S29PcjhoR2ZldTNzNmlhWTA1d0pvVTc5QWZWd1NYbWV4TzgwWlIzK1VSQm1qSEU2YUtlb2RXa1ZNZlo4SkJNbm9hNFdBeTZVYjFHdEh3RldGIiwiaWF0IjoxNzc1MDQyNDAyLCJleHAiOjE3NzUwNDYwMDIsImp0aSI6ImFjYzoxOjE3NzUwNDI0MDIwNzI6d2ViIn0.z1rLGx5JFAgywk6oL53m3u7Fg-6ghqncg8ALQxUYvtU`,
       "Content-Type": "application/json",
     },
   }, "schema": "1.0",
@@ -22,9 +22,10 @@ export const report = {
         "topbar": {
             "uitype": "type1"
         },
-        "source": {
+      
+         "source": {
             "type": "sql",
-            "queryid": "reports%40hse.induction%40source"
+            "queryid": "reports%40menuManager.main%40source"
         },
         "actions": {
             "forms@hse.induction": {
@@ -32,116 +33,162 @@ export const report = {
                 "icon": "fa fa-plus"
             }
         },
-        "buttons": {
-            "infoview@hse.induction/{id}": {
-                "label": "View Induction",
-                "icon": "fa fa-eye"
-            },
-            "forms@hse.induction/update/{id}": {
-                "label": "Edit Induction",
-                "icon": "fa fa-pencil"
-            },
-            "popup@activity_logs.popup_activity_logs/{id}": {
-                "label": "History",
-                "params": {
-                    "ref_src": "forms@hse.induction",
-                    "columns": [
-                        "created_on",
-                        "category",
-                        "subject"
-                    ]
+        "sidebar": {
+            "type": "filter",
+            "source": {
+                "category": {
+                      "title": "Select category for filter",
+                    "type": "sql",
+                    "table": "do_links",
+                    "cols": "category as title, category as value",
+                    "where": {
+                        "blocked": "false",
+                      
+                    },
+                    "groupby": "category",
+                    "orderby": "category asc"
                 },
-                "icon": "fa-solid fa-clock-rotate-left"
-            },
-            "api@hse.deleteRecord": {
-                "label": "Delete Induction",
-                "icon": "fa fa-trash",
-                "lgksConfirm": "Are you sure you want to delete this record?",
-                "payload": "hse.induction.reports.buttons.api@hse.deleteRecord"
+                  "weight": {
+                      "title": "Whom to Meet/Authorizer",
+                    "type": "sql",
+                    "table": "do_links",
+                    "cols": "weight as title, weight as value",
+                    "where": {
+                        "blocked": "false",
+                    },
+                    "groupby": "weight",
+                    "orderby": "weight asc"
+                }
             }
         },
-        "toolbar": {
-            "search": true,
-            "print": true,
-            "export": true,
-            "email": false
+        "actions": {
+            "forms@menuManager.main": {
+                "label": "Add Menus",
+                "icon": "fa fa-plus"
+            }
+        },
+        "buttons": {
+            "infoview@menuManager.main/{id}": {
+                "label": "View Menu Manager",
+                "icon": "fa fa-eye",
+                "class": "masters-terms"
+            },
+            "forms@menuManager.main/update/{id}": {
+                "label": "Edit Menu Manager",
+                "icon": "fa fa-pencil",
+                "class": "masters-terms"
+            }
         },
         "datagrid": {
-            "hse_induction.id": {
+            "id": {
                 "label": "ID",
+                "hidden": false,
                 "searchable": true,
                 "sortable": true,
                 "groupable": false,
+                "classes": "",
                 "style": "width:50px;",
+                "formatter": "text"
+            },
+            "menuid": {
+                "label": "Menu ID",
+                "sortable": true,
+                "searchable": true,
                 "hidden": true
-            },       "conducted_by_department": {
-                "label": "Conducted By Department",
-                "sortable": true,
-                "searchable": true,
-                "formatter": "pretty"
             },
-            "date": {
-                "label": "Date",
-                "sortable": true,
-                "formatter": "date",
-                "searchable": true
-            },
-     
-            "user_name": {
-                "label": "Conducted By (Name)",
+            "title": {
+                "label": "Title",
                 "sortable": true,
                 "searchable": true
             },
-            "participant_count": {
-                "label": "Participants",
+            "category": {
+                "label": "Category",
                 "sortable": true,
                 "searchable": true
             },
-            "photo_attendance": {
-                "label": "Induction Photo/Attendance",
+            "class": {
+                "label": "Class",
                 "sortable": true,
-                "searchable": true,
-                "formatter": "attachment"
-            },
-            "hse_induction.created_by": {
-                "label": "Added By",
-                "sortable": true,
-                "searchable": true,
-                "formatter": "pretty",
-                "filter": {
-                    "type": "text"
-                }
-            },
-            "hse_induction.created_on": {
-                "label": "Added On",
-                "sortable": true,
-                "searchable": true,
-                "formatter": "datetime",
                 "hidden": true,
+                "searchable": true
+            },
+            "onmenu": {
+                "label": "OnMenu",
+                "sortable": true,
+                "searchable": true,
                 "filter": {
-                    "type": "date"
+                    "type": "select",
+                    "nofilter": "--",
+                    "options": {
+                        "false": "False",
+                        "true": "True"
+                    },
+                    "default": "true"
                 }
             },
-            "hse_induction.edited_by": {
+            "blocked": {
+                "label": "Blocked",
+                "sortable": true,
+                "searchable": true,
+                "filter": {
+                    "type": "select",
+                    "nofilter": "--",
+                    "options": {
+                        "false": "Not Blocked",
+                        "true": "Blocked"
+                    },
+                    "default": "false"
+                }
+            },
+            "to_check": {
+                "label": "Scope Rules/Permission",
+                "sortable": true,
+                "hidden": false,
+                "searchable": true
+            },
+            "link": {
+                "label": "Link",
+                "sortable": true,
+                "hidden": false,
+                "searchable": true
+            },
+            "menugroup": {
+                "label": "Menugroup",
+                "sortable": true,
+                "searchable": true,
+                "filter": {
+                    "qtype": "EQ"
+                }
+            },
+            "weight": {
+                "label": "Weight",
+                "sortable": true,
+                "searchable": true
+            },
+            "device": {
+                "label": "Device",
+                "sortable": true,
+                "searchable": true
+            },
+            "target": {
+                "label": "Target",
+                "sortable": true,
+                "searchable": true
+            },
+            "edited_by": {
                 "label": "Updated By",
                 "sortable": true,
                 "searchable": true,
-                "formatter": "pretty",
-                "filter": {
-                    "type": "text"
-                }
+                "hidden": true
             },
-            "hse_induction.edited_on": {
-                "label": "Updated On",
+            "edited_on": {
+                "label": "Last Update",
+                "formatter": "date",
                 "sortable": true,
                 "searchable": true,
-                "formatter": "datetime",
-                "hidden": true,
-                "filter": {
-                    "type": "date"
-                }
+                "hidden": true
             }
         },
-        "module_refid": "hse.induction",
+        "module_refid": "menuManager.main",
         "module_type": "reports"
 };
