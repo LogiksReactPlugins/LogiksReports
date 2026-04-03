@@ -439,6 +439,8 @@ function Reports({
     handleReset();
     setRowsPerPage(config?.rowsPerPage);
     setCurrentPage(0);
+        setOnSidebarChange(null)
+
   }, [config]);
 
   const buildSearchFilter = (datagrid, searchString) => {
@@ -1265,7 +1267,11 @@ const formatted = formatCellValue(
                 </select>
 
                 <button
-                  onClick={handleReset}
+                  onClick={()=>{
+                    handleReset(),
+                     setOnSidebarChange(null)
+ }
+                  }
                   className="inline-flex h-8 cursor-pointer items-center px-3 text-sm font-medium bg-action rounded-md flex-shrink-0"
                 >
                   <RotateCcw className="w-4 h-4 mr-1" />

@@ -65,7 +65,7 @@ const Sidebar = ({ config, onChange }) => {
 
   useEffect(() => {
     if (!config?.sidebar?.source) return;
-
+    setSelectedFilters({})
     Object.entries(config.sidebar.source).forEach(([key, source]) => {
       if (source?.type === "sql") {
         fetchSQLData(key, source);
@@ -83,7 +83,6 @@ const Sidebar = ({ config, onChange }) => {
     return match ? item[match] : undefined;
   };
 
-  // 🔥 common handler for filter changes
   const handleFilterChange = (key, value) => {
     const updated = {
       ...selectedFilters,
@@ -94,34 +93,39 @@ const Sidebar = ({ config, onChange }) => {
     onChange?.(updated); // send ALL selected filters
   };
 
-  const renderList = (key, source) => {
-    const list = dataMap[key] || [];
-    if (!Array.isArray(list) || list.length === 0) return null;
+const renderList = (key, source) => {
+  const list = dataMap[key] || [];
+  if (!Array.isArray(list) || list.length === 0) return null;
 
-    return (
-      <div key={key} className={`mb-4 px-2 list-${key}`}>
-        <div className={`text-md font-semibold mb-1 list-${key}-title`}>
-          {source?.title}
-        </div>
+  return (
+    <div key={key} className={`mb-4 px-2 list-${key}`}>
+      <div className={`text-md font-semibold mb-1 list-${key}-title`}>
+        {source?.title}
+      </div>
 
-        <div className={`list-${key}-items`}>
-          {list.map((item, i) => (
+      <div className={`list-${key}-items`}>
+        {list.map((item, i) => {
+          const value = getItemValue(item, "value");
+          const isActive = selectedFilters[key] === value;
+
+          return (
             <div
               key={i}
-              className="text-sm cursor-pointer hover:bg-gray-100 px-2 py-1 rounded"
-              onClick={() =>
-                onChange?.({
-                  [key]: getItemValue(item, "value"),
-                })
-              }
+              className={`text-sm cursor-pointer px-2 py-1 rounded ${
+                isActive
+                  ? "active"
+                  : "hover:bg-gray-100"
+              }`}
+              onClick={() => handleFilterChange(key, value)}
             >
               {getItemValue(item, "title")}
             </div>
-          ))}
-        </div>
+          );
+        })}
       </div>
-    );
-  };
+    </div>
+  );
+};
 
   const renderFilter = (key, source) => {
     const list = dataMap[key] || [];
@@ -165,6 +169,11 @@ const Sidebar = ({ config, onChange }) => {
 
   return (
     <div>
+     <div className='px-2 sidebar-title'>
+       {
+        config?.sidebar?.title
+      }
+     </div>
       {Object.entries(config?.sidebar?.source || {}).map(
         ([key, source]) => (
           <div key={key}>
