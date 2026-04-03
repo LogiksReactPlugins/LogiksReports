@@ -1526,7 +1526,7 @@ const formatted = formatCellValue(
         {
         config.sidebar && 
         <div className="max-w-[250px] min-w-[250px] border-r border-gray-200  max-h-screen overflow-y-auto thin-scrollbar sidebar">
-           <Sidebar config={config} onChange={handleSidebarChange}  />
+           <Sidebar config={config} onChange={handleSidebarChange} onSidebarChange={onSidebarChange} />
         </div>
         }
         <div className="flex-1 overflow-auto report">

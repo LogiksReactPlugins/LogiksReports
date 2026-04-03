@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-const Sidebar = ({ config, onChange }) => {
+const Sidebar = ({ config, onChange,onSidebarChange}) => {
   const [dataMap, setDataMap] = useState({});
   const [loading, setLoading] = useState({});
-  const [selectedFilters, setSelectedFilters] = useState({});
+  const [selectedFilters, setSelectedFilters] = useState(onSidebarChange || {});
   const endPoints = config.endPoints;
 
   const fetchSQLData = async (key, source) => {
