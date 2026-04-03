@@ -4,7 +4,7 @@ import axios from "axios";
 const Sidebar = ({ config, onChange,onSidebarChange}) => {
   const [dataMap, setDataMap] = useState({});
   const [loading, setLoading] = useState({});
-  const [selectedFilters, setSelectedFilters] = useState(onSidebarChange || {});
+  const [selectedFilters, setSelectedFilters] = useState({});
   const endPoints = config.endPoints;
 
   const fetchSQLData = async (key, source) => {
@@ -62,6 +62,10 @@ const Sidebar = ({ config, onChange,onSidebarChange}) => {
       setLoading((prev) => ({ ...prev, [key]: false }));
     }
   };
+
+  useEffect(() => {
+    setSelectedFilters(onSidebarChange || {});
+  }, [onSidebarChange]);
 
   useEffect(() => {
     if (!config?.sidebar?.source) return;
