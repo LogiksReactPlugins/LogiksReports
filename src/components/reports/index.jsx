@@ -536,6 +536,14 @@ function Reports({
                     ([key, { type, value }]) => {
                       if (type == "text") {
                         return [key, [value, "LIKE"]];
+                      }else if(type=="date"){
+                        const startDate = new Date(value + "T00:00:00");
+                        const endDate = new Date(value + "T23:59:59");
+
+                        const startDateString = startDate.toISOString().replace('T', ' ').substring(0, 19); 
+                        const endDateString = endDate.toISOString().replace('T', ' ').substring(0, 19); 
+
+                        return [key, [[startDateString, endDateString], "range"]];
                       }
                       return [key, value];
                     },
