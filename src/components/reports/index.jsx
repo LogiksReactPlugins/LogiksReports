@@ -546,24 +546,6 @@ const request = typeof api === "function" ? api : axios;
                         const endDateString = endDate.toISOString().replace('T', ' ').substring(0, 19); 
 
                         return [key, [[startDateString, endDateString], "range"]];
-                      }else if(type=="month"){
-                        const [year, month] = value.split("-").map(Number);
-
-                      const startDate = new Date(year, month - 1, 1, 0, 0, 0);
-                      const endDate = new Date(year, month, 0, 23, 59, 59);
-
-                      const format = (d) =>
-                        d.getFullYear() + "-" +
-                        String(d.getMonth() + 1).padStart(2, "0") + "-" +
-                        String(d.getDate()).padStart(2, "0") + " " +
-                        String(d.getHours()).padStart(2, "0") + ":" +
-                        String(d.getMinutes()).padStart(2, "0") + ":" +
-                        String(d.getSeconds()).padStart(2, "0");
-
-                      const startDateString = format(startDate);
-                      const endDateString = format(endDate);
-
-                      return [key, [[startDateString, endDateString], "range"]];
                       }
                       return [key, value];
                     },
