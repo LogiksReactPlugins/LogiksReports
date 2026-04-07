@@ -5,6 +5,8 @@ const Sidebar = ({ config, onChange,onSidebarChange}) => {
   const [dataMap, setDataMap] = useState({});
   const [loading, setLoading] = useState({});
   const [selectedFilters, setSelectedFilters] = useState({});
+  const [searchText, setSearchText] = useState({});
+  
   const endPoints = config.endPoints;
 
   const fetchSQLData = async (key, source) => {
@@ -87,6 +89,13 @@ const Sidebar = ({ config, onChange,onSidebarChange}) => {
     return match ? item[match] : undefined;
   };
 
+  const handleSearchChange = (key, value) => {
+  setSearchText((prev) => ({
+    ...prev,
+    [key]: value,
+  }));
+};
+
   const handleFilterChange = (key, value) => {
     const updated = {
       ...selectedFilters,
@@ -101,14 +110,29 @@ const renderList = (key, source) => {
   const list = dataMap[key] || [];
   if (!Array.isArray(list) || list.length === 0) return null;
 
+  const searchValue = searchText[key] || "";
+
+  const filteredList = list.filter((item) => {
+    const title = getItemValue(item, "title") || "";
+    return title.toLowerCase().includes(searchValue.toLowerCase());
+  });
+
   return (
     <div key={key} className={`mb-4 px-2 list-${key}`}>
       <div className={`text-md font-semibold mb-1 list-${key}-title`}>
         {source?.title}
       </div>
 
+      <input
+        type="search"
+        placeholder="Search..."
+        value={searchValue}
+        onChange={(e) => handleSearchChange(key, e.target.value)}
+        className="w-full mb-2 px-2 py-1 text-sm border border-gray-200 rounded"
+      />
+
       <div className={`list-${key}-items`}>
-        {list.map((item, i) => {
+        {filteredList.map((item, i) => {
           const value = getItemValue(item, "value");
           const isActive = selectedFilters[key] === value;
 
@@ -116,9 +140,7 @@ const renderList = (key, source) => {
             <div
               key={i}
               className={`text-sm cursor-pointer px-2 py-1 rounded ${
-                isActive
-                  ? "active"
-                  : "hover:bg-gray-100"
+                isActive ? "active" : "hover:bg-gray-100"
               }`}
               onClick={() => handleFilterChange(key, value)}
             >
@@ -126,6 +148,13 @@ const renderList = (key, source) => {
             </div>
           );
         })}
+
+        {/* No results */}
+        {filteredList.length === 0 && (
+          <div className="text-xs text-gray-400 px-2 py-1">
+            No results found
+          </div>
+        )}
       </div>
     </div>
   );

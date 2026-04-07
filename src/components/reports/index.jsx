@@ -96,6 +96,7 @@ function Reports({
   data: reportdata,
   onButtonClick,
   components,
+  api
 }) {
   const [config, setConfig] = useState(null);
   const [currentView, setCurrentView] = useState();
@@ -136,6 +137,7 @@ function Reports({
   const { openConfirm, openPrompt, openAlert } = useModal();
   const [errorMsg,setErrorMsg]=useState("")
   const [onSidebarChange,setOnSidebarChange]=useState(null)
+const request = typeof api === "function" ? api : axios;
 
   useEffect(() => {
     setCurrentPage(0);
@@ -164,7 +166,7 @@ function Reports({
             ...config?.source,
           },
         };
-        const { data } = await axios(axiosObject);
+        const { data } = await request(axiosObject);
         // console.log({ data });
         setDebuggData(data);
       })();
@@ -499,7 +501,7 @@ function Reports({
               data: payload,
               srcid: config?.module_refid,
             };
-            const { data: saveQuerydata } = await axios(
+            const { data: saveQuerydata } = await request(
               axiosObjectForSaveQuery,
             );
             // console.log({ saveQuerydata });
@@ -561,7 +563,7 @@ function Reports({
             },
           };
           // console.log({ axiosObject });
-          const { data } = await axios(axiosObject);
+          const { data } = await request(axiosObject);
           const responsePath = config?.source?.response || "data";
           // // console.log({config?.source?.response})
 
@@ -861,7 +863,7 @@ const handleExportAll = async (type = "excel") => {
     if (!config?.source?.queryid) {
       const { table, cols, join, where } = config.source;
 
-      const { data: saveQuerydata } = await axios({
+      const { data: saveQuerydata } = await request({
         method: "POST",
         url: config?.endPoints.saveQuery,
         headers: config?.endPoints?.headers,
@@ -934,7 +936,7 @@ const handleExportAll = async (type = "excel") => {
       },
     };
 
-    const { data } = await axios(axiosObject);
+    const { data } = await request(axiosObject);
     const responsePath = config?.source?.response || "data";
     const result = getValueByPath(data, responsePath) || [];
 
