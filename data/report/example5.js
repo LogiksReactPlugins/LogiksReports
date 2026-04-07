@@ -5,9 +5,9 @@ saveQuery: "http://192.168.0.20:9999/api/query/save",
     baseURL: "http://192.168.0.20:9999",
     debuggUrl: `http://192.168.0.20:9999/api/query/view`,
     preview: `http://192.168.0.20:9999/api/files/preview`,
-    accessToken: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwicGF5bG9hZCI6IjBaeFdGSlJqcU8wN2dDMGoyelY4TUp5K3RnQ0JMc1BKSzBscWUzWTJQZmJVTGRyTjlxcGN3Rnk2ckJ1ZTcyRGF1Z0dHWElNVmlYMjA0Mkw2eWx4amp0YUtZUjV1K2x6dnlHSWFYb2ZLYUpuU3VtMTJmODNjSVU4RXVmMThRakZGbjE3TFhIZDRpak5OTmlUOFBkWkNzMkVJTTB4RGZlWitnYkpEVnVMZVQwVDh4S09DaEFEb00yYk90cXNCalVkN3FFS0hFSmVnNnJ4ay9SYU9PMnViV0VhVVNlc3JuUDFrN21jZ09pV0I1OUNndEJYRitOZnlxeFVBSlNlNm0xQzRvSmliTTFSWTJWOUE3U0VIUW5OT3pFdWZHdFFJbllFL1p1VHJsbG9xNm05YVVYY3VLaTJWblRPaUd4R3JQUT09IiwiaWF0IjoxNzc1NTQxODkzLCJleHAiOjE3NzU1NDU0OTMsImp0aSI6ImFjYzoxOjE3NzU1NDE4OTM4Njc6d2ViIn0.hDj_LirSQHwH95FJ8rPMkTVih50oLeM2w6Jo4LybtTs",
+    accessToken: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwicGF5bG9hZCI6Ik1QQXJsVERrVGRXc3htbUtGaitXamMybSt2UFFEbk5IOUw4Rmc4azhLMk9KZDlEbmFkT2IxSWcrc2Vib3JVOU5KeXRhWk1VUmN4UmxpS0pPQnZxMUFkNlVZWjdCRDJkM1dJbjdEZ2tBaTZrektweUpsbXpiSTRJOEpJbTJ4MlVMWTVSa29TcmpISmhVRTFJaFVEcllNWGtUaGJBbmRnNDhLWFQrZU84YUhVK2lsblBOcHNYejB0bUtEMU5OcVZqVWpLOGpqS3BnN1BqWHllTEl0VEF6VGpGMUg4Ukg1UmY3Smo4QXRkUFFKRmo3V2N4bC9aNjFXOGkxeUlhMkNmUkFpRHc3dWhhTVJZci9lcW5YeDVjVjBySUtDUHk1ek1jTFlkMWtXakljUU85bXFrK3RrTE05cGZFVHFmNi8iLCJpYXQiOjE3NzU1NTA4MTksImV4cCI6MTc3NTU1NDQxOSwianRpIjoiYWNjOjE6MTc3NTU1MDgxOTQ3NTp3ZWIifQ.OfLsrUsQ0Md60tBIH1-zol6kskzcNSUUUbl4TXp8ZD8",
     headers: {
-      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwicGF5bG9hZCI6IjBaeFdGSlJqcU8wN2dDMGoyelY4TUp5K3RnQ0JMc1BKSzBscWUzWTJQZmJVTGRyTjlxcGN3Rnk2ckJ1ZTcyRGF1Z0dHWElNVmlYMjA0Mkw2eWx4amp0YUtZUjV1K2x6dnlHSWFYb2ZLYUpuU3VtMTJmODNjSVU4RXVmMThRakZGbjE3TFhIZDRpak5OTmlUOFBkWkNzMkVJTTB4RGZlWitnYkpEVnVMZVQwVDh4S09DaEFEb00yYk90cXNCalVkN3FFS0hFSmVnNnJ4ay9SYU9PMnViV0VhVVNlc3JuUDFrN21jZ09pV0I1OUNndEJYRitOZnlxeFVBSlNlNm0xQzRvSmliTTFSWTJWOUE3U0VIUW5OT3pFdWZHdFFJbllFL1p1VHJsbG9xNm05YVVYY3VLaTJWblRPaUd4R3JQUT09IiwiaWF0IjoxNzc1NTQxODkzLCJleHAiOjE3NzU1NDU0OTMsImp0aSI6ImFjYzoxOjE3NzU1NDE4OTM4Njc6d2ViIn0.hDj_LirSQHwH95FJ8rPMkTVih50oLeM2w6Jo4LybtTs`,
+      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwicGF5bG9hZCI6Ik1QQXJsVERrVGRXc3htbUtGaitXamMybSt2UFFEbk5IOUw4Rmc4azhLMk9KZDlEbmFkT2IxSWcrc2Vib3JVOU5KeXRhWk1VUmN4UmxpS0pPQnZxMUFkNlVZWjdCRDJkM1dJbjdEZ2tBaTZrektweUpsbXpiSTRJOEpJbTJ4MlVMWTVSa29TcmpISmhVRTFJaFVEcllNWGtUaGJBbmRnNDhLWFQrZU84YUhVK2lsblBOcHNYejB0bUtEMU5OcVZqVWpLOGpqS3BnN1BqWHllTEl0VEF6VGpGMUg4Ukg1UmY3Smo4QXRkUFFKRmo3V2N4bC9aNjFXOGkxeUlhMkNmUkFpRHc3dWhhTVJZci9lcW5YeDVjVjBySUtDUHk1ek1jTFlkMWtXakljUU85bXFrK3RrTE05cGZFVHFmNi8iLCJpYXQiOjE3NzU1NTA4MTksImV4cCI6MTc3NTU1NDQxOSwianRpIjoiYWNjOjE6MTc3NTU1MDgxOTQ3NTp3ZWIifQ.OfLsrUsQ0Md60tBIH1-zol6kskzcNSUUUbl4TXp8ZD8`,
       "Content-Type": "application/json",
     },
   }, 
@@ -183,7 +183,7 @@ saveQuery: "http://192.168.0.20:9999/api/query/save",
                 "formatter": "date",
                 "searchable": true,
                 "filter": {
-                    "type": "date"
+                    "type": "month"
                 },
                 "hidden": true
             },
@@ -200,7 +200,7 @@ saveQuery: "http://192.168.0.20:9999/api/query/save",
                 "formatter": "date",
                 "searchable": true,
                 "filter": {
-                    "type": "date"
+                    "type": "month"
                 },
                 "hidden": true
             },

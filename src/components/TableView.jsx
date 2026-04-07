@@ -430,6 +430,25 @@ const getEffectiveRows = (rows) => {
                                     />
                                   </th>
                                 );
+                                case "month":
+                              return (
+                                <th key={key} className="px-2 py-1">
+                                  <input
+                                    type="month"
+                                    value={filters[key]?.value || ""}
+                                    onChange={(e) =>
+                                      setFilters((p) => ({
+                                        ...p,
+                                        [key]: {
+                                          type: col.filter.type,
+                                          value: e.target.value,
+                                        },
+                                      }))
+                                    }
+                                    className="w-full border rounded px-2 py-1 text-xs"
+                                  />
+                                </th>
+                              );
                               case "select": {
                                 const rawOptions = filter.options ?? {};
 
