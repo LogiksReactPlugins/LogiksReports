@@ -166,7 +166,7 @@ const request = typeof api === "function" ? api : axios;
             ...config?.source,
           },
         };
-        const { data } = await request(axiosObject);
+        const { data } = await axios(axiosObject);
         // console.log({ data });
         setDebuggData(data);
       })();
@@ -501,7 +501,7 @@ const request = typeof api === "function" ? api : axios;
               data: payload,
               srcid: config?.module_refid,
             };
-            const { data: saveQuerydata } = await request(
+            const { data: saveQuerydata } = await axios(
               axiosObjectForSaveQuery,
             );
             // console.log({ saveQuerydata });
@@ -563,8 +563,8 @@ const request = typeof api === "function" ? api : axios;
             },
           };
           // console.log({ axiosObject });
-          const { data } = await request(axiosObject);
-          const responsePath = config?.source?.response || "";
+          const { data } = await axios(axiosObject);
+          const responsePath = config?.source?.response || "data";
           // // console.log({config?.source?.response})
 
           // console.log({ data });
@@ -863,7 +863,7 @@ const handleExportAll = async (type = "excel") => {
     if (!config?.source?.queryid) {
       const { table, cols, join, where } = config.source;
 
-      const { data: saveQuerydata } = await request({
+      const { data: saveQuerydata } = await axios({
         method: "POST",
         url: config?.endPoints.saveQuery,
         headers: config?.endPoints?.headers,
@@ -936,7 +936,7 @@ const handleExportAll = async (type = "excel") => {
       },
     };
 
-    const { data } = await request(axiosObject);
+    const { data } = await axios(axiosObject);
     const responsePath = config?.source?.response || "data";
     // const result = getValueByPath(data, responsePath) || [];
     const result = data || [];
