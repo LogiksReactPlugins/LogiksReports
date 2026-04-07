@@ -564,7 +564,7 @@ const request = typeof api === "function" ? api : axios;
           };
           // console.log({ axiosObject });
           const { data } = await request(axiosObject);
-          const responsePath = config?.source?.response || "data";
+          const responsePath = config?.source?.response || "";
           // // console.log({config?.source?.response})
 
           // console.log({ data });
@@ -938,7 +938,8 @@ const handleExportAll = async (type = "excel") => {
 
     const { data } = await request(axiosObject);
     const responsePath = config?.source?.response || "data";
-    const result = getValueByPath(data, responsePath) || [];
+    // const result = getValueByPath(data, responsePath) || [];
+    const result = data || [];
 
     const exportData = result.map((raw) => {
       const obj = {};
