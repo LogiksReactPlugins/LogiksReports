@@ -9,7 +9,6 @@ export const report = {
   "rowlink": false,
   "rowsPerPage": 5,
   // "showExtraColumn": "checkbox",
-  "template": "card",
   "custombar": false,
   "source": {
     "type": "sql",

@@ -137,6 +137,7 @@ function Reports({
   const { openConfirm, openPrompt, openAlert } = useModal();
   const [errorMsg,setErrorMsg]=useState("")
   const [onSidebarChange,setOnSidebarChange]=useState(null)
+  const [sidebarDataCount,setSidebarDataCount]=useState(null)
 const request = typeof api === "function" ? api : axios;
 
   useEffect(() => {
@@ -311,7 +312,8 @@ const request = typeof api === "function" ? api : axios;
     } else if (report?.template) {
       initialView = report.template;
     } else {
-      initialView = "table";
+       const isMobile = window.matchMedia("(max-width: 768px)").matches;
+  initialView = (isMobile && reportJSON.cards) ? "cards" : "table";
     }
 
     setCurrentView(initialView);
@@ -441,7 +443,8 @@ const request = typeof api === "function" ? api : axios;
     handleReset();
     setRowsPerPage(config?.rowsPerPage);
     setCurrentPage(0);
-        setOnSidebarChange(null)
+    setOnSidebarChange(null)
+    setSidebarDataCount(0)
 
   }, [config]);
 
@@ -1536,8 +1539,13 @@ const formatted = formatCellValue(
       <div className="flex">
         {
         config.sidebar && 
-        <div className="max-w-[250px] min-w-[250px] border-r border-gray-200  max-h-screen overflow-y-auto thin-scrollbar sidebar">
-           <Sidebar config={config} onChange={handleSidebarChange} onSidebarChange={onSidebarChange} />
+        <div 
+        
+          className={`max-w-[250px] min-w-[250px] border-r border-gray-200 max-h-screen overflow-y-auto thin-scrollbar sidebar ${
+        sidebarDataCount === 0 ? "hidden" : ""
+      }`}
+        >
+           <Sidebar config={config} onChange={handleSidebarChange} onSidebarChange={onSidebarChange} setSidebarDataCount={setSidebarDataCount} />
         </div>
         }
         <div className="flex-1 overflow-auto report">

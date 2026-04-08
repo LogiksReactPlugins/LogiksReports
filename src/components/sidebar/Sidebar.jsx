@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 
-const Sidebar = ({ config, onChange,onSidebarChange}) => {
+const Sidebar = ({ config, onChange,onSidebarChange,setSidebarDataCount}) => {
   const [dataMap, setDataMap] = useState({});
   const [loading, setLoading] = useState({});
   const [selectedFilters, setSelectedFilters] = useState({});
@@ -88,6 +88,21 @@ const Sidebar = ({ config, onChange,onSidebarChange}) => {
     );
     return match ? item[match] : undefined;
   };
+
+  const sidebarDataCount = useMemo(() => {
+  return Object.values(dataMap).reduce((acc, curr) => {
+    if (Array.isArray(curr) && curr.length > 0) {
+      return acc + curr.length;
+    }
+    return acc;
+  }, 0);
+}, [dataMap]);
+
+
+useEffect(() => {
+  setSidebarDataCount?.(sidebarDataCount);
+}, [sidebarDataCount]);
+
 
   const handleSearchChange = (key, value) => {
   setSearchText((prev) => ({

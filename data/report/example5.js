@@ -5,214 +5,157 @@ saveQuery: "http://192.168.0.20:9999/api/query/save",
     baseURL: "http://192.168.0.20:9999",
     debuggUrl: `http://192.168.0.20:9999/api/query/view`,
     preview: `http://192.168.0.20:9999/api/files/preview`,
-    accessToken: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwicGF5bG9hZCI6Ik1QQXJsVERrVGRXc3htbUtGaitXamMybSt2UFFEbk5IOUw4Rmc4azhLMk9KZDlEbmFkT2IxSWcrc2Vib3JVOU5KeXRhWk1VUmN4UmxpS0pPQnZxMUFkNlVZWjdCRDJkM1dJbjdEZ2tBaTZrektweUpsbXpiSTRJOEpJbTJ4MlVMWTVSa29TcmpISmhVRTFJaFVEcllNWGtUaGJBbmRnNDhLWFQrZU84YUhVK2lsblBOcHNYejB0bUtEMU5OcVZqVWpLOGpqS3BnN1BqWHllTEl0VEF6VGpGMUg4Ukg1UmY3Smo4QXRkUFFKRmo3V2N4bC9aNjFXOGkxeUlhMkNmUkFpRHc3dWhhTVJZci9lcW5YeDVjVjBySUtDUHk1ek1jTFlkMWtXakljUU85bXFrK3RrTE05cGZFVHFmNi8iLCJpYXQiOjE3NzU1NTA4MTksImV4cCI6MTc3NTU1NDQxOSwianRpIjoiYWNjOjE6MTc3NTU1MDgxOTQ3NTp3ZWIifQ.OfLsrUsQ0Md60tBIH1-zol6kskzcNSUUUbl4TXp8ZD8",
+    accessToken: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwicGF5bG9hZCI6IjM4SHhtVUpraFRPdjc0NkgvVkNKV0JwbWg3NjNkNGQzL1VCMHRXVlhxVjRuRG1JTFl5ZlJVSWc0MmpkWjQvMVZ4TFlkVFpETXZ6TkI3UlRsWWJiZnVBOUtRNGZlV1VFKzhQNTJ5Y0NzZzVJdUpXbVpPa2Q1NWdwbnhiRzFqK1JmUTR2RzhIRDA4eEpKODBObVh6SkNscEVNUkkwQzlud0tDdktHWnhNdTM5N2svclk2cit6RXJUWk5wZlVWM29UaWV1MkhVSXorMVpVQmIrMkZiQks0cDUxM1FHaXh6TEl5bU1Vbmtob1FKZDVpeHhIb1JmZW1qWnQrWVZ3MW96N0Y0Z0pkT2pMUGhGbzRITHpBUk9iU21tTndUZW5ITDJ3L2I5bzYvQTFERnB3Ylg5NDFta1BhOENISEhLd1pSQT09IiwiaWF0IjoxNzc1NjQ3ODc2LCJleHAiOjE3NzU2NTE0NzYsImp0aSI6ImFjYzoxOjE3NzU2NDc4NzY3NjQ6d2ViIn0.22MOWkZPxS1hOO_p3kTV6G5X8G1jCwlQvSVtsQiT1_I",
     headers: {
-      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwicGF5bG9hZCI6Ik1QQXJsVERrVGRXc3htbUtGaitXamMybSt2UFFEbk5IOUw4Rmc4azhLMk9KZDlEbmFkT2IxSWcrc2Vib3JVOU5KeXRhWk1VUmN4UmxpS0pPQnZxMUFkNlVZWjdCRDJkM1dJbjdEZ2tBaTZrektweUpsbXpiSTRJOEpJbTJ4MlVMWTVSa29TcmpISmhVRTFJaFVEcllNWGtUaGJBbmRnNDhLWFQrZU84YUhVK2lsblBOcHNYejB0bUtEMU5OcVZqVWpLOGpqS3BnN1BqWHllTEl0VEF6VGpGMUg4Ukg1UmY3Smo4QXRkUFFKRmo3V2N4bC9aNjFXOGkxeUlhMkNmUkFpRHc3dWhhTVJZci9lcW5YeDVjVjBySUtDUHk1ek1jTFlkMWtXakljUU85bXFrK3RrTE05cGZFVHFmNi8iLCJpYXQiOjE3NzU1NTA4MTksImV4cCI6MTc3NTU1NDQxOSwianRpIjoiYWNjOjE6MTc3NTU1MDgxOTQ3NTp3ZWIifQ.OfLsrUsQ0Md60tBIH1-zol6kskzcNSUUUbl4TXp8ZD8`,
+      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwicGF5bG9hZCI6IjM4SHhtVUpraFRPdjc0NkgvVkNKV0JwbWg3NjNkNGQzL1VCMHRXVlhxVjRuRG1JTFl5ZlJVSWc0MmpkWjQvMVZ4TFlkVFpETXZ6TkI3UlRsWWJiZnVBOUtRNGZlV1VFKzhQNTJ5Y0NzZzVJdUpXbVpPa2Q1NWdwbnhiRzFqK1JmUTR2RzhIRDA4eEpKODBObVh6SkNscEVNUkkwQzlud0tDdktHWnhNdTM5N2svclk2cit6RXJUWk5wZlVWM29UaWV1MkhVSXorMVpVQmIrMkZiQks0cDUxM1FHaXh6TEl5bU1Vbmtob1FKZDVpeHhIb1JmZW1qWnQrWVZ3MW96N0Y0Z0pkT2pMUGhGbzRITHpBUk9iU21tTndUZW5ITDJ3L2I5bzYvQTFERnB3Ylg5NDFta1BhOENISEhLd1pSQT09IiwiaWF0IjoxNzc1NjQ3ODc2LCJleHAiOjE3NzU2NTE0NzYsImp0aSI6ImFjYzoxOjE3NzU2NDc4NzY3NjQ6d2ViIn0.22MOWkZPxS1hOO_p3kTV6G5X8G1jCwlQvSVtsQiT1_I`,
       "Content-Type": "application/json",
     },
   }, 
         "schema": "1.0",
-        "title": "User Project Matrix",
-        "category": "CMS",
+        "title": "Deactive Menu Manager",
+        "category": "Tools",
         "privilege": "*",
         "blocked": false,
         "rowlink": false,
         "rowsPerPage": 20,
         "showExtraColumn": false,
         "custombar": false,
+        "DEBUG": false,
         "source": {
             "type": "sql",
-            "queryid": "reports%40userManager.projectUserMapping%40source"
+            "queryid": "reports%40menuManager.blockedMsg%40source"
+        },
+        "buttons": {
+            "infoview@menuManager.main/{id}@View '{title}' Menu details": {
+                "label": "View Menu Manager",
+                "icon": "fa fa-eye",
+                "class": "masters-terms"
+            },
+            "forms@menuManager.main/update/{id}@Edit '{title}' Menu": {
+                "label": "Edit Menu Manager",
+                "icon": "fa fa-pencil",
+                "class": "masters-terms"
+            }
         },
         "sidebar": {
             "type": "list",
-            "title":"test title",
             "source": {
-                "userid": {
+                "title": {
                     "type": "sql",
-                    "queryid": "reports%40userManager.projectUserMapping%40sidebar.source.userid"
+                    "queryid": "reports%40menuManager.blockedMsg%40sidebar.source.title"
                 }
             }
-        },
-        "actions": {
-            "forms@userManager.projectUserMapping@Add Mapping": {
-                "label": "Add Mapping",
-                "icon": "fa fa-plus"
-            }
-        },
-        "buttons": {
-            "infoview@userManager.updateProjectUserMapping/{id}@View {userid} Mapping": {
-                "label": "User Information",
-                "icon": "fa fa-eye"
-            },
-            "forms@userManager.updateProjectUserMapping/update/{id}@Edit {userid} User": {
-                "label": "Edit Mapping",
-                "icon": "fa fa-pencil"
-            }
-        },
-        "toolbar": {
-            "search": true,
-            "print": true,
-            "email": false
         },
         "datagrid": {
             "id": {
                 "label": "ID",
-                "hidden": true,
-                "searchable": false,
+                "hidden": false,
+                "searchable": true,
                 "sortable": true,
                 "groupable": false,
                 "classes": "",
                 "style": "width:50px;",
                 "formatter": "text"
             },
-            "userid": {
-                "label": "User ID",
+            "menuid": {
+                "label": "Menu ID",
                 "sortable": true,
-                "searchable": true,
-                "groupable": true
-            },
-            "company_spv_id": {
-                "label": "Company/ SPV ID",
                 "searchable": true,
                 "hidden": true
             },
-            "company_tbl.company_code": {
-                "label": "Company Code",
-                "searchable": true,
+            "title": {
+                "label": "Title",
                 "sortable": true,
-                "hidden": true
+                "searchable": true
             },
-            "company_tbl.company_title": {
-                "label": "Company/ SPV",
-                "searchable": true,
+            "category": {
+                "label": "Category",
                 "sortable": true,
-                "groupable": true
+                "searchable": true
             },
-            "sector_id": {
-                "label": "Sector ID",
-                "searchable": true,
-                "hidden": true
-            },
-            "data_sector.sector_code": {
-                "label": "Sector Code",
-                "searchable": true,
+            "class": {
+                "label": "Class",
                 "sortable": true,
-                "hidden": true
-            },
-            "data_sector.sector_title": {
-                "label": "Sector",
-                "searchable": true,
-                "sortable": true,
-                "groupable": true
-            },
-            "project_function_id": {
-                "label": "Project/ Function ID",
-                "searchable": true,
-                "hidden": true
-            },
-            "data_project_function.pf_code": {
-                "label": "Project/ Function Code",
-                "searchable": true,
-                "sortable": true,
-                "hidden": true
-            },
-            "data_project_function.pf_title": {
-                "label": "Project/ Function",
-                "searchable": true,
-                "sortable": true,
-                "groupable": true
-            },
-            "location_id": {
-                "label": "Location ID",
-                "searchable": true,
-                "hidden": true
-            },
-            "data_location.loc_code": {
-                "label": "Location Code",
-                "searchable": true,
-                "sortable": true,
-                "hidden": true
-            },
-            "data_location.loc_title": {
-                "label": "Location",
-                "searchable": true,
-                "sortable": true,
-                "groupable": true
-            },
-            "category_id": {
-                "label": "Category ID",
                 "hidden": true,
                 "searchable": true
             },
-            "data_category_tbl.category_code": {
-                "label": "Category Code",
-                "searchable": true,
+            "onmenu": {
+                "label": "OnMenu",
                 "sortable": true,
-                "hidden": true
-            },
-            "data_category_tbl.category_title": {
-                "label": "Category",
                 "searchable": true,
-                "sortable": true,
-                "groupable": true,
-                "formatter": "pretty"
-            },
-            "operation": {
-                "label": "Operation",
-                "searchable": true,
-                "formatter": "pretty"
-            },
-            "blocked": {
-                "label": "Blocked",
-                "formatter": "checkbox",
-                "searchable": true,
-                "hidden": true,
                 "filter": {
                     "type": "select",
                     "nofilter": "--",
                     "options": {
-                        "true": "Blocked",
-                        "false": "Not Blocked"
+                        "false": "False",
+                        "true": "True"
                     },
-                    "value": "false"
+                    "default": "true"
                 }
             },
-            "created_on": {
-                "label": "Added On",
-                "formatter": "date",
+            "blocked": {
+                "label": "Blocked",
+                "sortable": true,
                 "searchable": true,
                 "filter": {
-                    "type": "month"
-                },
-                "hidden": true
+                    "type": "select",
+                    "nofilter": "--",
+                    "options": {
+                        "false": "Not Blocked",
+                        "true": "Blocked"
+                    },
+                    "default": "false"
+                }
             },
-            "created_by": {
-                "label": "Added By",
+            "to_check": {
+                "label": "Scope Rules/Permission",
+                "sortable": true,
+                "hidden": false,
+                "searchable": true
+            },
+            "link": {
+                "label": "Link",
+                "sortable": true,
+                "hidden": false,
+                "searchable": true
+            },
+            "menugroup": {
+                "label": "Menugroup",
+                "sortable": true,
                 "searchable": true,
                 "filter": {
-                    "type": "text"
-                },
+                    "qtype": "EQ"
+                }
+            },
+            "weight": {
+                "label": "Weight",
+                "sortable": true,
+                "searchable": true
+            },
+            "device": {
+                "label": "Device",
+                "sortable": true,
+                "searchable": true
+            },
+            "target": {
+                "label": "Target",
+                "sortable": true,
+                "searchable": true
+            },
+            "edited_by": {
+                "label": "Updated By",
+                "sortable": true,
+                "searchable": true,
                 "hidden": true
             },
             "edited_on": {
-                "label": "Edited On",
+                "label": "Last Update",
                 "formatter": "date",
+                "sortable": true,
                 "searchable": true,
-                "filter": {
-                    "type": "month"
-                },
-                "hidden": true
-            },
-            "edited_by": {
-                "label": "Edited By",
-                "searchable": true,
-                "filter": {
-                    "type": "text"
-                },
                 "hidden": true
             }
         },
-        "module_refid": "userManager.projectUserMapping",
+        "module_refid": "menuManager.blockedMsg",
         "module_type": "reports"
     }
