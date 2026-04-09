@@ -71,6 +71,8 @@ const Sidebar = ({ config, onChange,onSidebarChange,setSidebarDataCount}) => {
 
   useEffect(() => {
     if (!config?.sidebar?.source) return;
+
+  setDataMap({})
     setSelectedFilters({})
     Object.entries(config.sidebar.source).forEach(([key, source]) => {
       if (source?.type === "sql") {

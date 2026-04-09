@@ -1024,6 +1024,7 @@ const formatted = formatCellValue(
     // methods[button?.event?.click]?.(...resolvedParams);
     // // console.log('METHOD--',methods[button?.event?.click])
     // console.log("Button clicked:", buttonKey, button, data);
+  // console.log({currentData})
 
     let promptResponse = null;
 
@@ -1051,6 +1052,7 @@ const formatted = formatCellValue(
       onButtonClick(
         { [buttonKey]: { ...button, prompt_response: promptResponse } },
         data,
+        currentData
       );
     }
   };
