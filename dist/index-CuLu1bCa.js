@@ -37236,7 +37236,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Or.canvg ? Promise.resolve(Or.canvg) : import("./index.es-CKJTEFxt.js")).catch(function(f) {
+  return (Or.canvg ? Promise.resolve(Or.canvg) : import("./index.es-B0dsOE2x.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
@@ -94473,140 +94473,119 @@ const u6e = ({ lat: r, lng: e }) => {
     }
   );
 }, d6e = ({ config: r, onChange: e, onSidebarChange: t, setSidebarDataCount: n }) => {
-  const [i, a] = Pt({}), [o, s] = Pt({}), [l, u] = Pt({}), [A, c] = Pt({}), f = r.endPoints, h = async (b, C) => {
+  const [i, a] = Pt({}), [o, s] = Pt({}), [l, u] = Pt({}), [A, c] = Pt({}), f = r.endPoints, h = async (x, b) => {
     try {
-      s((N) => ({ ...N, [b]: !0 }));
-      let S = C?.queryid;
-      if (!S) {
-        const N = {
+      s((T) => ({ ...T, [x]: !0 }));
+      let C = b?.queryid;
+      if (!C) {
+        const T = {
           query: {
-            table: C?.table,
-            cols: C?.cols,
-            join: C?.join,
-            where: C?.where,
-            groupby: C?.groupby,
-            orderby: C?.orderby
+            table: b?.table,
+            cols: b?.cols,
+            join: b?.join,
+            where: b?.where,
+            groupby: b?.groupby,
+            orderby: b?.orderby
           },
-          dbkey: C?.dbkey,
+          dbkey: b?.dbkey,
           srcid: r?.module_refid
-        }, { data: I } = await ci({
+        }, { data: N } = await ci({
           method: "POST",
           url: f?.saveQuery,
           headers: f?.headers,
-          data: N
+          data: T
         });
-        S = I?.queryid;
+        C = N?.queryid;
       }
-      const { data: D } = await ci({
-        method: C?.method || "POST",
-        url: C?.url || `${f?.baseURL}${f?.runQuery}`,
-        headers: C?.headers || f?.headers,
+      const { data: S } = await ci({
+        method: b?.method || "POST",
+        url: b?.url || `${f?.baseURL}${f?.runQuery}`,
+        headers: b?.headers || f?.headers,
         data: {
-          queryid: S,
+          queryid: C,
           filter: {},
-          ...C?.groupby && { group_by: C.groupby }
+          ...b?.groupby && { group_by: b.groupby }
         }
-      }), T = C?.response ? C.response.split(".").reduce((N, I) => N?.[I], D) : D?.data;
-      a((N) => ({ ...N, [b]: T || [] }));
-    } catch (S) {
-      console.error(S);
+      }), D = b?.response ? b.response.split(".").reduce((T, N) => T?.[N], S) : S?.data;
+      a((T) => ({ ...T, [x]: D || [] }));
+    } catch (C) {
+      console.error(C);
     } finally {
-      s((S) => ({ ...S, [b]: !1 }));
+      s((C) => ({ ...C, [x]: !1 }));
     }
   };
   Br(() => {
     u(t || {});
   }, [t]), Br(() => {
-    r?.sidebar?.source && (a({}), u({}), Object.entries(r.sidebar.source).forEach(([b, C]) => {
-      C?.type === "sql" && h(b, C);
+    r?.sidebar?.source && (a({}), u({}), Object.entries(r.sidebar.source).forEach(([x, b]) => {
+      b?.type === "sql" && h(x, b);
     }));
   }, [r]);
-  const d = (b, C) => {
-    if (C in b) return b[C];
-    const S = C?.split(".").pop();
-    if (S in b) return b[S];
-    const D = Object.keys(b).find(
-      (T) => T.split(".").pop() === S
+  const d = (x, b) => {
+    if (b in x) return x[b];
+    const C = b?.split(".").pop();
+    if (C in x) return x[C];
+    const S = Object.keys(x).find(
+      (D) => D.split(".").pop() === C
     );
-    return D ? b[D] : void 0;
-  }, v = vn(() => Object.values(i).reduce((b, C) => Array.isArray(C) && C.length > 0 ? b + C.length : b, 0), [i]);
+    return S ? x[S] : void 0;
+  }, v = vn(() => Object.values(i).reduce((x, b) => Array.isArray(b) && b.length > 0 ? x + b.length : x, 0), [i]);
   Br(() => {
     n?.(v);
   }, [v]);
-  const g = (b, C) => {
-    c((S) => ({
-      ...S,
-      [b]: C
-    }));
-  }, m = (b, C) => {
-    const S = {
+  const g = (x, b) => {
+    const C = {
       ...l,
-      [b]: C
+      [x]: b
     };
-    u(S), e?.(S);
-  }, y = (b, C) => {
-    const S = i[b] || [];
-    if (!Array.isArray(S) || S.length === 0) return null;
-    const D = A[b] || "", T = S.filter((N) => (d(N, "title") || "").toLowerCase().includes(D.toLowerCase()));
-    return /* @__PURE__ */ V.jsxs("div", { className: `mb-4 px-2 list-${b}`, children: [
-      /* @__PURE__ */ V.jsx("div", { className: `text-md font-semibold mb-1 list-${b}-title`, children: C?.title }),
-      /* @__PURE__ */ V.jsx(
-        "input",
-        {
-          type: "search",
-          placeholder: "Search...",
-          value: D,
-          onChange: (N) => g(b, N.target.value),
-          className: "w-full mb-2 px-2 py-1 text-sm border border-gray-200 rounded"
-        }
-      ),
-      /* @__PURE__ */ V.jsxs("div", { className: `list-${b}-items`, children: [
-        T.map((N, I) => {
-          const M = d(N, "value"), P = l[b] === M;
+    u(C), e?.(C);
+  }, m = (x, b) => {
+    const C = i[x] || [];
+    if (!Array.isArray(C) || C.length === 0) return null;
+    const S = A[x] || "", D = C.filter((T) => (d(T, "title") || "").toLowerCase().includes(S.toLowerCase()));
+    return /* @__PURE__ */ V.jsxs("div", { className: `mb-4 px-2 list-${x}`, children: [
+      /* @__PURE__ */ V.jsx("div", { className: `text-md font-semibold mb-1 list-${x}-title`, children: b?.title }),
+      /* @__PURE__ */ V.jsxs("div", { className: `list-${x}-items`, children: [
+        D.map((T, N) => {
+          const I = d(T, "value"), M = l[x] === I;
           return /* @__PURE__ */ V.jsx(
             "div",
             {
-              className: `text-sm cursor-pointer px-2 py-1 rounded ${P ? "active" : "hover:bg-gray-100"}`,
-              onClick: () => m(b, M),
-              children: d(N, "title")
+              className: `text-sm cursor-pointer px-2 py-1 rounded ${M ? "active" : "hover:bg-gray-100"}`,
+              onClick: () => g(x, I),
+              children: d(T, "title")
             },
-            I
+            N
           );
         }),
-        T.length === 0 && /* @__PURE__ */ V.jsx("div", { className: "text-xs text-gray-400 px-2 py-1", children: "No results found" })
+        D.length === 0 && /* @__PURE__ */ V.jsx("div", { className: "text-xs text-gray-400 px-2 py-1", children: "No results found" })
       ] })
-    ] }, b);
-  }, w = (b, C) => {
-    const S = i[b] || [];
-    return !Array.isArray(S) || S.length === 0 ? null : /* @__PURE__ */ V.jsxs("div", { className: `mb-4 px-2 filter-${b}`, children: [
-      /* @__PURE__ */ V.jsx("div", { className: `text-md font-semibold mb-1 filter-${b}-title`, children: C?.title }),
+    ] }, x);
+  }, y = (x, b) => {
+    const C = i[x] || [];
+    return !Array.isArray(C) || C.length === 0 ? null : /* @__PURE__ */ V.jsxs("div", { className: `mb-4 px-2 filter-${x}`, children: [
+      /* @__PURE__ */ V.jsx("div", { className: `text-md font-semibold mb-1 filter-${x}-title`, children: b?.title }),
       /* @__PURE__ */ V.jsxs(
         "select",
         {
           className: "w-full border text-sm border-gray-200 p-2 rounded",
-          value: l[b] || "",
-          onChange: (D) => m(b, D.target.value),
+          value: l[x] || "",
+          onChange: (S) => g(x, S.target.value),
           children: [
-            /* @__PURE__ */ V.jsx("option", { value: "", children: C?.["no-option"] || "Select" }),
-            S.map((D, T) => /* @__PURE__ */ V.jsx("option", { value: d(D, "value"), children: d(D, "title") }, T))
+            /* @__PURE__ */ V.jsx("option", { value: "", children: b?.["no-option"] || "Select" }),
+            C.map((S, D) => /* @__PURE__ */ V.jsx("option", { value: d(S, "value"), children: d(S, "title") }, D))
           ]
         }
       )
-    ] }, b);
-  }, x = (b, C) => {
-    switch (r?.sidebar?.type) {
-      case "list":
-        return y(b, C);
-      case "filter":
-        return w(b, C);
-      default:
-        return null;
-    }
+    ] }, x);
+  }, w = (x, b) => {
+    const C = i[x] || [];
+    return (!Array.isArray(C) || C.length <= 1 ? "list" : r?.sidebar?.type) === "filter" ? y(x, b) : m(x, b);
   };
   return /* @__PURE__ */ V.jsxs("div", { children: [
     /* @__PURE__ */ V.jsx("div", { className: "px-2 sidebar-title", children: r?.sidebar?.title }),
     Object.entries(r?.sidebar?.source || {}).map(
-      ([b, C]) => /* @__PURE__ */ V.jsx("div", { children: o[b] ? /* @__PURE__ */ V.jsx("div", { className: "text-xs text-gray-400", children: "Loading..." }) : x(b, C) }, b)
+      ([x, b]) => /* @__PURE__ */ V.jsx("div", { children: o[x] ? /* @__PURE__ */ V.jsx("div", { className: "text-xs text-gray-400", children: "Loading..." }) : w(x, b) }, x)
     )
   ] });
 }, v6e = [

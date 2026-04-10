@@ -140,14 +140,6 @@ const renderList = (key, source) => {
         {source?.title}
       </div>
 
-      <input
-        type="search"
-        placeholder="Search..."
-        value={searchValue}
-        onChange={(e) => handleSearchChange(key, e.target.value)}
-        className="w-full mb-2 px-2 py-1 text-sm border border-gray-200 rounded"
-      />
-
       <div className={`list-${key}-items`}>
         {filteredList.map((item, i) => {
           const value = getItemValue(item, "value");
@@ -206,16 +198,18 @@ const renderList = (key, source) => {
     );
   };
 
-  const renderComponent = (key, source) => {
-    switch (config?.sidebar?.type) {
-      case "list":
-        return renderList(key, source);
-      case "filter":
-        return renderFilter(key, source);
-      default:
-        return null;
-    }
-  };
+    const renderComponent = (key, source) => {
+      const list = dataMap[key] || [];
+
+      const effectiveType =
+        !Array.isArray(list) || list.length <= 1
+          ? "list"
+          : config?.sidebar?.type;
+
+      return effectiveType === "filter"
+        ? renderFilter(key, source)
+        : renderList(key, source);
+    };
 
   return (
     <div>
