@@ -65,6 +65,11 @@ const Sidebar = ({ config, onChange,onSidebarChange,setSidebarDataCount}) => {
     }
   };
 
+  const handleClearFilters = () => {
+    setSelectedFilters({});
+    onChange?.({});
+  };
+
   useEffect(() => {
     setSelectedFilters(onSidebarChange || {});
   }, [onSidebarChange]);
@@ -198,26 +203,32 @@ const renderList = (key, source) => {
     );
   };
 
-    const renderComponent = (key, source) => {
-      const list = dataMap[key] || [];
+  const renderComponent = (key, source) => {
+  const list = dataMap[key] || [];
 
-      const effectiveType =
-        !Array.isArray(list) || list.length <= 1
-          ? "list"
-          : config?.sidebar?.type;
+  const isSingleItem = Array.isArray(list) && list.length === 1;
 
-      return effectiveType === "filter"
-        ? renderFilter(key, source)
-        : renderList(key, source);
-    };
+  if (isSingleItem) {
+    return renderList(key, source);
+  }
+
+  return config?.sidebar?.type === "filter"
+    ? renderFilter(key, source)
+    : renderList(key, source);
+};
 
   return (
     <div>
-     <div className='px-2 sidebar-title'>
-       {
-        config?.sidebar?.title
-      }     
-     </div>
+     <div className="px-2 sidebar-title flex items-center justify-between">
+  <span>{config?.sidebar?.title}</span>
+
+  <button
+    onClick={handleClearFilters}
+    className="text-xs text-blue-600 hover:underline"
+  >
+    Clear
+  </button>
+</div>
       {Object.entries(config?.sidebar?.source || {}).map(
         ([key, source]) => (
           <div key={key}>

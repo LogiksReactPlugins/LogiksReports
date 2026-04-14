@@ -421,30 +421,34 @@ const request = typeof api === "function" ? api : axios;
     }
   };
 
-  const handleReset = () => {
-    setSearchTerm("");
+  useEffect(()=>{
     setSortConfig({ key: null, direction: "asc" });
-    setGroupBy(null);
-    setCurrentPage(0);
+    setShowTableFilters(false);
+    setFilters({});
+
     setSelectedRows(new Set());
     setSelectAll(false);
-    fetchAPI();
     setSearchColumn("");
     setDateRange({ start: "", end: "" });
     setActiveDateCol(null);
     setDateOperator("eq");
     setFilterTabs({});
     setShowDatePicker(false);
-    setFilters({});
-    setShowTableFilters(false);
+
+    setOnSidebarChange(null)
+    setSidebarDataCount(0)
+  },[config?.module_refid])
+
+  const handleReset = () => {
+    setSearchTerm("");
+    setGroupBy(null);
+    setCurrentPage(0);
   };
 
   useEffect(() => {
     handleReset();
     setRowsPerPage(config?.rowsPerPage);
     setCurrentPage(0);
-    setOnSidebarChange(null)
-    setSidebarDataCount(0)
 
   }, [config]);
 

@@ -5,9 +5,9 @@ saveQuery: "http://192.168.0.20:9999/api/query/save",
     baseURL: "http://192.168.0.20:9999",
     debuggUrl: `http://192.168.0.20:9999/api/query/view`,
     preview: `http://192.168.0.20:9999/api/files/preview`,
-    accessToken: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwicGF5bG9hZCI6IjdndXg4TThmbEFaOG9tN0ZUVFpYVFVIKzViY1NGcFdnVmx4dkZlV3FCVklEeTA3OXpOYjhuazdkK3c4YktXdFgwUTY3S1FUMjFrRnRaOWd0emxreXVHVEFMMFppS3gweVNoWklHbE1vcGhhVzVwYVZ1WGhwZEFGVUJCODlaQlVXeWxQZGUxVUgvVVVOUTFsTkRPQngrRG0rSkh4SVdNLzZZckVDZlFsMXBSZmVzeXVCMFJ6c09UaUF3b01oeGUzWlZLWUx0ME1GUy95Z2xES2FldWp4SFZweVlyMDVMZDZ3NWZrMVU5RjJxWENFRG9nMlo0SGl3Q1lVT1kxSmhPa1BzVWdzOG5EeGVON1hPaHFjdjlNK1Q2U0dyQT09IiwiaWF0IjoxNzc2MTQyODcxLCJleHAiOjE3NzYxNDY0NzEsImp0aSI6ImFjYzoxOjE3NzYxNDI4NzE3MzU6d2ViIn0.RJYhFUaSHSVHAK9Chb4zrptZKt7MAeFhsBZ1S1dHaQQ",
+    accessToken: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwicGF5bG9hZCI6ImI4SUt4MnhYbGh3WHJvZ1VOQ0x1dnNDaUNHTUpuTno0L3dFbWlaTGNKV2R0L0QvbEVVZlpPMGVlOGN3VStyMVFjMm9CcjIvMlZPeTdWdlNFVXYydkw4dm1aZHVuWnNoNS92R3MyaXcrRzhySSs3aG5hVjB5ai9INUlZbENmNnhBVmJ0b1J1MUs2bDdXSXJEam5UeVpnTCsvZTgxVGVSUU1TaTJ1d2RkZ0EwSW9lbS8vRXBlMEtkR2VwWllQQmdHMmc1UUk3ei9hdmJFRHJlNmhuWDhUN3Rtb1VmSFFRN0RpSktvblJxSStZbS9LdlBxcFA5bnMyRUpwbWl3cW1aMkI5b3Q0UGVJYVduNm12M2JpbVpBODIwRDZkMmk1eFRXeE13dEdZK1JraGU1K3VLM1FKOGFUL1NPQWlVSndDU241OXc9PSIsImlhdCI6MTc3NjE1NzcxMywiZXhwIjoxNzc2MTYxMzEzLCJqdGkiOiJhY2M6MjoxNzc2MTU3NzEzNTYxOndlYiJ9.ulF_tCH3o4mXX-X9F--Vl5sTwJCxwR3aItQxr4QKcdI",
     headers: {
-      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwicGF5bG9hZCI6IjdndXg4TThmbEFaOG9tN0ZUVFpYVFVIKzViY1NGcFdnVmx4dkZlV3FCVklEeTA3OXpOYjhuazdkK3c4YktXdFgwUTY3S1FUMjFrRnRaOWd0emxreXVHVEFMMFppS3gweVNoWklHbE1vcGhhVzVwYVZ1WGhwZEFGVUJCODlaQlVXeWxQZGUxVUgvVVVOUTFsTkRPQngrRG0rSkh4SVdNLzZZckVDZlFsMXBSZmVzeXVCMFJ6c09UaUF3b01oeGUzWlZLWUx0ME1GUy95Z2xES2FldWp4SFZweVlyMDVMZDZ3NWZrMVU5RjJxWENFRG9nMlo0SGl3Q1lVT1kxSmhPa1BzVWdzOG5EeGVON1hPaHFjdjlNK1Q2U0dyQT09IiwiaWF0IjoxNzc2MTQyODcxLCJleHAiOjE3NzYxNDY0NzEsImp0aSI6ImFjYzoxOjE3NzYxNDI4NzE3MzU6d2ViIn0.RJYhFUaSHSVHAK9Chb4zrptZKt7MAeFhsBZ1S1dHaQQ`,
+      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwicGF5bG9hZCI6ImI4SUt4MnhYbGh3WHJvZ1VOQ0x1dnNDaUNHTUpuTno0L3dFbWlaTGNKV2R0L0QvbEVVZlpPMGVlOGN3VStyMVFjMm9CcjIvMlZPeTdWdlNFVXYydkw4dm1aZHVuWnNoNS92R3MyaXcrRzhySSs3aG5hVjB5ai9INUlZbENmNnhBVmJ0b1J1MUs2bDdXSXJEam5UeVpnTCsvZTgxVGVSUU1TaTJ1d2RkZ0EwSW9lbS8vRXBlMEtkR2VwWllQQmdHMmc1UUk3ei9hdmJFRHJlNmhuWDhUN3Rtb1VmSFFRN0RpSktvblJxSStZbS9LdlBxcFA5bnMyRUpwbWl3cW1aMkI5b3Q0UGVJYVduNm12M2JpbVpBODIwRDZkMmk1eFRXeE13dEdZK1JraGU1K3VLM1FKOGFUL1NPQWlVSndDU241OXc9PSIsImlhdCI6MTc3NjE1NzcxMywiZXhwIjoxNzc2MTYxMzEzLCJqdGkiOiJhY2M6MjoxNzc2MTU3NzEzNTYxOndlYiJ9.ulF_tCH3o4mXX-X9F--Vl5sTwJCxwR3aItQxr4QKcdI`,
       "Content-Type": "application/json",
     },
   }, "schema": "1.0",
@@ -36,28 +36,9 @@ saveQuery: "http://192.168.0.20:9999/api/query/save",
         "sidebar": {
             "type": "filter",
             "source": {
-                "category": {
-                      "title": "Select category for filter",
-                    "type": "sql",
-                    "table": "do_links",
-                    "cols": "category as title, category as value",
-                    "where": {
-                        "blocked": "false",
-                      
-                    },
-                    "groupby": "category",
-                    "orderby": "category asc"
-                },
-                  "weight": {
-                      "title": "Whom to Meet/Authorizer",
-                    "type": "sql",
-                    "table": "do_links",
-                    "cols": "weight as title, weight as value",
-                    "where": {
-                        "blocked": "false",
-                    },
-                    "groupby": "weight",
-                    "orderby": "weight asc"
+                "menuid": {
+                       "type": "sql",
+                    "queryid": "reports%40menuManager.main%40sidebar.source.menuid"
                 }
             }
         },
