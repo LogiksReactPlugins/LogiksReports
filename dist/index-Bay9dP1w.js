@@ -37236,7 +37236,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Or.canvg ? Promise.resolve(Or.canvg) : import("./index.es-H0CGgS88.js")).catch(function(f) {
+  return (Or.canvg ? Promise.resolve(Or.canvg) : import("./index.es-DKhPXa5k.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
@@ -94488,7 +94488,7 @@ const A6e = ({ lat: r, lng: e }) => {
   );
 }, v6e = ({ config: r, onChange: e, onSidebarChange: t, setSidebarDataCount: n }) => {
   const [i, a] = Pt({}), [o, s] = Pt({}), [l, u] = Pt({}), [A, c] = Pt({});
-  console.log({ selectedFilters_SIDEBAR: l });
+  console.log({ selectedFilters_SIDEBAR: l }), console.log({ onSidebarChange_SIDEBAR: t });
   const f = r.endPoints, h = async (b, C) => {
     try {
       s((N) => ({ ...N, [b]: !0 }));
