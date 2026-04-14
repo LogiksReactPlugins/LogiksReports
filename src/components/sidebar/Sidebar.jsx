@@ -74,19 +74,19 @@ const Sidebar = ({ config, onChange,onSidebarChange,setSidebarDataCount}) => {
 
   useEffect(() => {
     setSelectedFilters(onSidebarChange || {});
-}, [onSidebarChange,config]);
+}, [onSidebarChange]);
 
   useEffect(() => {
     if (!config?.sidebar?.source) return;
 
-  setDataMap({})
+    setDataMap({})
     setSelectedFilters({})
     Object.entries(config.sidebar.source).forEach(([key, source]) => {
       if (source?.type === "sql") {
         fetchSQLData(key, source);
       }
     });
-  }, [config]);
+  },[config?.module_refid])
 
   const getItemValue = (item, key) => {
     if (key in item) return item[key];

@@ -481,164 +481,172 @@ function Reports({
 
   const filteredAndSortedData = useCallback(() => {
     if (!data) return [];
+    setDataLoading(true)
 
     let filtered = data;
-    // const searchFilter = buildSearchFilter(config?.datagrid, searchTerm);
-    const dateFilter =
-      activeDateCol && dateOperator
-        ? {
-            [activeDateCol]:
-              dateOperator === "between"
-                ? [[dateRange.start, dateRange.end], "range"]
-                : dateOperator === "eq"
-                  ? [dateRange.start, "like"]
-                  : [[dateRange.start, dateRange.end], "range"],
-          }
-        : {};
+      try {
+            // const searchFilter = buildSearchFilter(config?.datagrid, searchTerm);
+          const dateFilter =
+            activeDateCol && dateOperator
+              ? {
+                  [activeDateCol]:
+                    dateOperator === "between"
+                      ? [[dateRange.start, dateRange.end], "range"]
+                      : dateOperator === "eq"
+                        ? [dateRange.start, "like"]
+                        : [[dateRange.start, dateRange.end], "range"],
+                }
+              : {};
 
-    if (searchTerm || currentPage || dateFilter) {
-      if (config?.source?.type === "sql") {
-        (async () => {
+          if (searchTerm || currentPage || dateFilter) {
+            if (config?.source?.type === "sql") {
+              (async () => {
 
-          console.log({searchableColumns})
-          if (!config?.source?.queryid) {
-            const { table, cols, join, where } = config.source;
+                console.log({searchableColumns})
+                if (!config?.source?.queryid) {
+                  const { table, cols, join, where } = config.source;
 
-            const payload = {
-              query: { table, cols, join, where },
-              dbkey: config?.source?.dbkey,
-            };
-            const axiosObjectForSaveQuery = {
-              method: "POST",
-              url: config?.endPoints.saveQuery,
-              headers: config?.endPoints?.headers,
-              data: payload,
-              srcid: config?.module_refid,
-            };
-            const { data: saveQuerydata } = await axios(
-              axiosObjectForSaveQuery,
-            );
-            // console.log({ saveQuerydata });
-            config.source.queryid = saveQuerydata?.queryid;
-          }
-          const refid = config?.endPoints?.refid;
-        const hasFilterTabs = filterTabs && Object.keys(filterTabs).length > 0;
+                  const payload = {
+                    query: { table, cols, join, where },
+                    dbkey: config?.source?.dbkey,
+                  };
+                  const axiosObjectForSaveQuery = {
+                    method: "POST",
+                    url: config?.endPoints.saveQuery,
+                    headers: config?.endPoints?.headers,
+                    data: payload,
+                    srcid: config?.module_refid,
+                  };
+                  const { data: saveQuerydata } = await axios(
+                    axiosObjectForSaveQuery,
+                  );
+                  // console.log({ saveQuerydata });
+                  config.source.queryid = saveQuerydata?.queryid;
+                }
+                const refid = config?.endPoints?.refid;
+              const hasFilterTabs = filterTabs && Object.keys(filterTabs).length > 0;
 
-          const axiosObject = {
-            method: config?.source?.method || "post",
-            url:
-              config?.source?.url ||
-              `${config?.endPoints?.baseURL}${config?.endPoints.runQuery}`,
-            headers: config?.source?.headers || config?.endPoints?.headers,
-            data: {
-              queryid: config?.source?.queryid,
-              ...(!hasFilterTabs && {
-                stxt: searchTerm,
-                cols: searchableColumns.map((col) => col.key),
-            // cols:["eoffice_files_tbl.subject","eoffice_files_tbl.pending_at"]
-              }),
-                filter: {
-                  ...config?.source?.defaultFilters,
-                  ...onSidebarChange,
-                 ...(hasFilterTabs &&
-                Object.fromEntries(
-                  Object.entries(filterTabs || {}).map(([key, { value }]) => [
-                    key,
-                    [value, "LIKE"],
-                  ]),
-                )),
-                ...Object.fromEntries(
-                  Object.entries(filters || {}).map(
-                    ([key, { type, value }]) => {
-                      if (type == "text") {
-                        return [key, [value, "LIKE"]];
-                      }else if(type=="date"){
-                        const startDate = new Date(value + "T00:00:00");
-                        const endDate = new Date(value + "T23:59:59");
+                const axiosObject = {
+                  method: config?.source?.method || "post",
+                  url:
+                    config?.source?.url ||
+                    `${config?.endPoints?.baseURL}${config?.endPoints.runQuery}`,
+                  headers: config?.source?.headers || config?.endPoints?.headers,
+                  data: {
+                    queryid: config?.source?.queryid,
+                    ...(!hasFilterTabs && {
+                      stxt: searchTerm,
+                      cols: searchableColumns.map((col) => col.key),
+                  // cols:["eoffice_files_tbl.subject","eoffice_files_tbl.pending_at"]
+                    }),
+                      filter: {
+                        ...config?.source?.defaultFilters,
+                        ...onSidebarChange,
+                      ...(hasFilterTabs &&
+                      Object.fromEntries(
+                        Object.entries(filterTabs || {}).map(([key, { value }]) => [
+                          key,
+                          [value, "LIKE"],
+                        ]),
+                      )),
+                      ...Object.fromEntries(
+                        Object.entries(filters || {}).map(
+                          ([key, { type, value }]) => {
+                            if (type == "text") {
+                              return [key, [value, "LIKE"]];
+                            }else if(type=="date"){
+                              const startDate = new Date(value + "T00:00:00");
+                              const endDate = new Date(value + "T23:59:59");
 
-                        const startDateString = startDate.toISOString().replace('T', ' ').substring(0, 19); 
-                        const endDateString = endDate.toISOString().replace('T', ' ').substring(0, 19); 
+                              const startDateString = startDate.toISOString().replace('T', ' ').substring(0, 19); 
+                              const endDateString = endDate.toISOString().replace('T', ' ').substring(0, 19); 
 
-                        return [key, [[startDateString, endDateString], "range"]];
-                      }
-                      return [key, value];
+                              return [key, [[startDateString, endDateString], "range"]];
+                            }
+                            return [key, value];
+                          },
+                        ),
+                      ),
+                      ...dateFilter,
                     },
-                  ),
-                ),
-                ...dateFilter,
-              },
-              ...(groupBy && { group_by: groupBy }),
-              ...(refid ? { refid } : {}),
-              limit: rowsPerPage,
-              page: currentPage,
-              ...(sortConfig?.key
-                ? { orderby: `${sortConfig?.key} ${sortConfig?.direction}` }
-                : {}),
-            },
-          };
-          // console.log({ axiosObject });
-          const { data } = await axios(axiosObject);
-          const responsePath = config?.source?.response || "data";
-          // // console.log({config?.source?.response})
+                    ...(groupBy && { group_by: groupBy }),
+                    ...(refid ? { refid } : {}),
+                    limit: rowsPerPage,
+                    page: currentPage,
+                    ...(sortConfig?.key
+                      ? { orderby: `${sortConfig?.key} ${sortConfig?.direction}` }
+                      : {}),
+                  },
+                };
+                // console.log({ axiosObject });
+                const { data } = await axios(axiosObject);
+                const responsePath = config?.source?.response || "data";
+                // // console.log({config?.source?.response})
 
-          // console.log({ data });
-          // console.log({ responsePath });
-          // setData(data?.data || []);
-          const result = getValueByPath(data, responsePath);
-          // console.log({ result });
-          setData(result || []);
-          setCurrentPage(data?.page || 0);
-          setTotalData(data.max || 0);
-        })();
+                // console.log({ data });
+                // console.log({ responsePath });
+                // setData(data?.data || []);
+                const result = getValueByPath(data, responsePath);
+                // console.log({ result });
+                setData(result || []);
+                setCurrentPage(data?.page || 0);
+                setTotalData(data.max || 0);
+              })();
+            }
+            // const advancedSearch = searchTerm.includes(":");
+            // if (advancedSearch) {
+            //   const conditions = searchTerm.split(",").map((cond) => {
+            //     let [rawKey, value] = cond
+            //       .split(":")
+            //       .map((s) => s.trim().toLowerCase());
+            //     let key = rawKey;
+            //     let colConfig = config?.datagrid[key];
+            //     if (!colConfig) {
+            //       const match = Object.entries(config?.datagrid).find(
+            //         ([colKey, col]) => col.label.toLowerCase() === rawKey
+            //       );
+            //       if (match) key = match[0];
+            //     }
+            //     return { key, value };
+            //   });
+            //   // console.log({ conditions });
+            //   filtered = filtered.filter((row) => {
+            //     return conditions.every(({ key, value }) => {
+            //       const colConfig = config?.datagrid[key];
+            //       if (!colConfig || !colConfig?.searchable) return false;
+            //       const cellVal = String(row[key] || "").toLowerCase();
+            //       return cellVal.includes(value);
+            //     });
+            //   });
+            // } else {
+            //   filtered = filtered.filter((row) => {
+            //     return Object.entries(config?.datagrid).some(([key, col]) => {
+            //       if (!col.searchable) return false;
+            //       const value = String(row[key] || "").toLowerCase();
+            //       return value.includes(searchTerm.toLowerCase());
+            //     });
+            //   });
+            // }
+          }
+
+          // if (sortConfig?.key) {
+          //   filtered = [...filtered].sort((a, b) => {
+          //     const aVal = a[sortConfig?.key];
+          //     const bVal = b[sortConfig?.key];
+
+          //     if (aVal < bVal) return sortConfig?.direction === "asc" ? -1 : 1;
+          //     if (aVal > bVal) return sortConfig?.direction === "asc" ? 1 : -1;
+          //     return 0;
+          //   });
+          // }
+
+          // console.log({ filtered });
+      } catch (error) {
+        console.log({error})
+      }finally{
+        setDataLoading(false)
+
       }
-      // const advancedSearch = searchTerm.includes(":");
-      // if (advancedSearch) {
-      //   const conditions = searchTerm.split(",").map((cond) => {
-      //     let [rawKey, value] = cond
-      //       .split(":")
-      //       .map((s) => s.trim().toLowerCase());
-      //     let key = rawKey;
-      //     let colConfig = config?.datagrid[key];
-      //     if (!colConfig) {
-      //       const match = Object.entries(config?.datagrid).find(
-      //         ([colKey, col]) => col.label.toLowerCase() === rawKey
-      //       );
-      //       if (match) key = match[0];
-      //     }
-      //     return { key, value };
-      //   });
-      //   // console.log({ conditions });
-      //   filtered = filtered.filter((row) => {
-      //     return conditions.every(({ key, value }) => {
-      //       const colConfig = config?.datagrid[key];
-      //       if (!colConfig || !colConfig?.searchable) return false;
-      //       const cellVal = String(row[key] || "").toLowerCase();
-      //       return cellVal.includes(value);
-      //     });
-      //   });
-      // } else {
-      //   filtered = filtered.filter((row) => {
-      //     return Object.entries(config?.datagrid).some(([key, col]) => {
-      //       if (!col.searchable) return false;
-      //       const value = String(row[key] || "").toLowerCase();
-      //       return value.includes(searchTerm.toLowerCase());
-      //     });
-      //   });
-      // }
-    }
-
-    // if (sortConfig?.key) {
-    //   filtered = [...filtered].sort((a, b) => {
-    //     const aVal = a[sortConfig?.key];
-    //     const bVal = b[sortConfig?.key];
-
-    //     if (aVal < bVal) return sortConfig?.direction === "asc" ? -1 : 1;
-    //     if (aVal > bVal) return sortConfig?.direction === "asc" ? 1 : -1;
-    //     return 0;
-    //   });
-    // }
-
-    // console.log({ filtered });
     return filtered;
   }, [
     config,
