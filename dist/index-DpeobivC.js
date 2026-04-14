@@ -37236,7 +37236,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Or.canvg ? Promise.resolve(Or.canvg) : import("./index.es-J8gxJwkm.js")).catch(function(f) {
+  return (Or.canvg ? Promise.resolve(Or.canvg) : import("./index.es-CV4E88If.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
@@ -38491,14 +38491,9 @@ const dD = (r) => {
   const e = dD(r), t = [];
   return r.querySelectorAll("tr").forEach((n) => {
     const i = [];
-    for (Array.from(n.children).forEach((a, o) => {
-      if (!e.includes(o)) {
-        const s = a.innerText.trim();
-        s !== "" ? i.push(s) : i.push("");
-      }
-    }); i.length && i[0] === ""; )
-      i.shift();
-    t.push(i);
+    Array.from(n.children).forEach((a, o) => {
+      e.includes(o) || i.push(a.innerText.trim());
+    }), i.length && i.splice(0, 1), t.push(i);
   }), t;
 }, FB = (r) => {
   const e = dD(r), t = r.cloneNode(!0);

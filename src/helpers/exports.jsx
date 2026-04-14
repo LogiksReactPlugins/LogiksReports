@@ -27,14 +27,12 @@ const tableToCleanArray = (table) => {
 
     Array.from(row.children).forEach((cell, i) => {
       if (!excluded.includes(i)) {
-        const text = cell.innerText.trim();
-        if (text !== "") rowData.push(text);
-        else rowData.push("");
+        rowData.push(cell.innerText.trim());
       }
     });
 
-    while (rowData.length && rowData[0] === "") {
-      rowData.shift();
+    if (rowData.length) {
+      rowData.splice(0, 1);
     }
 
     data.push(rowData);
@@ -42,7 +40,6 @@ const tableToCleanArray = (table) => {
 
   return data;
 };
-
 /**
  * Clone table without excluded columns
  */
