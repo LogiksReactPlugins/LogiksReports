@@ -7,6 +7,7 @@ const Sidebar = ({ config, onChange,onSidebarChange,setSidebarDataCount}) => {
   const [selectedFilters, setSelectedFilters] = useState({});
   const [searchText, setSearchText] = useState({});
   console.log({"selectedFilters_SIDEBAR":selectedFilters})
+  console.log({"onSidebarChange_SIDEBAR":onSidebarChange})
   
   const endPoints = config.endPoints;
 
@@ -73,7 +74,7 @@ const Sidebar = ({ config, onChange,onSidebarChange,setSidebarDataCount}) => {
 
   useEffect(() => {
     setSelectedFilters(onSidebarChange || {});
-  }, [onSidebarChange]);
+}, [onSidebarChange,config]);
 
   useEffect(() => {
     if (!config?.sidebar?.source) return;

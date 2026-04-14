@@ -37236,7 +37236,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Or.canvg ? Promise.resolve(Or.canvg) : import("./index.es-XPt1pjvb.js")).catch(function(f) {
+  return (Or.canvg ? Promise.resolve(Or.canvg) : import("./index.es-H0CGgS88.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
@@ -94534,7 +94534,7 @@ const A6e = ({ lat: r, lng: e }) => {
   };
   Br(() => {
     u(t || {});
-  }, [t]), Br(() => {
+  }, [t, r]), Br(() => {
     r?.sidebar?.source && (a({}), u({}), Object.entries(r.sidebar.source).forEach(([b, C]) => {
       C?.type === "sql" && h(b, C);
     }));
