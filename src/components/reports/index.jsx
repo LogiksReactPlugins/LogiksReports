@@ -138,7 +138,9 @@ function Reports({
   const [errorMsg,setErrorMsg]=useState("")
   const [onSidebarChange,setOnSidebarChange]=useState(null)
   const [sidebarDataCount,setSidebarDataCount]=useState(null)
-const request = typeof api === "function" ? api : axios;
+  const request = typeof api === "function" ? api : axios;
+
+  console.log({"onSidebarChange____IND":onSidebarChange})
 
   useEffect(() => {
     setCurrentPage(0);
@@ -462,6 +464,11 @@ const request = typeof api === "function" ? api : axios;
     );
   };
   const handleSidebarChange = (values) => {
+      if (!values || Object.keys(values).length === 0) {
+    setOnSidebarChange?.({});
+    return;
+  }
+  
   const filteredValues = Object.fromEntries(
     Object.entries(values).filter(([_, v]) => {
       if (Array.isArray(v)) return v.length > 0;

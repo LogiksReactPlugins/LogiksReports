@@ -6,6 +6,7 @@ const Sidebar = ({ config, onChange,onSidebarChange,setSidebarDataCount}) => {
   const [loading, setLoading] = useState({});
   const [selectedFilters, setSelectedFilters] = useState({});
   const [searchText, setSearchText] = useState({});
+  console.log({"selectedFilters_SIDEBAR":selectedFilters})
   
   const endPoints = config.endPoints;
 
@@ -125,7 +126,7 @@ useEffect(() => {
     };
 
     setSelectedFilters(updated);
-    onChange?.(updated); // send ALL selected filters
+    onChange?.(updated);
   };
 
 const renderList = (key, source) => {
