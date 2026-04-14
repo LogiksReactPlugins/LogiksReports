@@ -96,6 +96,8 @@ const TableView = ({
     if (!col?.aggregate?.type || !Array.isArray(rows)) return null;
 
     const rawType = col.aggregate.type;
+    console.log({rawType})
+    console.log({methods})
     const getNumericValues = (columnKey) =>
       rows
         .map((row) => {
@@ -128,6 +130,7 @@ const TableView = ({
 
         default: {
           const result = methods[type]?.(values, rows);
+          console.log({result})
           if (result !== undefined) {
             return result;
           }
@@ -139,6 +142,7 @@ const TableView = ({
 
       if (typeof rawType === "string" && /^[a-z_]+$/i.test(rawType)) {
         const result = calculateBase(rawType.toUpperCase(), key);
+        console.log({result})
 
         return typeof result === "number"
           ? Number(result.toFixed(2))
@@ -245,6 +249,7 @@ const formatAggregateValue = (value, format = {}) => {
             return <td key={key} className={fixedClass} />;
           }
           const rawValue = getAggregateValue(key, col, rows);
+          console.log({rawValue})
 
           return (
             <td key={key} className={`px-2 py-2 text-sm ${fixedClass}`}>
