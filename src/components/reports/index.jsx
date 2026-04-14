@@ -665,6 +665,7 @@ function Reports({
   useEffect(() => {
     setCurrentData(filteredAndSortedData);
   }, [
+    config,
     searchTerm,
     currentPage,
     dateRange.start,
