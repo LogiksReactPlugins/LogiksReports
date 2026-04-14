@@ -126,14 +126,25 @@ const TableView = ({
         case "COUNT":
           return rows.length;
 
-        default:
+        default: {
+          const result = methods[type]?.(values, rows);
+
+          if (result !== undefined) {
+            return result;
+          }
+
           return 0;
+        }
       }
     };
 
-    if (typeof rawType === "string" && /^[a-z]+$/i.test(rawType)) {
-      return Number(calculateBase(rawType.toUpperCase(), key).toFixed(2));
-    }
+ if (typeof rawType === "string" && /^[a-z_]+$/i.test(rawType)) {
+  const result = calculateBase(rawType.toUpperCase(), key);
+
+  return typeof result === "number"
+    ? Number(result.toFixed(2))
+    : result; 
+}
 
     if (typeof rawType === "string") {
       let expression = rawType;
@@ -242,8 +253,10 @@ const formatAggregateValue = (value, format = {}) => {
                 <span className="text-xs text-gray-500">
                   {col.aggregate.label}
                 </span>
-                  {formatAggregateValue(rawValue, col.aggregate?.format)}
-              </div>
+            {typeof rawValue === "number"
+                  ? formatAggregateValue(rawValue, col.aggregate?.format)
+                  : rawValue}
+                      </div>
             </td>
           );
         })}
