@@ -18,6 +18,31 @@ const getExcludedColumns = (table) => {
   return excluded;
 };
 
+const tableToCleanArray = (table) => {
+  const excluded = getExcludedColumns(table);
+  const data = [];
+
+  table.querySelectorAll("tr").forEach((row) => {
+    const rowData = [];
+
+    Array.from(row.children).forEach((cell, i) => {
+      if (!excluded.includes(i)) {
+        const text = cell.innerText.trim();
+        if (text !== "") rowData.push(text);
+        else rowData.push("");
+      }
+    });
+
+    while (rowData.length && rowData[0] === "") {
+      rowData.shift();
+    }
+
+    data.push(rowData);
+  });
+
+  return data;
+};
+
 /**
  * Clone table without excluded columns
  */
@@ -37,7 +62,7 @@ const cloneTableWithoutExcluded = (table) => {
 /**
  * Export main function
  */
-export const exportTable = async (type) => {
+export const exportTable = async (type,fileName) => {
   const table = document.getElementById("printable");
   if (!table) {
     alert("Table not found!");
@@ -46,22 +71,32 @@ export const exportTable = async (type) => {
 
   switch (type) {
     case "csv": {
-      const cleanTable = cloneTableWithoutExcluded(table);
-      const ws = XLSX.utils.table_to_sheet(cleanTable);
+      const data = tableToCleanArray(table);
+      const ws = XLSX.utils.aoa_to_sheet(data);
       const csv = XLSX.utils.sheet_to_csv(ws);
-      saveAs(new Blob([csv], { type: "text/csv;charset=utf-8" }), "export.csv");
+
+      saveAs(
+        new Blob([csv], { type: "text/csv;charset=utf-8" }),
+        `${fileName || "export"}.csv`
+      );
       break;
     }
 
     case "excel": {
-      const cleanTable = cloneTableWithoutExcluded(table);
-      const ws = XLSX.utils.table_to_sheet(cleanTable);
+      const data = tableToCleanArray(table);
+      const ws = XLSX.utils.aoa_to_sheet(data);
+
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, "Report");
-      const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+
+      const buffer = XLSX.write(wb, {
+        bookType: "xlsx",
+        type: "array",
+      });
+
       saveAs(
-        new Blob([excelBuffer], { type: "application/octet-stream" }),
-        "export.xlsx"
+        new Blob([buffer], { type: "application/octet-stream" }),
+        `${fileName || "export"}.xlsx`
       );
       break;
     }
@@ -90,18 +125,18 @@ export const exportTable = async (type) => {
 
       saveAs(
         new Blob([xml], { type: "application/xml;charset=utf-8" }),
-        "export.xml"
+        `${fileName || "export"}.xml`
       );
       break;
     }
 
     case "htm": {
-  const cleanTable = cloneTableWithoutExcluded(table);
+      const cleanTable = cloneTableWithoutExcluded(table);
 
-  // Remove unwanted elements (buttons, svgs, icons etc.)
-  cleanTable.querySelectorAll("button, svg, i").forEach((el) => el.remove());
+      // Remove unwanted elements (buttons, svgs, icons etc.)
+      cleanTable.querySelectorAll("button, svg, i").forEach((el) => el.remove());
 
-  const html = `
+      const html = `
     <html>
       <head>
         <meta charset="utf-8" />
@@ -116,105 +151,105 @@ export const exportTable = async (type) => {
       </body>
     </html>`;
 
-  saveAs(new Blob([html], { type: "text/html;charset=utf-8" }), "export.html");
-  break;
-}
+      saveAs(new Blob([html], { type: "text/html;charset=utf-8" }), `${fileName || "export"}.html`);
+      break;
+    }
 
- case "img": {
-  const table = document.getElementById("printable");
-  if (!table) return;
+    case "img": {
+      const table = document.getElementById("printable");
+      if (!table) return;
 
-  // Find index of "Actions" column
-  const excluded = getExcludedColumns(table);
+      // Find index of "Actions" column
+      const excluded = getExcludedColumns(table);
 
-  // Hide the column(s)
-  const hidden = [];
-  table.querySelectorAll("tr").forEach((row) => {
-    excluded.forEach((i) => {
-      if (row.children[i]) {
-        hidden.push(row.children[i]);
-        row.children[i].style.display = "none";
-      }
-    });
-  });
+      // Hide the column(s)
+      const hidden = [];
+      table.querySelectorAll("tr").forEach((row) => {
+        excluded.forEach((i) => {
+          if (row.children[i]) {
+            hidden.push(row.children[i]);
+            row.children[i].style.display = "none";
+          }
+        });
+      });
 
-  // Now use html-to-image on the real table
-  toPng(table, { cacheBust: true })
-    .then((dataUrl) => {
-      const link = document.createElement("a");
-      link.href = dataUrl;
-      link.download = "export.png";
-      link.click();
-    })
-    .finally(() => {
-      // Restore hidden columns
-      hidden.forEach((cell) => (cell.style.display = ""));
-    });
+      // Now use html-to-image on the real table
+      toPng(table, { cacheBust: true })
+        .then((dataUrl) => {
+          const link = document.createElement("a");
+          link.href = dataUrl;
+          link.download = `${fileName || "export"}.png`;
+          link.click();
+        })
+        .finally(() => {
+          // Restore hidden columns
+          hidden.forEach((cell) => (cell.style.display = ""));
+        });
 
-  break;
-}
+      break;
+    }
 
 
-case "pdf": {
-  const cleanTable = cloneTableWithoutExcluded(table);
+    case "pdf": {
+      const cleanTable = cloneTableWithoutExcluded(table);
 
-  // Remove buttons/icons etc.
-  cleanTable.querySelectorAll("button, svg, i").forEach((el) => el.remove());
+      // Remove buttons/icons etc.
+      cleanTable.querySelectorAll("button, svg, i").forEach((el) => el.remove());
 
-  // Inline RGB fallback styles (fixes Tailwind oklch colors)
-  cleanTable.querySelectorAll("*").forEach((el) => {
-    const style = window.getComputedStyle(el);
+      // Inline RGB fallback styles (fixes Tailwind oklch colors)
+      cleanTable.querySelectorAll("*").forEach((el) => {
+        const style = window.getComputedStyle(el);
 
-    // Convert problematic oklch/lab/hwb into safe rgb
-    ["color", "backgroundColor", "borderColor"].forEach((prop) => {
-      let val = style[prop];
-      if (val && val.includes("oklch")) {
-        el.style[prop] = "rgb(0,0,0)"; // fallback to black
-      } else if (val && val.includes("oklab")) {
-        el.style[prop] = "rgb(0,0,0)";
-      } else if (val && val.includes("hwb")) {
-        el.style[prop] = "rgb(0,0,0)";
-      } else {
-        el.style[prop] = val;
-      }
-    });
-  });
+        // Convert problematic oklch/lab/hwb into safe rgb
+        ["color", "backgroundColor", "borderColor"].forEach((prop) => {
+          let val = style[prop];
+          if (val && val.includes("oklch")) {
+            el.style[prop] = "rgb(0,0,0)"; // fallback to black
+          } else if (val && val.includes("oklab")) {
+            el.style[prop] = "rgb(0,0,0)";
+          } else if (val && val.includes("hwb")) {
+            el.style[prop] = "rgb(0,0,0)";
+          } else {
+            el.style[prop] = val;
+          }
+        });
+      });
 
-  // Attach offscreen for rendering
-  const wrapper = document.createElement("div");
-  wrapper.style.position = "fixed";
-  wrapper.style.top = "-9999px";
-  document.body.appendChild(wrapper);
-  wrapper.appendChild(cleanTable);
+      // Attach offscreen for rendering
+      const wrapper = document.createElement("div");
+      wrapper.style.position = "fixed";
+      wrapper.style.top = "-9999px";
+      document.body.appendChild(wrapper);
+      wrapper.appendChild(cleanTable);
 
-  toPng(cleanTable, { cacheBust: true })
-    .then((dataUrl) => {
-      const pdf = new jsPDF("p", "mm", "a4");
-      const imgProps = pdf.getImageProperties(dataUrl);
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-      const imgHeight = (imgProps.height * pageWidth) / imgProps.width;
+      toPng(cleanTable, { cacheBust: true })
+        .then((dataUrl) => {
+          const pdf = new jsPDF("p", "mm", "a4");
+          const imgProps = pdf.getImageProperties(dataUrl);
+          const pageWidth = pdf.internal.pageSize.getWidth();
+          const pageHeight = pdf.internal.pageSize.getHeight();
+          const imgHeight = (imgProps.height * pageWidth) / imgProps.width;
 
-      let position = 0;
-      let heightLeft = imgHeight;
+          let position = 0;
+          let heightLeft = imgHeight;
 
-      pdf.addImage(dataUrl, "PNG", 0, position, pageWidth, imgHeight);
-      heightLeft -= pageHeight;
+          pdf.addImage(dataUrl, "PNG", 0, position, pageWidth, imgHeight);
+          heightLeft -= pageHeight;
 
-      while (heightLeft > 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(dataUrl, "PNG", 0, position, pageWidth, imgHeight);
-        heightLeft -= pageHeight;
-      }
+          while (heightLeft > 0) {
+            position = heightLeft - imgHeight;
+            pdf.addPage();
+            pdf.addImage(dataUrl, "PNG", 0, position, pageWidth, imgHeight);
+            heightLeft -= pageHeight;
+          }
 
-      pdf.save("export.pdf");
-      document.body.removeChild(wrapper);
-    })
-    .catch((err) => console.error("PDF export failed", err));
+          pdf.save(`${fileName || "export"}.pdf`);
+          document.body.removeChild(wrapper);
+        })
+        .catch((err) => console.error("PDF export failed", err));
 
-  break;
-}
+      break;
+    }
     default:
       alert("Unsupported export type");
   }

@@ -10,15 +10,7 @@ export const report = {
   "rowsPerPage": 5,
   // "showExtraColumn": "checkbox",
   "custombar": false,
-  "source": {
-    "type": "sql",
-    "table": "lgks_users",
-    "where": {
-      "guid": { "VALUE": "seleccontrols", "OP": "EQ" },
-      "id": { "RAW": "id>1" }
-    },
-    "limit": 10
-  },
+
   "actions": {
     "addRecord": {
       "label": "adddddd",

@@ -37236,7 +37236,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Or.canvg ? Promise.resolve(Or.canvg) : import("./index.es-PZVzbiZF.js")).catch(function(f) {
+  return (Or.canvg ? Promise.resolve(Or.canvg) : import("./index.es-J8gxJwkm.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
@@ -38507,58 +38507,58 @@ const dD = (r) => {
       n.children[i] && n.removeChild(n.children[i]);
     });
   }), t;
-}, gye = async (r) => {
-  const e = document.getElementById("printable");
-  if (!e) {
+}, gye = async (r, e) => {
+  const t = document.getElementById("printable");
+  if (!t) {
     alert("Table not found!");
     return;
   }
   switch (r) {
     case "csv": {
-      const t = uk(e), n = Nf.aoa_to_sheet(t), i = Nf.sheet_to_csv(n);
+      const n = uk(t), i = Nf.aoa_to_sheet(n), a = Nf.sheet_to_csv(i);
       Am.saveAs(
-        new Blob([i], { type: "text/csv;charset=utf-8" }),
-        "export.csv"
+        new Blob([a], { type: "text/csv;charset=utf-8" }),
+        `${e || "export"}.csv`
       );
       break;
     }
     case "excel": {
-      const t = uk(e), n = Nf.aoa_to_sheet(t), i = Nf.book_new();
-      Nf.book_append_sheet(i, n, "Report");
-      const a = RI(i, {
+      const n = uk(t), i = Nf.aoa_to_sheet(n), a = Nf.book_new();
+      Nf.book_append_sheet(a, i, "Report");
+      const o = RI(a, {
         bookType: "xlsx",
         type: "array"
       });
       Am.saveAs(
-        new Blob([a], { type: "application/octet-stream" }),
-        "export.xlsx"
+        new Blob([o], { type: "application/octet-stream" }),
+        `${e || "export"}.xlsx`
       );
       break;
     }
     case "xml": {
-      const t = FB(e), n = (a) => a.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
-      let i = `<?xml version="1.0" encoding="utf-8"?>
+      const n = FB(t), i = (o) => o.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
+      let a = `<?xml version="1.0" encoding="utf-8"?>
 <table>
 `;
-      t.querySelectorAll("tbody tr").forEach((a, o) => {
-        i += `  <row index="${o}">
-`, a.querySelectorAll("td").forEach((s, l) => {
-          i += `    <col index="${l}">${n(
-            s.innerText.trim()
+      n.querySelectorAll("tbody tr").forEach((o, s) => {
+        a += `  <row index="${s}">
+`, o.querySelectorAll("td").forEach((l, u) => {
+          a += `    <col index="${u}">${i(
+            l.innerText.trim()
           )}</col>
 `;
-        }), i += `  </row>
+        }), a += `  </row>
 `;
-      }), i += "</table>", Am.saveAs(
-        new Blob([i], { type: "application/xml;charset=utf-8" }),
-        "export.xml"
+      }), a += "</table>", Am.saveAs(
+        new Blob([a], { type: "application/xml;charset=utf-8" }),
+        `${e || "export"}.xml`
       );
       break;
     }
     case "htm": {
-      const t = FB(e);
-      t.querySelectorAll("button, svg, i").forEach((i) => i.remove());
-      const n = `
+      const n = FB(t);
+      n.querySelectorAll("button, svg, i").forEach((a) => a.remove());
+      const i = `
     <html>
       <head>
         <meta charset="utf-8" />
@@ -38569,45 +38569,45 @@ const dD = (r) => {
         </style>
       </head>
       <body>
-        ${t.outerHTML}
+        ${n.outerHTML}
       </body>
     </html>`;
-      Am.saveAs(new Blob([n], { type: "text/html;charset=utf-8" }), "export.html");
+      Am.saveAs(new Blob([i], { type: "text/html;charset=utf-8" }), `${e || "export"}.html`);
       break;
     }
     case "img": {
-      const t = document.getElementById("printable");
-      if (!t) return;
-      const n = dD(t), i = [];
-      t.querySelectorAll("tr").forEach((a) => {
-        n.forEach((o) => {
-          a.children[o] && (i.push(a.children[o]), a.children[o].style.display = "none");
+      const n = document.getElementById("printable");
+      if (!n) return;
+      const i = dD(n), a = [];
+      n.querySelectorAll("tr").forEach((o) => {
+        i.forEach((s) => {
+          o.children[s] && (a.push(o.children[s]), o.children[s].style.display = "none");
         });
-      }), lk(t, { cacheBust: !0 }).then((a) => {
-        const o = document.createElement("a");
-        o.href = a, o.download = "export.png", o.click();
+      }), lk(n, { cacheBust: !0 }).then((o) => {
+        const s = document.createElement("a");
+        s.href = o, s.download = `${e || "export"}.png`, s.click();
       }).finally(() => {
-        i.forEach((a) => a.style.display = "");
+        a.forEach((o) => o.style.display = "");
       });
       break;
     }
     case "pdf": {
-      const t = FB(e);
-      t.querySelectorAll("button, svg, i").forEach((i) => i.remove()), t.querySelectorAll("*").forEach((i) => {
-        const a = window.getComputedStyle(i);
-        ["color", "backgroundColor", "borderColor"].forEach((o) => {
-          let s = a[o];
-          s && s.includes("oklch") || s && s.includes("oklab") || s && s.includes("hwb") ? i.style[o] = "rgb(0,0,0)" : i.style[o] = s;
+      const n = FB(t);
+      n.querySelectorAll("button, svg, i").forEach((a) => a.remove()), n.querySelectorAll("*").forEach((a) => {
+        const o = window.getComputedStyle(a);
+        ["color", "backgroundColor", "borderColor"].forEach((s) => {
+          let l = o[s];
+          l && l.includes("oklch") || l && l.includes("oklab") || l && l.includes("hwb") ? a.style[s] = "rgb(0,0,0)" : a.style[s] = l;
         });
       });
-      const n = document.createElement("div");
-      n.style.position = "fixed", n.style.top = "-9999px", document.body.appendChild(n), n.appendChild(t), lk(t, { cacheBust: !0 }).then((i) => {
-        const a = new fr("p", "mm", "a4"), o = a.getImageProperties(i), s = a.internal.pageSize.getWidth(), l = a.internal.pageSize.getHeight(), u = o.height * s / o.width;
-        let A = 0, c = u;
-        for (a.addImage(i, "PNG", 0, A, s, u), c -= l; c > 0; )
-          A = c - u, a.addPage(), a.addImage(i, "PNG", 0, A, s, u), c -= l;
-        a.save("export.pdf"), document.body.removeChild(n);
-      }).catch((i) => console.error("PDF export failed", i));
+      const i = document.createElement("div");
+      i.style.position = "fixed", i.style.top = "-9999px", document.body.appendChild(i), i.appendChild(n), lk(n, { cacheBust: !0 }).then((a) => {
+        const o = new fr("p", "mm", "a4"), s = o.getImageProperties(a), l = o.internal.pageSize.getWidth(), u = o.internal.pageSize.getHeight(), A = s.height * l / s.width;
+        let c = 0, f = A;
+        for (o.addImage(a, "PNG", 0, c, l, A), f -= u; f > 0; )
+          c = f - A, o.addPage(), o.addImage(a, "PNG", 0, c, l, A), f -= u;
+        o.save(`${e || "export"}.pdf`), document.body.removeChild(i);
+      }).catch((a) => console.error("PDF export failed", a));
       break;
     }
     default:
@@ -94984,7 +94984,7 @@ function g6e({
         new Blob([Eo], {
           type: Le === "csv" ? "text/csv;charset=utf-8" : "application/octet-stream"
         }),
-        `export.${Le === "csv" ? "csv" : "xlsx"}`
+        `${s?.title || "export"}.${Le === "csv" ? "csv" : "xlsx"}`
       );
     } catch (lt) {
       console.error("Export failed", lt);
@@ -95014,7 +95014,7 @@ function g6e({
     N(T === Le ? null : Le);
   }, si = Object.entries(Tt).filter(([Le, lt]) => lt.groupable && !lt.hidden).map(([Le, lt]) => ({ key: Le, label: lt.label })), Vn = s?.showExtraColumn, Vs = gt ? Object.entries(gt).filter(([Le]) => Le !== "more") : [], es = gt?.more ? Object.entries(gt.more) : [], oo = Vs.length > 0 || es.length > 0, wn = async (Le) => {
     try {
-      J(Le), await gye(Le);
+      J(Le), await gye(Le, `${s?.title || "export"}`);
     } finally {
       M(!1), J(null);
     }

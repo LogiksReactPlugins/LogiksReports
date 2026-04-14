@@ -216,7 +216,7 @@ const renderList = (key, source) => {
      <div className='px-2 sidebar-title'>
        {
         config?.sidebar?.title
-      }
+      }     
      </div>
       {Object.entries(config?.sidebar?.source || {}).map(
         ([key, source]) => (

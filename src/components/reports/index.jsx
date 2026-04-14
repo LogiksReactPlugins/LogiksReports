@@ -992,7 +992,7 @@ const formatted = formatCellValue(
             ? "text/csv;charset=utf-8"
             : "application/octet-stream",
       }),
-      `export.${type === "csv" ? "csv" : "xlsx"}`
+      `${config?.title || "export"}.${type === "csv" ? "csv" : "xlsx"}`
     );
   } catch (err) {
     console.error("Export failed", err);
@@ -1077,7 +1077,7 @@ const formatted = formatCellValue(
     // console.log("Exporting as:", type);
     try {
       setLoading(type);
-      await exportTable(type);
+      await exportTable(type,`${config?.title || "export"}`);
     } finally {
       setOpen(false);
       setLoading(null);
