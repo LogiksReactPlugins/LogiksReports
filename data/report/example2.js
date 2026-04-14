@@ -170,10 +170,7 @@ export const report = {
   showExtraColumn: "checkbox",
   custombar: false,
   DEBUG: false,
-  source: {
-    type: "php",
-    file: "plugins/modules/test/test.php",
-  },
+
   buttons: {
     "form@demo": {
       label: "a {userid}",
@@ -195,7 +192,7 @@ export const report = {
       sortable: true,
       formatter: "text",
       aggregate: {
-        type: "COUNT",
+        type: "TESTMETHOD",
         label: "Total Records",
       },
     },
@@ -259,7 +256,7 @@ export const report = {
         },
       },
       aggregate: {
-        type: "SUM",
+        type: "TESTMETHOD",
         label: "Total Blocked",
       },
     },

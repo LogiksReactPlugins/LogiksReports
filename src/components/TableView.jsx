@@ -96,7 +96,6 @@ const TableView = ({
     if (!col?.aggregate?.type || !Array.isArray(rows)) return null;
 
     const rawType = col.aggregate.type;
-
     const getNumericValues = (columnKey) =>
       rows
         .map((row) => {
@@ -106,6 +105,7 @@ const TableView = ({
         .filter((val) => !isNaN(val));
 
     const calculateBase = (type, columnKey) => {
+
       const values = getNumericValues(columnKey);
 
       switch (type) {
@@ -128,7 +128,6 @@ const TableView = ({
 
         default: {
           const result = methods[type]?.(values, rows);
-
           if (result !== undefined) {
             return result;
           }
@@ -138,13 +137,13 @@ const TableView = ({
       }
     };
 
- if (typeof rawType === "string" && /^[a-z_]+$/i.test(rawType)) {
-  const result = calculateBase(rawType.toUpperCase(), key);
+      if (typeof rawType === "string" && /^[a-z_]+$/i.test(rawType)) {
+        const result = calculateBase(rawType.toUpperCase(), key);
 
-  return typeof result === "number"
-    ? Number(result.toFixed(2))
-    : result; 
-}
+        return typeof result === "number"
+          ? Number(result.toFixed(2))
+          : result; 
+      }
 
     if (typeof rawType === "string") {
       let expression = rawType;

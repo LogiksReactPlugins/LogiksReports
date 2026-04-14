@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 
-import { report } from "../data/report/example4";
+import { report } from "../data/report/example2";
 import Reports from "./components/reports";
 import actionHandler from "./actions/actionHandler";
 
@@ -15,12 +15,16 @@ export default function App() {
     // console.log("handelTrig2");
     return <div>{data}</div>;
   };
+  const TESTMETHOD=()=>{
+    // alert()
+    return "121212"
+  }
   return (
     <>
       <Reports
         report={report}
         onButtonClick={handleAction}
-        methods={{ handelTrig, handelTrig2 }}
+        methods={{ handelTrig, handelTrig2,TESTMETHOD }}
       />
     </>
   );
