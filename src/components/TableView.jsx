@@ -91,7 +91,12 @@ const TableView = ({
 
     return groups;
   };
-  
+  const getMethod = (type) => {
+  const key = Object.keys(methods).find(
+    (k) => k.toLowerCase() === String(type).toLowerCase()
+  );
+  return key ? methods[key] : undefined;
+};
   const getAggregateValue = (key, col, rows = []) => {
     if (!col?.aggregate?.type || !Array.isArray(rows)) return null;
 
@@ -106,39 +111,37 @@ const TableView = ({
         })
         .filter((val) => !isNaN(val));
 
-    const calculateBase = (type, columnKey) => {
+ const calculateBase = (type, columnKey) => {
+  const values = getNumericValues(columnKey);
 
-      const values = getNumericValues(columnKey);
+  switch (type.toUpperCase()) {
+    case "SUM":
+      return values.reduce((a, b) => a + b, 0);
 
-      switch (type) {
-        case "SUM":
-          return values.reduce((a, b) => a + b, 0);
+    case "AVG":
+      return values.length
+        ? values.reduce((a, b) => a + b, 0) / values.length
+        : 0;
 
-        case "AVG":
-          return values.length
-            ? values.reduce((a, b) => a + b, 0) / values.length
-            : 0;
+    case "MIN":
+      return values.length ? Math.min(...values) : 0;
 
-        case "MIN":
-          return values.length ? Math.min(...values) : 0;
+    case "MAX":
+      return values.length ? Math.max(...values) : 0;
 
-        case "MAX":
-          return values.length ? Math.max(...values) : 0;
+    case "COUNT":
+      return rows.length;
 
-        case "COUNT":
-          return rows.length;
+    default: {
+      const fn = getMethod(type); // 🔥 case-insensitive
+      const result = fn?.(values, rows);
 
-        default: {
-          const result = methods[type]?.(values, rows);
-          console.log({result})
-          if (result !== undefined) {
-            return result;
-          }
+      if (result !== undefined) return result;
 
-          return 0;
-        }
-      }
-    };
+      return 0;
+    }
+  }
+};
 
 if (typeof rawType === "string" && /^[a-z0-9_]+$/i.test(rawType)) {
         const result = calculateBase(rawType.toUpperCase(), key);
