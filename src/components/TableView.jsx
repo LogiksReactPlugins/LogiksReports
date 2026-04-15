@@ -140,7 +140,7 @@ const TableView = ({
       }
     };
 
-      if (typeof rawType === "string" && /^[a-z_]+$/i.test(rawType)) {
+if (typeof rawType === "string" && /^[a-z0-9_]+$/i.test(rawType)) {
         const result = calculateBase(rawType.toUpperCase(), key);
         console.log({result})
 
@@ -152,13 +152,22 @@ const TableView = ({
     if (typeof rawType === "string") {
       let expression = rawType;
 
-      expression = expression.replace(
-        /(sum|avg|min|max|count)\((.*?)\)/gi,
-        (_, fn, columnKey) => {
-          const value = calculateBase(fn.toUpperCase(), columnKey.trim());
-          return Number(value);
-        },
-      );
+    const fnRegex = new RegExp(
+  `(${[
+    "sum",
+    "avg",
+    "min",
+    "max",
+    "count",
+    ...Object.keys(methods).map((k) => k.toLowerCase()),
+  ].join("|")})\\((.*?)\\)`,
+  "gi"
+);
+
+expression = expression.replace(fnRegex, (_, fn, columnKey) => {
+  const value = calculateBase(fn.toUpperCase(), columnKey.trim());
+  return Number(value);
+});
 
       try {
         if (!/^[0-9+\-*/().\s]+$/.test(expression)) return 0;
