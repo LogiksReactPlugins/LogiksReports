@@ -1,0 +1,12 @@
+{
+  "name": "LogiksReports",
+  "scripts": {
+    "start": "docusaurus start",
+    "build": "docusaurus build",
+    "deploy": "docusaurus deploy"
+  },
+  "dependencies": {
+    "@docusaurus/core": "...",
+    "@docusaurus/preset-classic": "..."
+  }
+}
