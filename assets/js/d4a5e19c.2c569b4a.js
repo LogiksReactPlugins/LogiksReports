@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkLogiksReports=self.webpackChunkLogiksReports||[]).push([["40"],{9512(e){e.exports=JSON.parse('{"metadata":{"permalink":"/LogiksReports/blog","page":1,"postsPerPage":10,"totalPages":1,"totalCount":0,"blogDescription":"Blog","blogTitle":"Blog"}}')}}]);
