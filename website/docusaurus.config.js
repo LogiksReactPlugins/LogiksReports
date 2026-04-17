@@ -10,8 +10,8 @@ import { themes as prismThemes } from "prism-react-renderer";
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: "My Site",
-  tagline: "Dinosaurs are cool",
+  title: "SMART LRC",
+  tagline: "Logiks React Components are cool",
   favicon: "img/favicon.ico",
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
@@ -55,7 +55,7 @@ const config = {
         docs: {
           path: "../docs",
           sidebarPath: "./sidebars.js",
-          routeBasePath: "/",
+          // routeBasePath: "/",
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
@@ -92,7 +92,7 @@ const config = {
         respectPrefersColorScheme: true,
       },
       navbar: {
-        title: "My Site",
+        title: "LRC",
         logo: {
           alt: "My Site Logo",
           src: "/img/logo.svg",
@@ -120,7 +120,7 @@ const config = {
             items: [
               {
                 label: "Tutorial",
-                to: "/intro",
+                to: "/docs/intro",
               },
             ],
           },
