@@ -1,0 +1,29 @@
+name: Logiks React Plugins Deploy Docs
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - run: npm install
+      - run: cd website && npm install
+
+      - run: cd website && npm run build
+
+      - name: Deploy
+        run: cd website && npm run deploy
+        env:
+          GIT_USER: LogiksReactPlugins
+          USE_SSH: false
+          GIT_PASS: ${{ secrets.GITHUB_TOKEN }}
