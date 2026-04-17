@@ -19,12 +19,7 @@ const FeatureList = [
   {
     title: "Logiks Dashboard",
     Svg: require("@site/static/img/dashboard.svg").default,
-    description: (
-      <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
-      </>
-    ),
+    description: <>Coming Soon.</>,
   },
   {
     title: "Logiks Charts",
