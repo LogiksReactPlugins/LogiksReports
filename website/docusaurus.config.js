@@ -11,7 +11,7 @@ import { themes as prismThemes } from "prism-react-renderer";
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: "SMART LRC",
-  tagline: "Logiks React Components are cool",
+  tagline: "A JSON-driven, low-code reporting engine for React applications.",
   favicon: "img/favicon.ico",
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
@@ -106,7 +106,7 @@ const config = {
           },
           { to: "/blog", label: "Blog", position: "left" },
           {
-            href: "https://github.com/facebook/docusaurus",
+            href: "https://github.com/orgs/LogiksReactPlugins/repositories",
             label: "GitHub",
             position: "right",
           },
@@ -150,7 +150,7 @@ const config = {
               },
               {
                 label: "GitHub",
-                href: "https://github.com/facebook/docusaurus",
+                href: "https://github.com/orgs/LogiksReactPlugins/repositories",
               },
             ],
           },
