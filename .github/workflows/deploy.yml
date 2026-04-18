@@ -2,8 +2,8 @@ name: Logiks React Plugins Deploy Docs
 
 on:
   push:
-    branches:
-      - master
+    tags:
+      - "docs-v*.*.*"
 
 jobs:
   deploy:
