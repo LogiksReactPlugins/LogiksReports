@@ -1,0 +1,34 @@
+name: Logiks React Plugins Deploy Docs
+
+on:
+  push:
+    tags:
+      - "docs-v*.*.*"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 23.9.0
+
+      - run: npm install
+      - run: cd website && npm install
+
+      - run: cd website && npm run build
+
+      - name: Setup Git identity
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+
+      - name: Deploy
+        run: cd website && npm run deploy
+        env:
+          GIT_USER: LogiksReactPlugins
+          USE_SSH: false
+          GIT_PASS: ${{ secrets.GITHUB_TOKEN }}
