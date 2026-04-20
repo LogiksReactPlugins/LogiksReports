@@ -26,7 +26,7 @@ const RecenterMap = ({ lat, lng }) => {
 
 const GmapView = ({ reportConfig, data }) => {
   const [currentLocation, setCurrentLocation] = useState(null);
-  // console.log({reportConfig,data})
+  console.log({reportConfig,data})
   // // console.log(reportConfig.gmap.colmap)
   const colMap = {
     title: "title",
