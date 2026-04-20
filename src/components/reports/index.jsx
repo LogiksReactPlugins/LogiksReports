@@ -961,8 +961,8 @@ const handleExportAll = async (type = "excel") => {
 
     const { data } = await axios(axiosObject);
     const responsePath = config?.source?.response || "data";
-    // const result = getValueByPath(data, responsePath) || [];
-    const result = data || [];
+    const result = getValueByPath(data, responsePath) || [];
+    // const result = data || [];
 
     const exportData = result.map((raw) => {
       const obj = {};
@@ -1694,7 +1694,7 @@ const formatted = formatCellValue(
         <GmapView
           reportConfig={config}
           getRowValue={getRowValue}
-          data={dummyData}
+          data={paginatedGroupedData?.ungrouped}
           errorMsg={errorMsg}
         />
       ) : currentView === "calendar" ? (
