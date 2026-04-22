@@ -473,7 +473,6 @@ const visibleColumns = useMemo(() => {
 
   setOnSidebarChange?.(filteredValues);
 };
-
 const fetchData = useCallback(async () => {
   if (!config) return;
 
@@ -500,16 +499,13 @@ const fetchData = useCallback(async () => {
       const refid = config?.endPoints?.refid;
       const hasFilterTabs = Object.keys(filterTabs || {}).length > 0;
 
-      // ✅ date filter (restored)
       const dateFilter =
-        activeDateCol && dateOperator
+        activeDateCol && dateOperator && dateRange?.start
           ? {
               [activeDateCol]:
                 dateOperator === "between"
                   ? [[dateRange.start, dateRange.end], "range"]
-                  : dateOperator === "eq"
-                  ? [dateRange.start, "like"]
-                  : [[dateRange.start, dateRange.end], "range"],
+                  : [dateRange.start, "like"],
             }
           : {};
 
@@ -521,16 +517,13 @@ const fetchData = useCallback(async () => {
         headers: config?.source?.headers || config?.endPoints?.headers,
         data: {
           queryid: config?.source?.queryid,
-
           ...(!hasFilterTabs && {
             stxt: searchTerm,
             cols: searchableColumns.map((c) => c.key),
           }),
-
           filter: {
             ...config?.source?.defaultFilters,
             ...onSidebarChange,
-
             ...(hasFilterTabs &&
               Object.fromEntries(
                 Object.entries(filterTabs || {}).map(([key, { value }]) => [
@@ -538,40 +531,42 @@ const fetchData = useCallback(async () => {
                   [value, "LIKE"],
                 ])
               )),
-
             ...Object.fromEntries(
-              Object.entries(filters || {}).map(([k, { type, value }]) => {
-                if (type === "text") return [k, [value, "LIKE"]];
+              Object.entries(filters || {})
+                .map(([k, { type, value }]) => {
+                  if (type === "text") return [k, [value, "LIKE"]];
 
-                if (type === "date") {
-                  const start = new Date(value + "T00:00:00");
-                  const end = new Date(value + "T23:59:59");
+                  if (type === "date") {
+                    if (!value) return null;
 
-                  return [
-                    k,
-                    [
+                    const start = new Date(value + "T00:00:00");
+                    const end = new Date(value + "T23:59:59");
+
+                    if (isNaN(start.getTime()) || isNaN(end.getTime()))
+                      return null;
+
+                    return [
+                      k,
                       [
-                        start.toISOString().slice(0, 19).replace("T", " "),
-                        end.toISOString().slice(0, 19).replace("T", " "),
+                        [
+                          start.toISOString().slice(0, 19).replace("T", " "),
+                          end.toISOString().slice(0, 19).replace("T", " "),
+                        ],
+                        "range",
                       ],
-                      "range",
-                    ],
-                  ];
-                }
+                    ];
+                  }
 
-                return [k, value];
-              })
+                  return [k, value];
+                })
+                .filter(Boolean)
             ),
-
             ...dateFilter,
           },
-
           ...(groupBy && { group_by: groupBy }),
           ...(refid ? { refid } : {}),
-
           limit: rowsPerPage,
           page: currentPage,
-
           ...(sortConfig?.key
             ? { orderby: `${sortConfig.key} ${sortConfig.direction}` }
             : {}),
@@ -595,16 +590,16 @@ const fetchData = useCallback(async () => {
   config,
   searchTerm,
   filters,
-  filterTabs,        
+  filterTabs,
   groupBy,
   currentPage,
   rowsPerPage,
   sortConfig,
   onSidebarChange,
-  activeDateCol,     
-  dateOperator,      
-  dateRange.start,   
-  dateRange.end,     
+  activeDateCol,
+  dateOperator,
+  dateRange?.start,
+  dateRange?.end,
 ]);
 useEffect(() => {
   if (!config) return;
