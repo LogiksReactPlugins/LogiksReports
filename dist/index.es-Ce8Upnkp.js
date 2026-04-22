@@ -1,4 +1,4 @@
-import { c as Da, _ as Va, g as il } from "./index-tWFTaskx.js";
+import { c as Da, _ as Va, g as il } from "./index-BBP3wKDE.js";
 var fn = {}, cn = {}, cr, vn;
 function Q() {
   if (vn) return cr;

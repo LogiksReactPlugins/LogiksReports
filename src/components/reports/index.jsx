@@ -500,6 +500,19 @@ const fetchData = useCallback(async () => {
       const refid = config?.endPoints?.refid;
       const hasFilterTabs = Object.keys(filterTabs || {}).length > 0;
 
+      // ✅ date filter (restored)
+      const dateFilter =
+        activeDateCol && dateOperator
+          ? {
+              [activeDateCol]:
+                dateOperator === "between"
+                  ? [[dateRange.start, dateRange.end], "range"]
+                  : dateOperator === "eq"
+                  ? [dateRange.start, "like"]
+                  : [[dateRange.start, dateRange.end], "range"],
+            }
+          : {};
+
       const { data } = await axios({
         method: config?.source?.method || "post",
         url:
@@ -508,24 +521,57 @@ const fetchData = useCallback(async () => {
         headers: config?.source?.headers || config?.endPoints?.headers,
         data: {
           queryid: config?.source?.queryid,
+
           ...(!hasFilterTabs && {
             stxt: searchTerm,
             cols: searchableColumns.map((c) => c.key),
           }),
+
           filter: {
             ...config?.source?.defaultFilters,
             ...onSidebarChange,
+
+            ...(hasFilterTabs &&
+              Object.fromEntries(
+                Object.entries(filterTabs || {}).map(([key, { value }]) => [
+                  key,
+                  [value, "LIKE"],
+                ])
+              )),
+
             ...Object.fromEntries(
               Object.entries(filters || {}).map(([k, { type, value }]) => {
                 if (type === "text") return [k, [value, "LIKE"]];
+
+                if (type === "date") {
+                  const start = new Date(value + "T00:00:00");
+                  const end = new Date(value + "T23:59:59");
+
+                  return [
+                    k,
+                    [
+                      [
+                        start.toISOString().slice(0, 19).replace("T", " "),
+                        end.toISOString().slice(0, 19).replace("T", " "),
+                      ],
+                      "range",
+                    ],
+                  ];
+                }
+
                 return [k, value];
               })
             ),
+
+            ...dateFilter,
           },
+
           ...(groupBy && { group_by: groupBy }),
           ...(refid ? { refid } : {}),
+
           limit: rowsPerPage,
           page: currentPage,
+
           ...(sortConfig?.key
             ? { orderby: `${sortConfig.key} ${sortConfig.direction}` }
             : {}),
@@ -538,7 +584,6 @@ const fetchData = useCallback(async () => {
       setCurrentPage(data?.page || 0);
       setTotalData(data.max || 0);
     } else {
-      // fallback for static / API data
       setData(reportdata || config?.rows || []);
     }
   } catch (err) {
@@ -550,11 +595,16 @@ const fetchData = useCallback(async () => {
   config,
   searchTerm,
   filters,
+  filterTabs,        
   groupBy,
   currentPage,
   rowsPerPage,
   sortConfig,
   onSidebarChange,
+  activeDateCol,     
+  dateOperator,      
+  dateRange.start,   
+  dateRange.end,     
 ]);
 useEffect(() => {
   if (!config) return;
@@ -1382,7 +1432,8 @@ const formatted = formatCellValue(
                   onClick={()=>{
                     handleReset(),
                      setOnSidebarChange(null)
-                     setCurrentData(filteredAndSortedData)
+
+    fetchData(); 
  }
                   }
                   className="inline-flex h-8 cursor-pointer items-center px-3 text-sm font-medium bg-action rounded-md flex-shrink-0"
