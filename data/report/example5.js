@@ -6,70 +6,1214 @@ saveQuery: "http://192.168.0.20:9999/api/query/save",
     debuggUrl: `http://192.168.0.20:9999/api/query/view`,
     preview: `http://192.168.0.20:9999/api/files/preview`,
     
-    accessToken: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwicGF5bG9hZCI6InZkalRTZFJ3eUV6NkNrMFNJWFJEdnZzZ1dxRkZlVXZwaVRYTHoxQ2txY3pnbFVVR1R3cWNUdEpRQnByRzBjZ0p1SVNWTEZ4YnlsdThMTWE3clJmd2QzeVNXL21WanBlZmVKdlpyK3duemoweEJnSXlIbDJPeStzWVRIWGp2M0owSlp4a2c3NXpzdklaSThzYVhFQ042YVl0WldMUDFTSEpUZktWWmpnaEcydFdFYjEraW9LZE1wU2VvQ2pPamEydUlFbGNLc2pzTDFsYUhLVCtHN2RsN1VkRnhudEZDRzFmbnJGSEg1NGQ1VTVpUWwxMlFyK21jVFZwUk1aSmYxZnJ6UUpxaFMyci9lN3loMnM5bVBOUTFlVCtxQT09IiwiaWF0IjoxNzc2NjY0NzcxLCJleHAiOjE3NzY2NjgzNzEsImp0aSI6ImFjYzoxOjE3NzY2NjQ3NzE5NDY6d2ViIn0.X9ieXBxRQi4vhRZKbdFSP0b8vwTEvZKXK9Hdc2dx42M",
+    accessToken: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwicGF5bG9hZCI6IkNtRUtNempVUnZHZnFUbXZVRTFZM2FNVkRURTVJME1pTWpKajBsai9aYWJOMWcycVMwc3dydnc2NE51dkxpNEpzS25qLzBKckR5TURkL2FEcWllUm9IZXo0cEdVTmJQZWdSQ3ZFQTArSStGV1VIaTRFTnNuSERyTDRrMzMzMWVuZ0dML1ppdjc4RXpMeHhwbFM5Ykd6RFE0a1ZEdXNhaHZmeUVnR0lIRWxPajR6Nmw4SGVVMFgrV3NGd3hUeTYvdTl1TktwdDQ2TGoyZjhRa1B5VTZ1cEtWck9IUFYvNkZ6emFRclB2TU5oaXdzemV1N2RZaG13TmQzaWtlR2thMklnckI1K2RQYW9rY29LL3pXSWRvTk1FVHprdz09IiwiaWF0IjoxNzc2ODQ1MTUyLCJleHAiOjE3NzY4NDg3NTIsImp0aSI6ImFjYzoxOjE3NzY4NDUxNTI0MTc6d2ViIn0.xVmfqTqdituJ2EM2R3aR5jGz739A_lTUApJ6daSUoos",
     headers: {
-      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwicGF5bG9hZCI6InZkalRTZFJ3eUV6NkNrMFNJWFJEdnZzZ1dxRkZlVXZwaVRYTHoxQ2txY3pnbFVVR1R3cWNUdEpRQnByRzBjZ0p1SVNWTEZ4YnlsdThMTWE3clJmd2QzeVNXL21WanBlZmVKdlpyK3duemoweEJnSXlIbDJPeStzWVRIWGp2M0owSlp4a2c3NXpzdklaSThzYVhFQ042YVl0WldMUDFTSEpUZktWWmpnaEcydFdFYjEraW9LZE1wU2VvQ2pPamEydUlFbGNLc2pzTDFsYUhLVCtHN2RsN1VkRnhudEZDRzFmbnJGSEg1NGQ1VTVpUWwxMlFyK21jVFZwUk1aSmYxZnJ6UUpxaFMyci9lN3loMnM5bVBOUTFlVCtxQT09IiwiaWF0IjoxNzc2NjY0NzcxLCJleHAiOjE3NzY2NjgzNzEsImp0aSI6ImFjYzoxOjE3NzY2NjQ3NzE5NDY6d2ViIn0.X9ieXBxRQi4vhRZKbdFSP0b8vwTEvZKXK9Hdc2dx42M`,
+      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwicGF5bG9hZCI6IkNtRUtNempVUnZHZnFUbXZVRTFZM2FNVkRURTVJME1pTWpKajBsai9aYWJOMWcycVMwc3dydnc2NE51dkxpNEpzS25qLzBKckR5TURkL2FEcWllUm9IZXo0cEdVTmJQZWdSQ3ZFQTArSStGV1VIaTRFTnNuSERyTDRrMzMzMWVuZ0dML1ppdjc4RXpMeHhwbFM5Ykd6RFE0a1ZEdXNhaHZmeUVnR0lIRWxPajR6Nmw4SGVVMFgrV3NGd3hUeTYvdTl1TktwdDQ2TGoyZjhRa1B5VTZ1cEtWck9IUFYvNkZ6emFRclB2TU5oaXdzemV1N2RZaG13TmQzaWtlR2thMklnckI1K2RQYW9rY29LL3pXSWRvTk1FVHprdz09IiwiaWF0IjoxNzc2ODQ1MTUyLCJleHAiOjE3NzY4NDg3NTIsImp0aSI6ImFjYzoxOjE3NzY4NDUxNTI0MTc6d2ViIn0.xVmfqTqdituJ2EM2R3aR5jGz739A_lTUApJ6daSUoos`,
       "Content-Type": "application/json",
     },
   }, 
-        "schema": "1.0",
-        "title": "Logins",
-        "category": "CMS",
-        "privilege": "*",
-        "blocked": false,
-        "rowlink": false,
-        "rowsPerPage": 20,
-        "showExtraColumn": false,
-        "custombar": false,
-        "DEBUG": false,
-        "source": {
-            "type": "sql",
-            "queryid": "reports%40userManager.logins%40source"
-        },
-        "toolbar": {
-            "search": true,
-            "print": true,
-            "email": false
-        },
-        "datagrid": {
-            "id": {
-                "label": "ID",
-                "hidden": true,
-                "searchable": false,
-                "sortable": true,
-                "groupable": false,
-                "classes": "",
-                "style": "width:50px;",
-                "formatter": "text"
-            },
-            "loginid": {
-                "label": "UserID",
-                "sortable": true,
-                "searchable": true
-            },
-            "geolocation": {
-                "label": "geolocation",
-                "sortable": true,
-                "searchable": true
-            },
-            "created_on": {
-                "label": "Login",
-                "formatter": "datetime",
-                "searchable": true,
-                "filter": {
-                    "type": "date"
-                }
-            }
-        },
-        "gmap": {
-            "zoom": 4,
-            "mapid": "terrain",
-            "colmap": {
-                "title": "l.loginid",
-                "descs": "l.created_on",
-                "geolocation": "l.geolocation"
-            }
-        },
-        "module_refid": "userManager.logins",
-        "module_type": "reports"
+  "schema": "1.0",
+  "title": "All Quality Observations",
+  "category": "CMS",
+  "privilege": "*",
+  "blocked": false,
+  "rowlink": false,
+  "rowsPerPage": 20,
+  "showExtraColumn": false,
+  "custombar": false,
+  "source": {
+    "type": "sql",
+    "queryid": "reports%40quality.quality_observation_observer%40source"
+  },
+  "slotBindings": {
+    "app-toolbar.toolbar": ""
+  },
+  "buttons": {
+    "infoview@quality.edit_quality_observation/{id}": {
+      "label": "View Quality Observation",
+      "icon": "fa fa-eye"
+    },
+    "popup@activity_logs.popup_activity_logs/{id}": {
+      "label": "History",
+      "params": {
+        "ref_src": [
+          "forms@quality.quality_observation_status_update",
+          "forms@quality.quality_observation",
+          "forms@quality.edit_quality_observation_status_update",
+          "forms@quality.edit_quality_observation"
+        ]
+      },
+      "icon": "fa-solid fa-clock-rotate-left"
+    }
+  },
+  "toolbar": {
+    "search": true,
+    "print": true,
+    "export": true,
+    "email": false
+  },
+  "datagrid": {
+    "quality_observation.id": {
+      "label": "ID",
+      "hidden": true,
+      "searchable": true,
+      "sortable": true,
+      "formatter": "text"
+    },
+    "company_tbl.title": {
+      "label": "Company/SPV",
+      "sortable": true,
+      "searchable": true,
+      "hidden": false,
+      "filter": {
+        "type": "text"
+      }
+    },
+    "data_sector.title": {
+      "label": "Sector",
+      "sortable": true,
+      "searchable": true,
+      "hidden": false,
+      "filter": {
+        "type": "text"
+      }
+    },
+    "data_project_function.title": {
+      "label": "Project",
+      "sortable": true,
+      "searchable": true,
+      "hidden": false,
+      "filter": {
+        "type": "text"
+      }
+    },
+    "location_type": {
+      "label": "Location Type",
+      "hidden": false,
+      "searchable": true,
+      "sortable": true,
+      "formatter": "pretty",
+      "filter": {
+        "type": "text"
+      }
+    },
+    "quality_observation.chainage_from": {
+      "label": "Chainage",
+      "hidden": false,
+      "searchable": true,
+      "sortable": true,
+      "formatter": "showChainage",
+      "filter": {
+        "type": "text"
+      }
+    },
+    "quality_observation.location_other": {
+      "label": "Location Other",
+      "hidden": false,
+      "searchable": true,
+      "sortable": true,
+      "filter": {
+        "type": "text"
+      }
+    },
+    "raised_date": {
+      "label": "Raised On Date",
+      "hidden": false,
+      "searchable": true,
+      "sortable": true,
+      "formatter": "date",
+      "filter": {
+        "type": "date"
+      }
+    },
+    "data_quality_section_master.section": {
+      "label": "Section",
+      "hidden": false,
+      "formatter": "pretty",
+      "searchable": true,
+      "filter": {
+        "type": "text"
+      }
+    },
+    "data_structure.name": {
+      "label": "Part Of Structure / Part",
+      "formatter": "pretty",
+      "hidden": false,
+      "searchable": true,
+      "filter": {
+        "type": "text"
+      }
+    },
+    "data_quality_department.name": {
+      "label": "Department / Category",
+      "hidden": false,
+      "searchable": true,
+      "formatter": "pretty",
+      "filter": {
+        "type": "select",
+        "options": [
+          {
+            "name": "New department check edit"
+          },
+          {
+            "name": "UAT-test department"
+          },
+          {
+            "name": "Infoview testing"
+          },
+          {
+            "name": "UAT-test department1"
+          }
+        ]
+      }
+    },
+    "data_sub_contractor.name": {
+      "label": "Sub Contractor",
+      "hidden": false,
+      "searchable": true,
+      "formatter": "pretty",
+      "filter": {
+        "type": "select",
+        "options": []
+      }
+    },
+    "status": {
+      "label": "Status",
+      "hidden": false,
+      "searchable": true,
+      "formatter": "pretty",
+      "filter": {
+        "type": "select",
+        "options": [
+          {
+            "status": "open"
+          },
+          {
+            "status": "re_open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "closed"
+          },
+          {
+            "status": "closed"
+          },
+          {
+            "status": "closed"
+          },
+          {
+            "status": "closed"
+          },
+          {
+            "status": "submitted"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "closed"
+          },
+          {
+            "status": "re_open"
+          },
+          {
+            "status": "closed"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "closed"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "closed"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "closed"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "closed"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "submitted"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "submitted"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "re_open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "closed"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "closed"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "closed"
+          },
+          {
+            "status": "closed"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "submitted"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "submitted"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "re_open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "closed"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "closed"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "closed"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "closed"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "re_open"
+          },
+          {
+            "status": "re_open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "closed"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "submitted"
+          },
+          {
+            "status": "submitted"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "submitted"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "closed"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "submitted"
+          },
+          {
+            "status": "submitted"
+          },
+          {
+            "status": "submitted"
+          },
+          {
+            "status": "open"
+          },
+          {
+            "status": "closed"
+          },
+          {
+            "status": "submitted"
+          },
+          {
+            "status": "closed"
+          },
+          {
+            "status": "open"
+          }
+        ]
+      }
+    },
+    "data_cost_borne_by.name": {
+      "label": "Rework Cost Borne By",
+      "sortable": true,
+      "formatter": "pretty",
+      "filter": {
+        "type": "text"
+      }
+    },
+    "severity_level": {
+      "label": "Severity Level",
+      "hidden": false,
+      "searchable": true,
+      "formatter": "pretty",
+      "filter": {
+        "type": "select",
+        "options": [
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": "critical"
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": "critical"
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": "critical"
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": "critical"
+          },
+          {
+            "severity_level": "critical"
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": "critical"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "critical"
+          },
+          {
+            "severity_level": "minor"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "critical"
+          },
+          {
+            "severity_level": "critical"
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": "minor"
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": "minor"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": "critical"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "critical"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "critical"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "critical"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "minor"
+          },
+          {
+            "severity_level": "critical"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "critical"
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": "critical"
+          },
+          {
+            "severity_level": "critical"
+          },
+          {
+            "severity_level": "critical"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "critical"
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": "critical"
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": "critical"
+          },
+          {
+            "severity_level": "minor"
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": "critical"
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": "minor"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": ""
+          },
+          {
+            "severity_level": "critical"
+          },
+          {
+            "severity_level": "minor"
+          },
+          {
+            "severity_level": "minor"
+          },
+          {
+            "severity_level": "critical"
+          },
+          {
+            "severity_level": "critical"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "critical"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "critical"
+          },
+          {
+            "severity_level": "minor"
+          },
+          {
+            "severity_level": "critical"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "critical"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "Moderate"
+          },
+          {
+            "severity_level": "critical"
+          },
+          {
+            "severity_level": "critical"
+          },
+          {
+            "severity_level": "critical"
+          },
+          {
+            "severity_level": "minor"
+          },
+          {
+            "severity_level": "Moderate"
+          }
+        ]
+      }
+    },
+    "observation_photograph": {
+      "label": "Observation Photograph",
+      "sortable": true,
+      "searchable": true,
+      "formatter": "attachment"
+    },
+    "compliance_photograph": {
+      "label": "Compliance Photograph",
+      "sortable": true,
+      "searchable": true,
+      "formatter": "attachment"
+    },
+    "ageing_days": {
+      "label": "Ageing Days",
+      "hidden": false,
+      "searchable": true,
+      "sortable": true,
+      "filter": {
+        "type": "text"
+      }
+    },
+    "raised_by": {
+      "label": "Raised By",
+      "formatter": "pretty",
+      "hidden": false,
+      "searchable": true,
+      "filter": {
+        "type": "text"
+      }
+    },
+    "assigned_to": {
+      "label": "Assigned To / Responsibility",
+      "hidden": false,
+      "searchable": true,
+      "filter": {
+        "type": "text"
+      }
+    },
+    "forward_to": {
+      "label": "Forward To",
+      "hidden": false,
+      "searchable": true,
+      "filter": {
+        "type": "text"
+      }
+    },
+    "closure_date": {
+      "label": "Closure Date",
+      "hidden": false,
+      "searchable": true,
+      "sortable": true,
+      "formatter": "date",
+      "filter": {
+        "type": "date"
+      }
+    },
+    "suggestion": {
+      "label": "Suggestion / Way Forward / Corrective Action",
+      "hidden": false,
+      "searchable": true,
+      "sortable": true,
+      "filter": {
+        "type": "text"
+      }
+    },
+    "quality_observation.created_by": {
+      "label": "Added By",
+      "sortable": true,
+      "searchable": true,
+      "formatter": "pretty",
+      "filter": {
+        "type": "text"
+      }
+    },
+    "quality_observation.created_on": {
+      "label": "Added On",
+      "sortable": true,
+      "searchable": true,
+      "formatter": "datetime",
+      "hidden": true,
+      "filter": {
+        "type": "date"
+      }
+    },
+    "quality_observation.edited_by": {
+      "label": "Updated By",
+      "sortable": true,
+      "searchable": true,
+      "formatter": "pretty",
+      "filter": {
+        "type": "text"
+      }
+    },
+    "quality_observation.edited_on": {
+      "label": "Updated On",
+      "sortable": true,
+      "searchable": true,
+      "formatter": "datetime",
+      "hidden": true,
+      "filter": {
+        "type": "date"
+      }
+    }
+  },
+  "cards": {
+    "colmap": {
+      "title": "Cardtitle",
+      "descs": "CardDesc",
+      "category": "status",
+      "due_date": "created_on"
+    }
+  },
+  "module_refid": "quality.quality_observation_observer",
+  "module_type": "reports"
+
     }

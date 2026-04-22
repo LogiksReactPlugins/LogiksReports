@@ -2,6 +2,33 @@ import { Copy, MoreVertical } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import ShimmerTableRow from "./loadings/ShimmerTableRow";
 import copyToClipboard from "../helpers/copyToClipboard";
+import { FixedSizeList as List } from "react-window";
+
+const ROW_HEIGHT = 42;
+
+const VirtualRows = ({ rows, renderRow }) => {
+  const Row = ({ index, style }) => {
+    return (
+      <div style={style}>
+        <table className="min-w-full border-collapse">
+          <tbody>{renderRow(rows[index], index)}</tbody>
+        </table>
+      </div>
+    );
+  };
+
+  return (
+    <List
+      height={800}        
+      itemCount={rows.length}
+      itemSize={ROW_HEIGHT}
+      width="100%"
+    >
+      {Row}
+    </List>
+  );
+};
+
 
 const TableView = ({
   config,
@@ -300,298 +327,32 @@ const getEffectiveRows = (rows) => {
     setOpenGroups(initialState);
   }, [groupBy, paginatedGroupedData]);
 
+  
+const renderRow = (row, rowIndex) => {
+  const rowRules = config?.rules?.row_class || {};
+  let dynamicRowClass = "";
+
+  Object.entries(rowRules).forEach(([field, valueMap]) => {
+    const fieldValue = getRowValue(row, field);
+    if (valueMap && fieldValue && valueMap[fieldValue]) {
+      dynamicRowClass += ` ${valueMap[fieldValue]}`;
+    }
+  });
+
   return (
-    <div className="overflow-hidden">
-      <div className="overflow-x-auto">
-        {Object.keys(paginatedGroupedData).map((groupKey) => {
-          const isOpen = openGroups[groupKey];
-
-          return (
-            <div key={groupKey} className="border-b border-gray-50">
-              {groupBy && (
-                <button
-                  type="button"
-                  onClick={() => toggleGroup(groupKey)}
-                  className="w-full flex items-center justify-between bg-gray-100 px-3 py-2 hover:bg-gray-200 transition"
-                >
-                  <div className="flex items-center gap-2">
-                    <span
-                      className={`transition-transform duration-200 ${
-                        isOpen ? "rotate-90" : ""
-                      }`}
-                    >
-                      <i class="fa-solid fa-caret-right"></i>
-                    </span>
-
-                    <span className="text-sm font-medium text-gray-700">
-                      {datagrid[groupBy].label}: {groupKey} (
-                      {paginatedGroupedData[groupKey].length} records)
-                    </span>
-                  </div>
-                </button>
-              )}
-              {(!groupBy || isOpen) && (
-                <div className="overflow-x-auto overflow-y-auto max-h-screen thin-scrollbar">
-                  <table
-                    className="min-w-full divide-y divide-gray-200 border border-gray-200 "
-                    id="printable"
-                  >
-                    <thead
-                      className={`${
-                        style?.thead || "bg-muted text-action"
-                      } sticky top-0 bg-white z-30`}
-                    >
-                      {visibleColumns.some(([, col]) => col.group) && (
-                        <tr>
-                          {hasButtons && <th />}
-                          {showExtraColumn === "checkbox" && <th />}
-
-                          {buildGroupedHeaders().map((group, idx) => (
-                            <th
-                              key={idx}
-                              colSpan={group.span}
-                              className="px-2 py-1 text-xs font-semibold text-center group-th border-b"
-                            >
-                              {group.label || ""}
-                            </th>
-                          ))}
-                        </tr>
-                      )}
-                      <tr>
-                        {hasButtons && (
-                          <th
-                            className={
-                              style?.th ||
-                              "px-2 py-2 text-xs font-bold uppercase"
-                            }
-                          >
-                            Actions
-                          </th>
-                        )}
-                        {showExtraColumn === "checkbox" && (
-                          <th className={style?.th || "px-2 py-2"}>
-                            <input
-                              type="checkbox"
-                              checked={selectAll}
-                              onChange={handleSelectAll}
-                            />
-                          </th>
-                        )}
-
-                        {visibleColumns.map(([key, col], colIndex) => {
-                          const fixedClass =
-                            (fixFirstTwoColumns && colIndex < 2) ||
-                            (fixFirstColumn && colIndex === 0)
-                              ? "sticky left-0 bg-white z-10"
-                              : fixLastColumn &&
-                                  colIndex === visibleColumns.length - 1
-                                ? "sticky right-0 bg-white z-10"
-                                : "";
-
-                          return (
-                            <th
-                              key={key}
-                              className={`${
-                                style?.th ||
-                                "px-2 py-2 text-xs font-bold uppercase"
-                              } 
-                        ${
-                          col.sortable ? "cursor-pointer hover:bg-gray-100" : ""
-                        } 
-                        ${fixedClass} ${col?.classes}`}
-                              style={col.style ? parseStyle(col.style) : {}}
-                              onClick={() => col.sortable && handleSort(key)}
-                            >
-                              <div className="flex items-center justify-between">
-                                <span className="truncate">{col.label}</span>
-                                {renderSortIcon(key)}
-                              </div>
-                            </th>
-                          );
-                        })}
-                      </tr>
-                      {showTableFilters && (
-                        <tr className="bg-gray-50">
-                          {hasButtons && <th />}
-                          {showExtraColumn === "checkbox" && <th />}
-
-                          {visibleColumns.map(([key, col]) => {
-                            const filter = col.filter;
-                            if (!filter) return <th key={key} />;
-
-                            switch (filter.type) {
-                              case "text":
-                                return (
-                                  <th key={key} className="px-2 py-1">
-                                    <input
-                                      type="text"
-                                      value={filters[key]?.value || ""}
-                                      onChange={(e) =>
-                                        setFilters((p) => ({
-                                          ...p,
-                                          [key]: {
-                                            type: col.filter.type,
-                                            value: e.target.value,
-                                          },
-                                        }))
-                                      }
-                                      className="w-full border rounded px-2 py-1 text-xs"
-                                    />
-                                  </th>
-                                );
-
-                              case "date":
-                                return (
-                                  <th key={key} className="px-2 py-1">
-                                    <input
-                                      type="date"
-                                      value={filters[key]?.value || ""}
-                                      onChange={(e) =>
-                                        setFilters((p) => ({
-                                          ...p,
-                                          [key]: {
-                                            type: col.filter.type,
-                                            value: e.target.value,
-                                          },
-                                        }))
-                                      }
-                                      className="w-full border rounded px-2 py-1 text-xs"
-                                    />
-                                  </th>
-                                );
-                                case "month":
-                              return (
-                                <th key={key} className="px-2 py-1">
-                                  <input
-                                    type="month"
-                                    value={filters[key]?.value || ""}
-                                    onChange={(e) =>
-                                      setFilters((p) => ({
-                                        ...p,
-                                        [key]: {
-                                          type: col.filter.type,
-                                          value: e.target.value,
-                                        },
-                                      }))
-                                    }
-                                    className="w-full border rounded px-2 py-1 text-xs"
-                                  />
-                                </th>
-                              );
-                              case "select": {
-                                const rawOptions = filter.options ?? {};
-
-                                // normalize options to { [key]: label }
-                                const options = Array.isArray(rawOptions)
-                                  ? rawOptions.reduce((acc, item) => {
-                                      const [key, value] =
-                                        Object.entries(item)[0];
-                                      acc[value] = value;
-                                      return acc;
-                                    }, {})
-                                  : rawOptions;
-
-                                return (
-                                  <th key={key} className="px-2 py-1">
-                                    <select
-                                      value={filters[key]?.value ?? ""}
-                                      onChange={(e) =>
-                                        setFilters((p) => ({
-                                          ...p,
-                                          [key]: {
-                                            type: col.filter.type,
-                                            value: e.target.value,
-                                          },
-                                        }))
-                                      }
-                                      className="w-full border rounded px-2 py-1 text-xs"
-                                    >
-                                      <option value="">
-                                        {filter.nofilter || "--"}
-                                      </option>
-
-                                      {Object.entries(options).map(
-                                        ([val, label]) => (
-                                          <option key={val} value={val}>
-                                            {label}
-                                          </option>
-                                        ),
-                                      )}
-                                    </select>
-                                  </th>
-                                );
-                              }
-
-                              default:
-                                return <th key={key} />;
-                            }
-                          })}
-                        </tr>
-                      )}
-                    </thead>
-
-                    <tbody
-                      className={
-                        style?.tbody || "bg-white divide-y divide-gray-200"
-                      }
-                    >
-                      {!loading && (config.aggregatePosition === "top" ||
-                      config.aggregatePosition === "both")
-                        ? renderAggregateRow(getEffectiveRows(paginatedGroupedData[groupKey] || []))
-                        : null}
-
-                      {loading ? (
-                        // Show shimmer while loading
-                        <>
-                          {Array.from({ length: 6 }).map((_, rowIndex) => (
-                            <ShimmerTableRow
-                              key={rowIndex}
-                              columns={[
-                                ...(hasButtons ? [["__actions", {}]] : []),
-                                ...(showExtraColumn === "checkbox"
-                                  ? [["__checkbox", {}]]
-                                  : []),
-                                ...visibleColumns,
-                              ]}
-                            />
-                          ))}
-                        </>
-                      ) : paginatedGroupedData[groupKey] &&
-                        paginatedGroupedData[groupKey].length > 0 ? (
-                        paginatedGroupedData[groupKey].map((row, rowIndex) => {
-                          const rowRules = config?.rules?.row_class || {};
-                          let dynamicRowClass = "";
-
-                          Object.entries(rowRules).forEach(
-                            ([field, valueMap]) => {
-                              const fieldValue = getRowValue(row, field);
-                              if (
-                                valueMap &&
-                                fieldValue &&
-                                valueMap[fieldValue]
-                              ) {
-                                dynamicRowClass += ` ${valueMap[fieldValue]}`;
-                              }
-                            },
-                          );
-                          return (
-                            <tr
-                              id={`${reportTitle}_tr_${getRowValue(row, "id")}`}
-                              key={rowIndex}
-                              className={`${style?.tr || "hover:bg-secondary"} 
-                            ${rowClickSelection ? "cursor-pointer" : ""} 
-                            ${compactMode ? "text-xs py-0.5" : ""} 
-                            ${
-                              stripedRows && rowIndex % 2 === 1
-                                ? "bg-gray-50"
-                                : ""
-                            }
-                            ${dynamicRowClass.trim()}`}
-                              onClick={() =>
-                                rowClickSelection &&
-                                handleSelectRow(getRowValue(row, "id"))
-                              }
-                            >
+    <tr
+      id={`${reportTitle}_tr_${getRowValue(row, "id")}`}
+      key={rowIndex}
+      className={`${style?.tr || "hover:bg-secondary"} 
+        ${rowClickSelection ? "cursor-pointer" : ""} 
+        ${compactMode ? "text-xs py-0.5" : ""} 
+        ${stripedRows && rowIndex % 2 === 1 ? "bg-gray-50" : ""}
+        ${dynamicRowClass.trim()}`}
+      onClick={() =>
+        rowClickSelection && handleSelectRow(getRowValue(row, "id"))
+      }
+    >
+    
                               {hasButtons && (
                                 <td
                                   className={
@@ -876,10 +637,281 @@ const getEffectiveRows = (rows) => {
                                   </td>
                                 );
                               })}
-                            </tr>
+    </tr>
+  );
+};
+  return (
+    <div className="overflow-hidden">
+      <div className="overflow-x-auto">
+        {Object.keys(paginatedGroupedData).map((groupKey) => {
+          const isOpen = openGroups[groupKey];
+
+          return (
+            <div key={groupKey} className="border-b border-gray-50">
+              {groupBy && (
+                <button
+                  type="button"
+                  onClick={() => toggleGroup(groupKey)}
+                  className="w-full flex items-center justify-between bg-gray-100 px-3 py-2 hover:bg-gray-200 transition"
+                >
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`transition-transform duration-200 ${
+                        isOpen ? "rotate-90" : ""
+                      }`}
+                    >
+                      <i class="fa-solid fa-caret-right"></i>
+                    </span>
+
+                    <span className="text-sm font-medium text-gray-700">
+                      {datagrid[groupBy].label}: {groupKey} (
+                      {paginatedGroupedData[groupKey].length} records)
+                    </span>
+                  </div>
+                </button>
+              )}
+              {(!groupBy || isOpen) && (
+                <div className="overflow-x-auto overflow-y-auto max-h-screen thin-scrollbar">
+                  <table
+                    className="min-w-full divide-y divide-gray-200 border border-gray-200 "
+                    id="printable"
+                  >
+                    <thead
+                      className={`${
+                        style?.thead || "bg-muted text-action"
+                      } sticky top-0 bg-white z-30`}
+                    >
+                      {visibleColumns.some(([, col]) => col.group) && (
+                        <tr>
+                          {hasButtons && <th />}
+                          {showExtraColumn === "checkbox" && <th />}
+
+                          {buildGroupedHeaders().map((group, idx) => (
+                            <th
+                              key={idx}
+                              colSpan={group.span}
+                              className="px-2 py-1 text-xs font-semibold text-center group-th border-b"
+                            >
+                              {group.label || ""}
+                            </th>
+                          ))}
+                        </tr>
+                      )}
+                      <tr>
+                        {hasButtons && (
+                          <th
+                            className={
+                              style?.th ||
+                              "px-2 py-2 text-xs font-bold uppercase"
+                            }
+                          >
+                            Actions
+                          </th>
+                        )}
+                        {showExtraColumn === "checkbox" && (
+                          <th className={style?.th || "px-2 py-2"}>
+                            <input
+                              type="checkbox"
+                              checked={selectAll}
+                              onChange={handleSelectAll}
+                            />
+                          </th>
+                        )}
+
+                        {visibleColumns.map(([key, col], colIndex) => {
+                          const fixedClass =
+                            (fixFirstTwoColumns && colIndex < 2) ||
+                            (fixFirstColumn && colIndex === 0)
+                              ? "sticky left-0 bg-white z-10"
+                              : fixLastColumn &&
+                                  colIndex === visibleColumns.length - 1
+                                ? "sticky right-0 bg-white z-10"
+                                : "";
+
+                          return (
+                            <th
+                              key={key}
+                              className={`${
+                                style?.th ||
+                                "px-2 py-2 text-xs font-bold uppercase"
+                              } 
+                        ${
+                          col.sortable ? "cursor-pointer hover:bg-gray-100" : ""
+                        } 
+                        ${fixedClass} ${col?.classes}`}
+                              style={col.style ? parseStyle(col.style) : {}}
+                              onClick={() => col.sortable && handleSort(key)}
+                            >
+                              <div className="flex items-center justify-between">
+                                <span className="truncate">{col.label}</span>
+                                {renderSortIcon(key)}
+                              </div>
+                            </th>
                           );
-                        })
-                      ) : (
+                        })}
+                      </tr>
+                      {showTableFilters && (
+                        <tr className="bg-gray-50">
+                          {hasButtons && <th />}
+                          {showExtraColumn === "checkbox" && <th />}
+
+                          {visibleColumns.map(([key, col]) => {
+                            const filter = col.filter;
+                            if (!filter) return <th key={key} />;
+
+                            switch (filter.type) {
+                              case "text":
+                                return (
+                                  <th key={key} className="px-2 py-1">
+                                    <input
+                                      type="text"
+                                      value={filters[key]?.value || ""}
+                                      onChange={(e) =>
+                                        setFilters((p) => ({
+                                          ...p,
+                                          [key]: {
+                                            type: col.filter.type,
+                                            value: e.target.value,
+                                          },
+                                        }))
+                                      }
+                                      className="w-full border rounded px-2 py-1 text-xs"
+                                    />
+                                  </th>
+                                );
+
+                              case "date":
+                                return (
+                                  <th key={key} className="px-2 py-1">
+                                    <input
+                                      type="date"
+                                      value={filters[key]?.value || ""}
+                                      onChange={(e) =>
+                                        setFilters((p) => ({
+                                          ...p,
+                                          [key]: {
+                                            type: col.filter.type,
+                                            value: e.target.value,
+                                          },
+                                        }))
+                                      }
+                                      className="w-full border rounded px-2 py-1 text-xs"
+                                    />
+                                  </th>
+                                );
+                                case "month":
+                              return (
+                                <th key={key} className="px-2 py-1">
+                                  <input
+                                    type="month"
+                                    value={filters[key]?.value || ""}
+                                    onChange={(e) =>
+                                      setFilters((p) => ({
+                                        ...p,
+                                        [key]: {
+                                          type: col.filter.type,
+                                          value: e.target.value,
+                                        },
+                                      }))
+                                    }
+                                    className="w-full border rounded px-2 py-1 text-xs"
+                                  />
+                                </th>
+                              );
+                              case "select": {
+                                const rawOptions = filter.options ?? {};
+
+                                // normalize options to { [key]: label }
+                                const options = Array.isArray(rawOptions)
+                                  ? rawOptions.reduce((acc, item) => {
+                                      const [key, value] =
+                                        Object.entries(item)[0];
+                                      acc[value] = value;
+                                      return acc;
+                                    }, {})
+                                  : rawOptions;
+
+                                return (
+                                  <th key={key} className="px-2 py-1">
+                                    <select
+                                      value={filters[key]?.value ?? ""}
+                                      onChange={(e) =>
+                                        setFilters((p) => ({
+                                          ...p,
+                                          [key]: {
+                                            type: col.filter.type,
+                                            value: e.target.value,
+                                          },
+                                        }))
+                                      }
+                                      className="w-full border rounded px-2 py-1 text-xs"
+                                    >
+                                      <option value="">
+                                        {filter.nofilter || "--"}
+                                      </option>
+
+                                      {Object.entries(options).map(
+                                        ([val, label]) => (
+                                          <option key={val} value={val}>
+                                            {label}
+                                          </option>
+                                        ),
+                                      )}
+                                    </select>
+                                  </th>
+                                );
+                              }
+
+                              default:
+                                return <th key={key} />;
+                            }
+                          })}
+                        </tr>
+                      )}
+                    </thead>
+
+                    <tbody
+                      className={
+                        style?.tbody || "bg-white divide-y divide-gray-200"
+                      }
+                    >
+                      {!loading && (config.aggregatePosition === "top" ||
+                      config.aggregatePosition === "both")
+                        ? renderAggregateRow(getEffectiveRows(paginatedGroupedData[groupKey] || []))
+                        : null}
+
+                      {loading ? (
+                        // Show shimmer while loading
+                        <>
+                          {Array.from({ length: 6 }).map((_, rowIndex) => (
+                            <ShimmerTableRow
+                              key={rowIndex}
+                              columns={[
+                                ...(hasButtons ? [["__actions", {}]] : []),
+                                ...(showExtraColumn === "checkbox"
+                                  ? [["__checkbox", {}]]
+                                  : []),
+                                ...visibleColumns,
+                              ]}
+                            />
+                          ))}
+                        </>
+                      ) : paginatedGroupedData[groupKey] &&
+                        paginatedGroupedData[groupKey].length > 0 ? <tr>
+  <td
+    colSpan={
+      visibleColumns.length +
+      (hasButtons ? 1 : 0) +
+      (showExtraColumn === "checkbox" ? 1 : 0)
+    }
+    className="p-0 border-0"
+  >
+    <VirtualRows
+      rows={paginatedGroupedData[groupKey]}
+      renderRow={renderRow}
+    />
+  </td>
+</tr> : (
                         <tr>
                           <td
                             colSpan={
