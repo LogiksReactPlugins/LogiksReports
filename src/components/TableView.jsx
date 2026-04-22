@@ -890,6 +890,11 @@ const bottomSpacerHeight =
                       )}
                     </thead>
 <tbody className={style?.tbody || "bg-white divide-y divide-gray-200"}>
+   {!loading &&
+    (config.aggregatePosition === "top" ||
+      config.aggregatePosition === "both") &&
+    renderAggregateRow(getEffectiveRows(currentRows))}
+
   {/* top spacer */}
   {topSpacerHeight > 0 && (
     <tr>
@@ -922,6 +927,9 @@ const bottomSpacerHeight =
       />
     </tr>
   )}
+    {!loading &&
+    config.aggregatePosition !== "top" &&
+    renderAggregateRow(getEffectiveRows(currentRows))}
 </tbody>
                   </table>
                 </div>
