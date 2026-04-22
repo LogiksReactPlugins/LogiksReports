@@ -102,3 +102,45 @@
     padding-right:3px
   }
 }
+.virtual-table-wrapper table {
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* inherit column widths from header */
+.virtual-table-wrapper td,
+.virtual-table-wrapper th {
+  width: inherit;
+}
+
+.virtual-row {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.virtual-table-wrapper tr:hover {
+  background-color: #f1f5f9; /* same as hover:bg-secondary */
+}
+
+.virtual-table-wrapper tr:nth-child(even) {
+  background-color: #f9fafb; /* stripedRows */
+}
+
+.virtual-table-wrapper td.sticky,
+.virtual-table-wrapper th.sticky {
+  position: sticky;
+  z-index: 20;
+  background: white;
+}
+
+/* left fixed */
+.virtual-table-wrapper .sticky.left-0 {
+  left: 0;
+}
+
+/* right fixed */
+.virtual-table-wrapper .sticky.right-0 {
+  right: 0;
+}

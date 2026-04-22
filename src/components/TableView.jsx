@@ -3,32 +3,7 @@ import React, { useEffect, useState } from "react";
 import ShimmerTableRow from "./loadings/ShimmerTableRow";
 import copyToClipboard from "../helpers/copyToClipboard";
 import { FixedSizeList as List } from "react-window";
-
 const ROW_HEIGHT = 42;
-
-const VirtualRows = ({ rows, renderRow }) => {
-  const Row = ({ index, style }) => {
-    return (
-      <div style={style}>
-        <table className="min-w-full border-collapse">
-          <tbody>{renderRow(rows[index], index)}</tbody>
-        </table>
-      </div>
-    );
-  };
-
-  return (
-    <List
-      height={800}        
-      itemCount={rows.length}
-      itemSize={ROW_HEIGHT}
-      width="100%"
-    >
-      {Row}
-    </List>
-  );
-};
-
 
 const TableView = ({
   config,
@@ -83,6 +58,12 @@ const TableView = ({
       return acc;
     }, {});
   });
+  const containerRef = React.useRef(null);
+const [visibleRange, setVisibleRange] = useState({ start: 0, end: 30 });
+
+const BUFFER = 10;
+const VIEWPORT_HEIGHT = 800;
+
   const toggleGroup = (groupKey) => {
     setOpenGroups((prev) => ({
       ...prev,
@@ -100,6 +81,31 @@ const TableView = ({
     document.addEventListener("mousedown", handleOutsideClick);
     return () => document.removeEventListener("mousedown", handleOutsideClick);
   }, [openDropdown]);
+useEffect(() => {
+  const el = containerRef.current;
+  if (!el) return;
+
+  const onScroll = () => {
+    const scrollTop = el.scrollTop;
+
+    const currentRows =
+      Object.values(paginatedGroupedData || {}).flat();
+
+    const totalRows = currentRows.length;
+
+    const start = Math.max(0, Math.floor(scrollTop / ROW_HEIGHT) - BUFFER);
+
+    const end = Math.min(
+      totalRows,
+      Math.ceil((scrollTop + VIEWPORT_HEIGHT) / ROW_HEIGHT) + BUFFER
+    );
+
+    setVisibleRange({ start, end });
+  };
+
+  el.addEventListener("scroll", onScroll);
+  return () => el.removeEventListener("scroll", onScroll);
+}, [paginatedGroupedData]);
 
   const buildGroupedHeaders = () => {
     const groups = [];
@@ -645,7 +651,18 @@ const renderRow = (row, rowIndex) => {
       <div className="overflow-x-auto">
         {Object.keys(paginatedGroupedData).map((groupKey) => {
           const isOpen = openGroups[groupKey];
+const currentRows = paginatedGroupedData[groupKey] || [];
+const totalRows = currentRows.length;
 
+const visibleRows = currentRows.slice(
+  visibleRange.start,
+  visibleRange.end
+);
+
+const topSpacerHeight = visibleRange.start * ROW_HEIGHT;
+
+const bottomSpacerHeight =
+  (totalRows - visibleRange.end) * ROW_HEIGHT;
           return (
             <div key={groupKey} className="border-b border-gray-50">
               {groupBy && (
@@ -671,9 +688,12 @@ const renderRow = (row, rowIndex) => {
                 </button>
               )}
               {(!groupBy || isOpen) && (
-                <div className="overflow-x-auto overflow-y-auto max-h-screen thin-scrollbar">
+                <div
+                  ref={containerRef}
+
+                className="overflow-x-auto overflow-y-auto max-h-screen thin-scrollbar">
                   <table
-                    className="min-w-full divide-y divide-gray-200 border border-gray-200 "
+                    className="min-w-full table-fixed border border-gray-200"
                     id="printable"
                   >
                     <thead
@@ -869,70 +889,40 @@ const renderRow = (row, rowIndex) => {
                         </tr>
                       )}
                     </thead>
+<tbody className={style?.tbody || "bg-white divide-y divide-gray-200"}>
+  {/* top spacer */}
+  {topSpacerHeight > 0 && (
+    <tr>
+      <td
+        colSpan={
+          visibleColumns.length +
+          (hasButtons ? 1 : 0) +
+          (showExtraColumn === "checkbox" ? 1 : 0)
+        }
+        style={{ height: topSpacerHeight }}
+      />
+    </tr>
+  )}
 
-                    <tbody
-                      className={
-                        style?.tbody || "bg-white divide-y divide-gray-200"
-                      }
-                    >
-                      {!loading && (config.aggregatePosition === "top" ||
-                      config.aggregatePosition === "both")
-                        ? renderAggregateRow(getEffectiveRows(paginatedGroupedData[groupKey] || []))
-                        : null}
+  {/* visible rows */}
+  {visibleRows.map((row, index) =>
+    renderRow(row, visibleRange.start + index)
+  )}
 
-                      {loading ? (
-                        // Show shimmer while loading
-                        <>
-                          {Array.from({ length: 6 }).map((_, rowIndex) => (
-                            <ShimmerTableRow
-                              key={rowIndex}
-                              columns={[
-                                ...(hasButtons ? [["__actions", {}]] : []),
-                                ...(showExtraColumn === "checkbox"
-                                  ? [["__checkbox", {}]]
-                                  : []),
-                                ...visibleColumns,
-                              ]}
-                            />
-                          ))}
-                        </>
-                      ) : paginatedGroupedData[groupKey] &&
-                        paginatedGroupedData[groupKey].length > 0 ? <tr>
-  <td
-    colSpan={
-      visibleColumns.length +
-      (hasButtons ? 1 : 0) +
-      (showExtraColumn === "checkbox" ? 1 : 0)
-    }
-    className="p-0 border-0"
-  >
-    <VirtualRows
-      rows={paginatedGroupedData[groupKey]}
-      renderRow={renderRow}
-    />
-  </td>
-</tr> : (
-                        <tr>
-                          <td
-                            colSpan={
-                              visibleColumns.length +
-                              (hasButtons ? 1 : 0) +
-                              (showExtraColumn === "checkbox" ? 1 : 0)
-                            }
-                            className="px-4 py-6 text-center text-sm text-gray-500"
-                          >
-                            {errorMsg
-                              ? "Something went wrong while fetching the data. Please refresh or try again later."
-                              : "There’s no data to display yet."
-                            }
-                          </td>
-                        </tr>
-                      )}
-
-                      {!loading && config.aggregatePosition !== "top"
-                        ? renderAggregateRow(getEffectiveRows(paginatedGroupedData[groupKey] || []))
-                        : null}
-                    </tbody>
+  {/* bottom spacer */}
+  {bottomSpacerHeight > 0 && (
+    <tr>
+      <td
+        colSpan={
+          visibleColumns.length +
+          (hasButtons ? 1 : 0) +
+          (showExtraColumn === "checkbox" ? 1 : 0)
+        }
+        style={{ height: bottomSpacerHeight }}
+      />
+    </tr>
+  )}
+</tbody>
                   </table>
                 </div>
               )}

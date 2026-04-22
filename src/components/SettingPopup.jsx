@@ -102,7 +102,23 @@ export default function SettingPopup({ config, setConfig, setSettingsOpen }) {
             <circle cx="10" cy="17" r="2" />
         </svg>
     );
+    const toggleAllColumns = (visible) => {
+  setTempConfig((prev) => {
+    const updated = { ...prev, datagrid: { ...prev.datagrid } };
 
+    Object.keys(updated.datagrid).forEach((key) => {
+      updated.datagrid[key] = {
+        ...updated.datagrid[key],
+        hidden: !visible,
+      };
+    });
+
+    return updated;
+  });
+};
+const allVisible = Object.values(tempConfig.datagrid || {}).every(
+  (col) => col.hidden !== true
+);
     return (
         <div className="fixed report-setting-popup inset-0 z-[999] flex items-center justify-center bg-black/50 backdrop-blur-sm">
             <div className="bg-white rounded-xl shadow-2xl w-full max-w-5xl h-[90vh] flex flex-col m-4 overflow-hidden">
@@ -275,25 +291,20 @@ export default function SettingPopup({ config, setConfig, setSettingsOpen }) {
 
                     {/* Right Panel - Columns */}
                     <div className="w-full md:w-1/2 overflow-y-auto h-full flex flex-col bg-white">
-                        <div className="p-5 flex items-center justify-between bg-gray-50/30">
-                            <div>
-                                <h3 className="text-sm font-medium text-secondary">Column Visibility</h3>
-                                <p className="text-xs text-muted mt-0.5">Drag to reorder • Toggle to show/hide</p>
-                            </div>
-                            <div className="relative">
-                                <input
-                                    type="search"
-                                    placeholder="Search columns..."
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                    className="text-sm bg-white rounded-lg pl-9 pr-4 py-2 w-48 outline outline-slate-300 focus:outline-1 border-0 transition-all"
-                                />
-                                <svg className="w-4 h-4 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                </svg>
-                            </div>
-                        </div>
+                  <div className="p-5 flex items-center justify-between bg-gray-50/30 gap-3">
+  <div>
+    <h3 className="text-sm font-medium text-secondary">Column Visibility</h3>
+    <p className="text-xs text-muted mt-0.5">Drag to reorder • Toggle to show/hide</p>
+  </div>
 
+<div className="flex items-center gap-2">
+  <span className="text-xs text-gray-600">All</span>
+  <Toggle
+    checked={allVisible}
+    onChange={(val) => toggleAllColumns(val)}
+  />
+</div>
+</div>
                         {/* Column List */}
                         <div className="flex-1 overflow-y-auto  thin-scrollbar">
                             {(searchTerm ? filteredColumns : columnOrder.map(key => [key, tempConfig.datagrid[key]])).map(([key, col], index) => (
