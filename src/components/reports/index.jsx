@@ -480,11 +480,9 @@ const fetchData = useCallback(async () => {
   if (!config) return;
     const requestId = ++requestIdRef.current;
 
-  const startTime = Date.now();
 
   try {
     setDataLoading(true);
-    setData([])
     if (config?.source?.type === "sql") {
       if (!config?.source?.queryid) {
         const { table, cols, join, where } = config.source;
@@ -594,10 +592,9 @@ const fetchData = useCallback(async () => {
  const elapsed = Date.now() - startTime;
     const remaining = Math.max(0, MIN_LOADING_TIME - elapsed);
     setTimeout(() => {
-      if (requestId === requestIdRef.current) {
         setDataLoading(false);
-      }
-    }, remaining);
+      
+    }, 300);
   
   }
 }, [
