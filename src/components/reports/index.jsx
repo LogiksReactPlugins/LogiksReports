@@ -894,8 +894,14 @@ useEffect(() => {
     setTotalPages(Math.ceil(totalData / (rowsPerPage || 5)));
   }, [totalData, rowsPerPage]);
 
-  const paginatedGroupedData = useMemo(() => {
-  if (!groupBy) return { ungrouped: currentData };
+ const paginatedGroupedData = useMemo(() => {
+  if (!currentData || currentData.length === 0) {
+    return { ungrouped: [] };
+  }
+
+  if (!groupBy) {
+    return { ungrouped: currentData };
+  }
 
   return currentData.reduce((acc, row) => {
     const val = row[groupBy] || "Ungrouped";

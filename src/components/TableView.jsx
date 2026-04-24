@@ -890,7 +890,7 @@ const bottomSpacerHeight =
                       )}
                     </thead>
 <tbody className={style?.tbody || "bg-white divide-y divide-gray-200"}>
-  {loading ? (
+{(!visibleRows || visibleRows.length === 0) && loading ? (
     Array.from({ length: 10 }).map((_, i) => (
       <ShimmerTableRow key={i} columns={visibleColumns} />
     ))
