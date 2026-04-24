@@ -588,8 +588,8 @@ const fetchData = useCallback(async () => {
   } catch (err) {
     console.error(err);
   } finally {
- const elapsed = Date.now() - startTime;
-    const remaining = Math.max(0, MIN_LOADING_TIME - elapsed);
+//  const elapsed = Date.now() - startTime;
+//     const remaining = Math.max(0, MIN_LOADING_TIME - elapsed);
         setDataLoading(false);
      
   

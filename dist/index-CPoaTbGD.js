@@ -37275,7 +37275,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Rr.canvg ? Promise.resolve(Rr.canvg) : import("./index.es-BOJgDgR5.js")).catch(function(f) {
+  return (Rr.canvg ? Promise.resolve(Rr.canvg) : import("./index.es-BQBHkwtQ.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
@@ -94858,7 +94858,7 @@ function m6e({
       } catch (Te) {
         console.error(Te);
       } finally {
-        Date.now() - startTime, G(!1);
+        G(!1);
       }
     }
   }, [
