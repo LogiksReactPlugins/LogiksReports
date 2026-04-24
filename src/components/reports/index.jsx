@@ -1862,6 +1862,7 @@ const formatted = formatCellValue(
         />
       ) : (
         <TableView
+          key={`${config?.module_refid}-${currentPage}-${JSON.stringify(config?.source)}`}
           style={style?.table}
           config={config}
           getRowValue={getRowValue}
