@@ -617,6 +617,10 @@ useEffect(() => {
   return () => clearTimeout(debounceRef.current);
 }, [fetchData]);
 
+useEffect(()=>{
+   fetchData();
+},[config])
+
   // const filteredAndSortedData = useCallback(() => {
   //   if (!data) return [];
   //   setDataLoading(true)
