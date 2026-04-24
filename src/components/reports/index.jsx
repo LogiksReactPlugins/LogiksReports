@@ -141,6 +141,7 @@ function Reports({
   const [onSidebarChange,setOnSidebarChange]=useState(null)
   const [sidebarDataCount,setSidebarDataCount]=useState(null)
   const request = typeof api === "function" ? api : axios;
+const requestIdRef = useRef(0);
 
   // console.log({"onSidebarChange____IND":onSidebarChange})
 
@@ -477,11 +478,13 @@ const visibleColumns = useMemo(() => {
 };
 const fetchData = useCallback(async () => {
   if (!config) return;
+    const requestId = ++requestIdRef.current;
+
   const startTime = Date.now();
 
   try {
     setDataLoading(true);
-
+    setData([])
     if (config?.source?.type === "sql") {
       if (!config?.source?.queryid) {
         const { table, cols, join, where } = config.source;
@@ -576,6 +579,7 @@ const fetchData = useCallback(async () => {
         },
       });
 
+    if (requestId !== requestIdRef.current) return; 
       const result = getValueByPath(data, config?.source?.response || "data");
 
       setData(result || []);
@@ -589,7 +593,13 @@ const fetchData = useCallback(async () => {
   } finally {
  const elapsed = Date.now() - startTime;
     const remaining = Math.max(0, MIN_LOADING_TIME - elapsed);
-    setTimeout(() => setDataLoading(false), remaining);  }
+    setTimeout(() => {
+      if (requestId === requestIdRef.current) {
+        setDataLoading(false);
+      }
+    }, remaining);
+  
+  }
 }, [
   config,
   searchTerm,
@@ -616,10 +626,6 @@ useEffect(() => {
 
   return () => clearTimeout(debounceRef.current);
 }, [fetchData]);
-
-useEffect(()=>{
-   fetchData();
-},[config])
 
   // const filteredAndSortedData = useCallback(() => {
   //   if (!data) return [];
