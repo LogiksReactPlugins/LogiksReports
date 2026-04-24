@@ -577,7 +577,6 @@ const fetchData = useCallback(async () => {
         },
       });
 
-    if (requestId !== requestIdRef.current) return; 
       const result = getValueByPath(data, config?.source?.response || "data");
 
       setData(result || []);
