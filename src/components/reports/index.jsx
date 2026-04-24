@@ -1768,7 +1768,7 @@ const formatted = formatCellValue(
           style={style?.cards}
           config={config}
           getRowValue={getRowValue}
-          paginatedGroupedData={paginatedGroupedData}
+          paginatedGroupedData={dataLoading ? [] :paginatedGroupedData}
           hasButtons={hasButtons}
           visibleButtons={visibleButtons}
           moreButtons={moreButtons}
@@ -1781,7 +1781,7 @@ const formatted = formatCellValue(
           setOpenDropdown={setOpenDropdown}
           getIconComponent={getIconComponent}
           loading={dataLoading}
-          currentData={currentData}
+          currentData={dataLoading ? [] :currentData}
           errorMsg={errorMsg}
         />
       ) : currentView === "gallery" ? (
@@ -1865,7 +1865,7 @@ const formatted = formatCellValue(
           style={style?.table}
           config={config}
           getRowValue={getRowValue}
-          paginatedGroupedData={paginatedGroupedData}
+          paginatedGroupedData={dataLoading ? [] :paginatedGroupedData}
           visibleColumns={visibleColumns}
           hasButtons={hasButtons}
           visibleButtons={visibleButtons}

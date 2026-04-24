@@ -37275,7 +37275,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Rr.canvg ? Promise.resolve(Rr.canvg) : import("./index.es-D0r21_kW.js")).catch(function(f) {
+  return (Rr.canvg ? Promise.resolve(Rr.canvg) : import("./index.es-DKeC-VwK.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
@@ -95525,7 +95525,7 @@ function y6e({
                 style: e?.cards,
                 config: s,
                 getRowValue: oi,
-                paginatedGroupedData: lt,
+                paginatedGroupedData: O ? [] : lt,
                 hasButtons: oo,
                 visibleButtons: Vs,
                 moreButtons: Jo,
@@ -95538,7 +95538,7 @@ function y6e({
                 setOpenDropdown: N,
                 getIconComponent: Wa,
                 loading: O,
-                currentData: ue,
+                currentData: O ? [] : ue,
                 errorMsg: Qt
               }
             ) : u === "gallery" ? /* @__PURE__ */ H.jsx(
@@ -95628,7 +95628,7 @@ function y6e({
                 style: e?.table,
                 config: s,
                 getRowValue: oi,
-                paginatedGroupedData: lt,
+                paginatedGroupedData: O ? [] : lt,
                 visibleColumns: vn,
                 hasButtons: oo,
                 visibleButtons: Vs,
