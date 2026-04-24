@@ -591,10 +591,8 @@ const fetchData = useCallback(async () => {
   } finally {
  const elapsed = Date.now() - startTime;
     const remaining = Math.max(0, MIN_LOADING_TIME - elapsed);
-    setTimeout(() => {
         setDataLoading(false);
-      
-    }, 300);
+     
   
   }
 }, [
