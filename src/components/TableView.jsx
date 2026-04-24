@@ -890,46 +890,50 @@ const bottomSpacerHeight =
                       )}
                     </thead>
 <tbody className={style?.tbody || "bg-white divide-y divide-gray-200"}>
-   {!loading &&
-    (config.aggregatePosition === "top" ||
-      config.aggregatePosition === "both") &&
-    renderAggregateRow(getEffectiveRows(currentRows))}
+  {loading ? (
+    Array.from({ length: 10 }).map((_, i) => (
+      <ShimmerTableRow key={i} columns={visibleColumns} />
+    ))
+  ) : (
+    <>
+      {(config.aggregatePosition === "top" ||
+        config.aggregatePosition === "both") &&
+        renderAggregateRow(getEffectiveRows(currentRows))}
 
-  {/* top spacer */}
-  {topSpacerHeight > 0 && (
-    <tr>
-      <td
-        colSpan={
-          visibleColumns.length +
-          (hasButtons ? 1 : 0) +
-          (showExtraColumn === "checkbox" ? 1 : 0)
-        }
-        style={{ height: topSpacerHeight }}
-      />
-    </tr>
-  )}
+      {topSpacerHeight > 0 && (
+        <tr>
+          <td
+            colSpan={
+              visibleColumns.length +
+              (hasButtons ? 1 : 0) +
+              (showExtraColumn === "checkbox" ? 1 : 0)
+            }
+            style={{ height: topSpacerHeight }}
+          />
+        </tr>
+      )}
 
-  {/* visible rows */}
-  {visibleRows.map((row, index) =>
-    renderRow(row, visibleRange.start + index)
-  )}
+      {visibleRows.map((row, index) =>
+        renderRow(row, visibleRange.start + index)
+      )}
 
-  {/* bottom spacer */}
-  {bottomSpacerHeight > 0 && (
-    <tr>
-      <td
-        colSpan={
-          visibleColumns.length +
-          (hasButtons ? 1 : 0) +
-          (showExtraColumn === "checkbox" ? 1 : 0)
-        }
-        style={{ height: bottomSpacerHeight }}
-      />
-    </tr>
+      {bottomSpacerHeight > 0 && (
+        <tr>
+          <td
+            colSpan={
+              visibleColumns.length +
+              (hasButtons ? 1 : 0) +
+              (showExtraColumn === "checkbox" ? 1 : 0)
+            }
+            style={{ height: bottomSpacerHeight }}
+          />
+        </tr>
+      )}
+
+      {config.aggregatePosition !== "top" &&
+        renderAggregateRow(getEffectiveRows(currentRows))}
+    </>
   )}
-    {!loading &&
-    config.aggregatePosition !== "top" &&
-    renderAggregateRow(getEffectiveRows(currentRows))}
 </tbody>
                   </table>
                 </div>

@@ -76,6 +76,8 @@ const getRowValue = (row, key) => {
 
   return match ? row[match] : undefined;
 };
+const MIN_LOADING_TIME = 500;
+
 const DATE_OPERATORS = [
   { label: "Is", value: "eq" },
   { label: "Between", value: "between" },
@@ -475,6 +477,7 @@ const visibleColumns = useMemo(() => {
 };
 const fetchData = useCallback(async () => {
   if (!config) return;
+  const startTime = Date.now();
 
   try {
     setDataLoading(true);
@@ -584,8 +587,9 @@ const fetchData = useCallback(async () => {
   } catch (err) {
     console.error(err);
   } finally {
-    setDataLoading(false);
-  }
+ const elapsed = Date.now() - startTime;
+    const remaining = Math.max(0, MIN_LOADING_TIME - elapsed);
+    setTimeout(() => setDataLoading(false), remaining);  }
 }, [
   config,
   searchTerm,
