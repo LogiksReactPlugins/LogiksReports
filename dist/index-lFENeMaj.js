@@ -37277,7 +37277,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (kr.canvg ? Promise.resolve(kr.canvg) : import("./index.es-ujWYWisJ.js")).catch(function(f) {
+  return (kr.canvg ? Promise.resolve(kr.canvg) : import("./index.es-BGJMzV_n.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
@@ -94895,7 +94895,14 @@ function g6e({
     const fr = at[v] || "Ungrouped";
     return (Te[fr] ||= []).push(at), Te;
   }, {}) : { ungrouped: ue }, [ue, v]);
-  if (!s)
+  if (wr(() => {
+    if (!v) return;
+    const Te = Object.keys(Dt || {}).reduce(
+      (at, fr) => (at[fr] = !0, at),
+      {}
+    );
+    setOpenGroups(Te);
+  }, [v, Dt]), !s)
     return /* @__PURE__ */ V.jsx("div", { className: "flex items-center justify-center h-48", children: /* @__PURE__ */ V.jsx("div", { className: "text-gray-500", children: "Loading..." }) });
   const {
     title: mt,
@@ -94933,16 +94940,7 @@ function g6e({
   }, {}) : {}, Vn = (Te) => Qr[Te].sortable ? h?.key === Te ? h?.direction === "asc" ? /* @__PURE__ */ V.jsx(AM, { className: "w-4 h-4" }) : /* @__PURE__ */ V.jsx(uM, { className: "w-4 h-4" }) : /* @__PURE__ */ V.jsxs("div", { className: "flex flex-col", children: [
     /* @__PURE__ */ V.jsx(AM, { className: "w-3 h-3 text-gray-400" }),
     /* @__PURE__ */ V.jsx(uM, { className: "w-3 h-3 text-gray-400 -mt-1" })
-  ] }) : null, Yo = (Te) => typeof Te == "string" || typeof Te == "number" ? String(Te) : Array.isArray(Te) ? Te.map(Yo).join("") : sn.isValidElement(Te) ? Yo(Te.props.children) : "";
-  wr(() => {
-    if (!v) return;
-    const Te = Object.keys(Dt || {}).reduce(
-      (at, fr) => (at[fr] = !0, at),
-      {}
-    );
-    setOpenGroups(Te);
-  }, [v, Dt]);
-  const Co = async (Te = "excel") => {
+  ] }) : null, Yo = (Te) => typeof Te == "string" || typeof Te == "number" ? String(Te) : Array.isArray(Te) ? Te.map(Yo).join("") : sn.isValidElement(Te) ? Yo(Te.props.children) : "", Co = async (Te = "excel") => {
     try {
       if (!s?.source?.queryid) {
         const { table: pt, cols: Ti, join: un, where: ml } = s.source, { data: Oi } = await ui({
