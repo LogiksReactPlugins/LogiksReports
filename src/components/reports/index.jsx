@@ -114,6 +114,7 @@ function Reports({
   const dropdownRef = useRef(null);
   const [kanbanGroupBy, setKanbanGroupBy] = useState(null);
   const [data, setData] = useState([]);
+  const currentData = data || [];
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [loading, setLoading] = useState(null);
   const [dataLoading, setDataLoading] = useState(false);
@@ -123,7 +124,6 @@ function Reports({
   const [debuggData, setDebuggData] = useState(null);
   const [totalData, setTotalData] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  const [currentData, setCurrentData] = useState([]);
   const [searchColumn, setSearchColumn] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [activeDateCol, setActiveDateCol] = useState(null);
@@ -143,22 +143,24 @@ function Reports({
   const request = typeof api === "function" ? api : axios;
 const requestIdRef = useRef(0);
 const [isSwitching, setIsSwitching] = useState(false);
-
+const versionRef = useRef(0);
+const [activeVersion, setActiveVersion] = useState(0);
+const [isConfigLoading, setIsConfigLoading] = useState(false);
 const controllerRef = useRef(null);
+const prevModuleRef = useRef();
   // console.log({"onSidebarChange____IND":onSidebarChange})
+
+
+
 useEffect(() => {
   if (!config?.module_refid) return;
 
-  setIsSwitching(true);
+  if (prevModuleRef.current !== config.module_refid) {
+    setIsConfigLoading(true);   
+    setData([]);
+  }
 
-  setData([]);
-  setCurrentData([]);
-
-  const t = setTimeout(() => {
-    setIsSwitching(false);
-  }, 150); // small delay to avoid flicker
-
-  return () => clearTimeout(t);
+  prevModuleRef.current = config.module_refid;
 }, [config?.module_refid]);
 
   useEffect(() => {
@@ -547,7 +549,6 @@ const fetchData = useCallback(async () => {
       result = reportdata || config?.rows || [];
     }
 
-    // ✅ IMPORTANT: ignore stale responses
     if (requestId !== requestIdRef.current) return;
 
     setData(result);
@@ -560,6 +561,9 @@ const fetchData = useCallback(async () => {
   } finally {
     if (requestId === requestIdRef.current) {
       setDataLoading(false);
+      setIsSwitching(false)
+
+      setIsConfigLoading(false); 
     }
   }
 }, [config, filters, currentPage, rowsPerPage]);
@@ -761,9 +765,7 @@ useEffect(() => {
   //   onSidebarChange
   // ]);
 
-useEffect(() => {
-  setCurrentData(data || []);
-}, [data]);
+
 
   useEffect(() => {
     if (!dateOperator) return;
@@ -861,6 +863,20 @@ useEffect(() => {
   }, {});
 }, [currentData, groupBy]);
 
+
+useEffect(() => {
+  if (!groupBy) return;
+
+  const initialState = Object.keys(paginatedGroupedData || {}).reduce(
+    (acc, key) => {
+      acc[key] = true;
+      return acc;
+    },
+    {}
+  );
+
+  setOpenGroups(initialState);
+}, [groupBy, paginatedGroupedData]);
 
   if (!config) {
     return (
@@ -973,20 +989,6 @@ const extractTextFromReactNode = (node) => {
 
   return "";
 };
-
-useEffect(() => {
-  if (!groupBy) return;
-
-  const initialState = Object.keys(paginatedGroupedData || {}).reduce(
-    (acc, key) => {
-      acc[key] = true;
-      return acc;
-    },
-    {}
-  );
-
-  setOpenGroups(initialState);
-}, [groupBy, paginatedGroupedData]);
 
 const handleExportAll = async (type = "excel") => {
   try {
@@ -1222,7 +1224,15 @@ const formatted = formatCellValue(
       </pre>
     );
   }
+const isReady = !isConfigLoading && config;
 
+if (!isReady) {
+  return (
+    <div className="flex items-center justify-center h-40">
+      <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
+    </div>
+  );
+}
   return (
     <div
       className={`bg-white report-root ${

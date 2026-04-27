@@ -1,8 +1,7 @@
 import { Copy, MoreVertical } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import ShimmerTableRow from "./loadings/ShimmerTableRow";
 import copyToClipboard from "../helpers/copyToClipboard";
-import { FixedSizeList as List } from "react-window";
 const ROW_HEIGHT = 42;
 
 const TableView = ({
@@ -49,7 +48,7 @@ const TableView = ({
     compactMode,
   } = config;
   const [copiedCell, setCopiedCell] = useState(null);
-  const dropdownRef = React.useRef(null);
+  const dropdownRef = useRef(null);
   const reportTitle = config?.title?.toLowerCase().trim().replace(/\s+/g, "_");
   const [openGroups, setOpenGroups] = useState(() => {
     if (!groupBy) return {};
@@ -58,8 +57,9 @@ const TableView = ({
       return acc;
     }, {});
   });
-  const containerRef = React.useRef(null);
-const [visibleRange, setVisibleRange] = useState({ start: 0, end: 30 });
+  const containerRefs = useRef({});
+const [visibleRange, setVisibleRange] = useState({});
+
 
 const BUFFER = 10;
 const VIEWPORT_HEIGHT = 800;
@@ -88,30 +88,40 @@ const VIEWPORT_HEIGHT = 800;
     document.addEventListener("mousedown", handleOutsideClick);
     return () => document.removeEventListener("mousedown", handleOutsideClick);
   }, [openDropdown]);
-useEffect(() => {
-  const el = containerRef.current;
-  if (!el) return;
 
-  const onScroll = () => {
-    const scrollTop = el.scrollTop;
+  useEffect(() => {
+  Object.entries(containerRefs.current).forEach(([groupKey, el]) => {
+    if (!el) return;
 
-    const currentRows =
-      Object.values(paginatedGroupedData || {}).flat();
+    const onScroll = () => {
+      const scrollTop = el.scrollTop;
+      const rows = paginatedGroupedData[groupKey] || [];
 
-    const totalRows = currentRows.length;
+      const start = Math.max(
+        0,
+        Math.floor(scrollTop / ROW_HEIGHT) - BUFFER
+      );
 
-    const start = Math.max(0, Math.floor(scrollTop / ROW_HEIGHT) - BUFFER);
+      const end = Math.min(
+        rows.length,
+        Math.ceil((scrollTop + VIEWPORT_HEIGHT) / ROW_HEIGHT) + BUFFER
+      );
 
-    const end = Math.min(
-      totalRows,
-      Math.ceil((scrollTop + VIEWPORT_HEIGHT) / ROW_HEIGHT) + BUFFER
-    );
+      setVisibleRange((prev) => ({
+        ...prev,
+        [groupKey]: { start, end },
+      }));
+    };
 
-    setVisibleRange({ start, end });
+    el.addEventListener("scroll", onScroll);
+  });
+
+  return () => {
+    Object.values(containerRefs.current).forEach((el) => {
+      if (!el) return;
+      el.removeEventListener("scroll", () => {});
+    });
   };
-
-  el.addEventListener("scroll", onScroll);
-  return () => el.removeEventListener("scroll", onScroll);
 }, [paginatedGroupedData]);
 
   const buildGroupedHeaders = () => {
@@ -326,6 +336,7 @@ const getEffectiveRows = (rows) => {
     selectedRows.has(getRowValue(row, "id"))
   );
 };
+
   useEffect(() => {
     if (!groupBy) return;
 
@@ -656,19 +667,22 @@ key={getRowValue(row, "id") ?? `${rowIndex}-${groupBy}`}      className={`${styl
     <div className="overflow-hidden">
       <div className="overflow-x-auto">
         {Object.keys(paginatedGroupedData).map((groupKey) => {
+
+   
+
+
           const isOpen = openGroups[groupKey];
 const currentRows = paginatedGroupedData[groupKey] || [];
 const totalRows = currentRows.length;
 
-const visibleRows = currentRows.slice(
-  visibleRange.start,
-  visibleRange.end
-);
+const range = visibleRange[groupKey] || { start: 0, end: 30 };
 
-const topSpacerHeight = visibleRange.start * ROW_HEIGHT;
+const visibleRows = currentRows.slice(range.start, range.end);
+
+const topSpacerHeight = range.start * ROW_HEIGHT;
 
 const bottomSpacerHeight =
-  (totalRows - visibleRange.end) * ROW_HEIGHT;
+  (totalRows - range.end) * ROW_HEIGHT;
           return (
             <div key={groupKey} className="border-b border-gray-50">
               {groupBy && (
@@ -695,8 +709,7 @@ const bottomSpacerHeight =
               )}
               {(!groupBy || isOpen) && (
                 <div
-                  ref={containerRef}
-
+                ref={(el) => (containerRefs.current[groupKey] = el)}
                 className="overflow-x-auto overflow-y-auto max-h-screen thin-scrollbar">
                   <table
                     className="min-w-full table-fixed border border-gray-200"
@@ -896,7 +909,20 @@ const bottomSpacerHeight =
                       )}
                     </thead>
 <tbody className={style?.tbody || "bg-white divide-y divide-gray-200"}>
-{ !loading && (
+{ loading ? (
+    <>
+      {Array.from({ length: 12 }).map((_, i) => (
+        <ShimmerTableRow
+          key={i}
+          columns={[
+            ...(hasButtons ? [["__actions"]] : []),
+            ...(showExtraColumn === "checkbox" ? [["__checkbox"]] : []),
+            ...visibleColumns,
+          ]}
+        />
+      ))}
+    </>
+  ): (
     <>
       {(config.aggregatePosition === "top" ||
         config.aggregatePosition === "both") &&
