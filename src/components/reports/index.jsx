@@ -142,8 +142,24 @@ function Reports({
   const [sidebarDataCount,setSidebarDataCount]=useState(null)
   const request = typeof api === "function" ? api : axios;
 const requestIdRef = useRef(0);
+const [isSwitching, setIsSwitching] = useState(false);
 
+const controllerRef = useRef(null);
   // console.log({"onSidebarChange____IND":onSidebarChange})
+useEffect(() => {
+  if (!config?.module_refid) return;
+
+  setIsSwitching(true);
+
+  setData([]);
+  setCurrentData([]);
+
+  const t = setTimeout(() => {
+    setIsSwitching(false);
+  }, 150); // small delay to avoid flicker
+
+  return () => clearTimeout(t);
+}, [config?.module_refid]);
 
   useEffect(() => {
     setCurrentPage(0);
@@ -476,13 +492,21 @@ const visibleColumns = useMemo(() => {
 
   setOnSidebarChange?.(filteredValues);
 };
+
+
+
 const fetchData = useCallback(async () => {
   if (!config) return;
-    const requestId = ++requestIdRef.current;
 
+  const requestId = ++requestIdRef.current;
 
   try {
     setDataLoading(true);
+
+    let result = [];
+    let page = 0;
+    let total = 0;
+
     if (config?.source?.type === "sql") {
       if (!config?.source?.queryid) {
         const { table, cols, join, where } = config.source;
@@ -501,17 +525,6 @@ const fetchData = useCallback(async () => {
       }
 
       const refid = config?.endPoints?.refid;
-      const hasFilterTabs = Object.keys(filterTabs || {}).length > 0;
-
-      const dateFilter =
-        activeDateCol && dateOperator && dateRange?.start
-          ? {
-              [activeDateCol]:
-                dateOperator === "between"
-                  ? [[dateRange.start, dateRange.end], "range"]
-                  : [dateRange.start, "like"],
-            }
-          : {};
 
       const { data } = await axios({
         method: config?.source?.method || "post",
@@ -521,94 +534,38 @@ const fetchData = useCallback(async () => {
         headers: config?.source?.headers || config?.endPoints?.headers,
         data: {
           queryid: config?.source?.queryid,
-          ...(!hasFilterTabs && {
-            stxt: searchTerm,
-            cols: searchableColumns.map((c) => c.key),
-          }),
-          filter: {
-            ...config?.source?.defaultFilters,
-            ...onSidebarChange,
-            ...(hasFilterTabs &&
-              Object.fromEntries(
-                Object.entries(filterTabs || {}).map(([key, { value }]) => [
-                  key,
-                  [value, "LIKE"],
-                ])
-              )),
-            ...Object.fromEntries(
-              Object.entries(filters || {})
-                .map(([k, { type, value }]) => {
-                  if (type === "text") return [k, [value, "LIKE"]];
-
-                  if (type === "date") {
-                    if (!value) return null;
-
-                    const start = new Date(value + "T00:00:00");
-                    const end = new Date(value + "T23:59:59");
-
-                    if (isNaN(start.getTime()) || isNaN(end.getTime()))
-                      return null;
-
-                    return [
-                      k,
-                      [
-                        [
-                          start.toISOString().slice(0, 19).replace("T", " "),
-                          end.toISOString().slice(0, 19).replace("T", " "),
-                        ],
-                        "range",
-                      ],
-                    ];
-                  }
-
-                  return [k, value];
-                })
-                .filter(Boolean)
-            ),
-            ...dateFilter,
-          },
-          ...(groupBy && { group_by: groupBy }),
-          ...(refid ? { refid } : {}),
+          filter: { ...filters },
           limit: rowsPerPage,
           page: currentPage,
-          ...(sortConfig?.key
-            ? { orderby: `${sortConfig.key} ${sortConfig.direction}` }
-            : {}),
         },
       });
 
-      const result = getValueByPath(data, config?.source?.response || "data");
-
-      setData(result || []);
-      setCurrentPage(data?.page || 0);
-      setTotalData(data.max || 0);
+      result = getValueByPath(data, config?.source?.response || "data") || [];
+      page = data?.page || 0;
+      total = data?.max || 0;
     } else {
-      setData(reportdata || config?.rows || []);
+      result = reportdata || config?.rows || [];
     }
+
+    // ✅ IMPORTANT: ignore stale responses
+    if (requestId !== requestIdRef.current) return;
+
+    setData(result);
+    setCurrentPage(page);
+    setTotalData(total);
+
   } catch (err) {
+    if (requestId !== requestIdRef.current) return;
     console.error(err);
   } finally {
-//  const elapsed = Date.now() - startTime;
-//     const remaining = Math.max(0, MIN_LOADING_TIME - elapsed);
-        setDataLoading(false);
-     
-  
+    if (requestId === requestIdRef.current) {
+      setDataLoading(false);
+    }
   }
-}, [
-  config,
-  searchTerm,
-  filters,
-  filterTabs,
-  groupBy,
-  currentPage,
-  rowsPerPage,
-  sortConfig,
-  onSidebarChange,
-  activeDateCol,
-  dateOperator,
-  dateRange?.start,
-  dateRange?.end,
-]);
+}, [config, filters, currentPage, rowsPerPage]);
+
+
+
 useEffect(() => {
   if (!config) return;
 
@@ -1016,6 +973,21 @@ const extractTextFromReactNode = (node) => {
 
   return "";
 };
+
+useEffect(() => {
+  if (!groupBy) return;
+
+  const initialState = Object.keys(paginatedGroupedData || {}).reduce(
+    (acc, key) => {
+      acc[key] = true;
+      return acc;
+    },
+    {}
+  );
+
+  setOpenGroups(initialState);
+}, [groupBy, paginatedGroupedData]);
+
 const handleExportAll = async (type = "excel") => {
   try {
     if (!config?.source?.queryid) {
@@ -1757,7 +1729,13 @@ const formatted = formatCellValue(
         </div>
       )}
       {/* Render Current View */}
-      {currentView === "cards" ? (
+      {
+      isSwitching ? (
+  <div className="flex items-center justify-center h-40">
+    <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
+  </div>)
+  :
+      currentView === "cards" ? (
         <CardView
           style={style?.cards}
           config={config}
@@ -1856,8 +1834,8 @@ const formatted = formatCellValue(
         />
       ) : (
         <TableView
-          key={`${config?.module_refid}-${currentPage}-${JSON.stringify(config?.source)}`}
-          style={style?.table}
+        key={`${config?.module_refid}-${visibleColumns.map(c => c[0]).join(",")}`}
+        style={style?.table}
           config={config}
           getRowValue={getRowValue}
           paginatedGroupedData={paginatedGroupedData}

@@ -70,6 +70,13 @@ const VIEWPORT_HEIGHT = 800;
       [groupKey]: !prev[groupKey],
     }));
   };
+
+
+  useEffect(() => {
+    setVisibleRange({ start: 0, end: 30 });
+  }, [paginatedGroupedData, visibleColumns]);
+
+
   useEffect(() => {
     if (!openDropdown) return;
 
@@ -348,8 +355,7 @@ const renderRow = (row, rowIndex) => {
   return (
     <tr
       id={`${reportTitle}_tr_${getRowValue(row, "id")}`}
-      key={rowIndex}
-      className={`${style?.tr || "hover:bg-secondary"} 
+key={getRowValue(row, "id") ?? `${rowIndex}-${groupBy}`}      className={`${style?.tr || "hover:bg-secondary"} 
         ${rowClickSelection ? "cursor-pointer" : ""} 
         ${compactMode ? "text-xs py-0.5" : ""} 
         ${stripedRows && rowIndex % 2 === 1 ? "bg-gray-50" : ""}
