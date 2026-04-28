@@ -149,17 +149,7 @@ const [isConfigLoading, setIsConfigLoading] = useState(false);
 const controllerRef = useRef(null);
 const prevModuleRef = useRef();
   // console.log({"onSidebarChange____IND":onSidebarChange})
-  const {
-    title,
-    toolbar,
-    actions,
-    buttons,
-    datagrid={},
-    uiswitcher,
-    compactMode,
-  } = config || {};
 
-const searchableColumns = Object.entries(datagrid) .filter(([, col]) => col?.searchable === true) .map(([key, col]) => ({ key, ...col }));
 
 
 useEffect(() => {
@@ -517,8 +507,8 @@ const fetchData = useCallback(async () => {
 
   try {
     setDataLoading(true);
+const searchableColumns = Object.entries(datagrid) .filter(([, col]) => col?.searchable === true) .map(([key, col]) => ({ key, ...col }));
 
-    // ✅ DATE FILTER (same logic as original)
     const dateFilter =
       activeDateCol && dateOperator
         ? {
@@ -551,7 +541,7 @@ const fetchData = useCallback(async () => {
         ([key, { type, value }]) => {
           if (type === "text") return [key, [value, "LIKE"]];
 
-          if (type === "date") {
+          if (type === "date" && value) {
             const startDate = new Date(value + "T00:00:00");
             const endDate = new Date(value + "T23:59:59");
 
@@ -574,7 +564,6 @@ const fetchData = useCallback(async () => {
     );
 
     // ✅ EXACT SAME CONDITION AS OLD CODE
-    if (searchTerm || currentPage || Object.keys(dateFilter).length) {
       if (config?.source?.type === "sql") {
         // ✅ ensure queryid
         if (!config?.source?.queryid) {
@@ -646,7 +635,7 @@ const fetchData = useCallback(async () => {
         page = data?.page || 0;
         total = data?.max || 0;
       }
-    }
+    
 
     // ✅ race safety
     if (requestId !== requestIdRef.current) return;
@@ -674,7 +663,6 @@ const fetchData = useCallback(async () => {
   filterTabs,
   groupBy,
   sortConfig,
-  searchableColumns,
   activeDateCol,
   dateOperator,
   dateRange.start,
@@ -988,8 +976,25 @@ useEffect(() => {
   setOpenGroups(initialState);
 }, [groupBy, paginatedGroupedData]);
 
+  if (!config) {
+    return (
+      <div className="flex items-center justify-center h-48">
+        <div className="text-gray-500">Loading...</div>
+      </div>
+    );
+  }
 
+  const {
+    title,
+    toolbar,
+    actions,
+    buttons,
+    datagrid,
+    uiswitcher,
+    compactMode,
+  } = config;
 
+const searchableColumns = Object.entries(datagrid) .filter(([, col]) => col?.searchable === true) .map(([key, col]) => ({ key, ...col }));
 
   const dateRangeColumns = Object.entries(datagrid)
     .filter(([, col]) => col?.filter?.type === "daterange")
