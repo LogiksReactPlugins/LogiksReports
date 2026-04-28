@@ -501,9 +501,31 @@ const fetchData = useCallback(async () => {
   if (!config) return;
 
   const requestId = ++requestIdRef.current;
+  
 
   try {
     setDataLoading(true);
+    const transformedFilters = Object.fromEntries(
+  Object.entries(filters || {}).map(([key, { type, value }]) => {
+    if (type === "text") return [key, [value, "LIKE"]];
+
+    if (type === "date") {
+      const start = new Date(value + "T00:00:00")
+        .toISOString()
+        .replace("T", " ")
+        .slice(0, 19);
+
+      const end = new Date(value + "T23:59:59")
+        .toISOString()
+        .replace("T", " ")
+        .slice(0, 19);
+
+      return [key, [[start, end], "range"]];
+    }
+
+    return [key, value];
+  })
+);
 
     let result = [];
     let page = 0;
@@ -534,11 +556,20 @@ const fetchData = useCallback(async () => {
           config?.source?.url ||
           `${config?.endPoints?.baseURL}${config?.endPoints.runQuery}`,
         headers: config?.source?.headers || config?.endPoints?.headers,
-        data: {
+       data: {
           queryid: config?.source?.queryid,
-          filter: { ...filters },
+          stxt: searchTerm,
+          cols: searchableColumns?.map(c => c.key),
+          filter: {
+            ...config?.source?.defaultFilters,
+            ...onSidebarChange,
+            ...transformedFilters
+          },
           limit: rowsPerPage,
           page: currentPage,
+          ...(sortConfig?.key && {
+            orderby: `${sortConfig.key} ${sortConfig.direction}`
+          })
         },
       });
 
@@ -1423,7 +1454,6 @@ if (!isReady) {
                   onClick={()=>{
                     handleReset(),
                      setOnSidebarChange(null)
-
     fetchData(); 
  }
                   }

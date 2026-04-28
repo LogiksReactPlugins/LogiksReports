@@ -794,7 +794,7 @@ const bottomSpacerHeight =
                           {hasButtons && <th />}
                           {showExtraColumn === "checkbox" && <th />}
 
-                          {visibleColumns.map(([key, col]) => {
+                          {visibleColumns.map(([key, col]) => { 
                             const filter = col.filter;
                             if (!filter) return <th key={key} />;
 
