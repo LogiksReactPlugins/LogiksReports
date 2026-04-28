@@ -149,7 +149,17 @@ const [isConfigLoading, setIsConfigLoading] = useState(false);
 const controllerRef = useRef(null);
 const prevModuleRef = useRef();
   // console.log({"onSidebarChange____IND":onSidebarChange})
+  const {
+    title,
+    toolbar,
+    actions,
+    buttons,
+    datagrid={},
+    uiswitcher,
+    compactMode,
+  } = config || {};
 
+const searchableColumns = Object.entries(datagrid) .filter(([, col]) => col?.searchable === true) .map(([key, col]) => ({ key, ...col }));
 
 
 useEffect(() => {
@@ -498,38 +508,19 @@ const visibleColumns = useMemo(() => {
 
 const fetchData = useCallback(async () => {
   if (!config) return;
-
+  const {datagrid}=config
   const requestId = ++requestIdRef.current;
+
+  let result = [];
+  let page = 0;
+  let total = 0;
 
   try {
     setDataLoading(true);
 
-    const transformedFilters = Object.fromEntries(
-      Object.entries(filters || {})
-        .filter(([, v]) => v?.value !== undefined && v?.value !== null && v?.value !== "")
-        .map(([key, { type, value }]) => {
-          if (type === "text") return [key, [value, "LIKE"]];
-
-          if (type === "date") {
-            const start = new Date(value + "T00:00:00")
-              .toISOString()
-              .replace("T", " ")
-              .slice(0, 19);
-
-            const end = new Date(value + "T23:59:59")
-              .toISOString()
-              .replace("T", " ")
-              .slice(0, 19);
-
-            return [key, [[start, end], "range"]];
-          }
-
-          return [key, value];
-        })
-    );
-
+    // ✅ DATE FILTER (same logic as original)
     const dateFilter =
-      activeDateCol && dateOperator && dateRange?.start
+      activeDateCol && dateOperator
         ? {
             [activeDateCol]:
               dateOperator === "between"
@@ -540,90 +531,124 @@ const fetchData = useCallback(async () => {
           }
         : {};
 
+    // ✅ FILTER TABS
     const hasFilterTabs =
       filterTabs && Object.keys(filterTabs).length > 0;
 
-    const tabFilters = hasFilterTabs
-      ? Object.fromEntries(
-          Object.entries(filterTabs).map(([key, { value }]) => [
-            key,
-            [value, "LIKE"],
-          ])
-        )
-      : {};
+    const tabFilters =
+      hasFilterTabs
+        ? Object.fromEntries(
+            Object.entries(filterTabs).map(([key, { value }]) => [
+              key,
+              [value, "LIKE"],
+            ])
+          )
+        : {};
 
-    let result = [];
-    let page = 0;
-    let total = 0;
+    // ✅ COLUMN FILTERS (NO CLEANUP → match original)
+    const transformedFilters = Object.fromEntries(
+      Object.entries(filters || {}).map(
+        ([key, { type, value }]) => {
+          if (type === "text") return [key, [value, "LIKE"]];
 
-    if (config?.source?.type === "sql") {
-      if (!config?.source?.queryid) {
-        const { table, cols, join, where } = config.source;
+          if (type === "date") {
+            const startDate = new Date(value + "T00:00:00");
+            const endDate = new Date(value + "T23:59:59");
 
-        const { data: saveQuerydata } = await axios({
-          method: "POST",
-          url: config?.endPoints.saveQuery,
-          headers: config?.endPoints?.headers,
+            const startStr = startDate
+              .toISOString()
+              .replace("T", " ")
+              .substring(0, 19);
+
+            const endStr = endDate
+              .toISOString()
+              .replace("T", " ")
+              .substring(0, 19);
+
+            return [key, [[startStr, endStr], "range"]];
+          }
+
+          return [key, value];
+        }
+      )
+    );
+
+    // ✅ EXACT SAME CONDITION AS OLD CODE
+    if (searchTerm || currentPage || Object.keys(dateFilter).length) {
+      if (config?.source?.type === "sql") {
+        // ✅ ensure queryid
+        if (!config?.source?.queryid) {
+          const { table, cols, join, where } = config.source;
+
+          const { data: saveQuerydata } = await axios({
+            method: "POST",
+            url: config?.endPoints.saveQuery,
+            headers: config?.endPoints?.headers,
+            data: {
+              query: { table, cols, join, where },
+              dbkey: config?.source?.dbkey,
+            },
+          });
+
+          config.source.queryid = saveQuerydata?.queryid;
+        }
+
+        const refid = config?.endPoints?.refid;
+
+        const { data } = await axios({
+          method: config?.source?.method || "post",
+          url:
+            config?.source?.url ||
+            `${config?.endPoints?.baseURL}${config?.endPoints.runQuery}`,
+          headers:
+            config?.source?.headers ||
+            config?.endPoints?.headers,
           data: {
-            query: { table, cols, join, where },
-            dbkey: config?.source?.dbkey,
+            queryid: config?.source?.queryid,
+
+            // ✅ EXACT: only when NO tabs
+            ...(!hasFilterTabs && {
+              stxt: searchTerm,
+              cols: searchableColumns?.map((col) => col.key),
+            }),
+
+            filter: {
+              ...config?.source?.defaultFilters,
+              ...onSidebarChange,
+
+              ...(hasFilterTabs && tabFilters),
+
+              ...transformedFilters,
+
+              ...dateFilter,
+            },
+
+            ...(groupBy && { group_by: groupBy }),
+            ...(refid ? { refid } : {}),
+
+            limit: rowsPerPage,
+            page: currentPage,
+
+            ...(sortConfig?.key
+              ? {
+                  orderby: `${sortConfig.key} ${sortConfig.direction}`,
+                }
+              : {}),
           },
         });
 
-        config.source.queryid = saveQuerydata?.queryid;
+        result =
+          getValueByPath(
+            data,
+            config?.source?.response || "data"
+          ) || [];
+
+        page = data?.page || 0;
+        total = data?.max || 0;
       }
-
-      const refid = config?.endPoints?.refid;
-
-      const payload = {
-        queryid: config?.source?.queryid,
-
-        ...(!hasFilterTabs && {
-          stxt: searchTerm,
-          cols: searchableColumns?.map((c) => c.key),
-        }),
-
-        filter: {
-          ...config?.source?.defaultFilters,
-          ...onSidebarChange,
-          ...tabFilters,
-          ...transformedFilters,
-          ...dateFilter,
-        },
-
-        ...(groupBy && { group_by: groupBy }),
-        ...(refid && { refid }),
-
-        limit: rowsPerPage,
-        page: currentPage,
-
-        ...(sortConfig?.key && {
-          orderby: `${sortConfig.key} ${sortConfig.direction}`,
-        }),
-      };
-
-      const { data } = await axios({
-        method: config?.source?.method || "post",
-        url:
-          config?.source?.url ||
-          `${config?.endPoints?.baseURL}${config?.endPoints.runQuery}`,
-        headers:
-          config?.source?.headers || config?.endPoints?.headers,
-        data: payload,
-      });
-
-      result =
-        getValueByPath(
-          data,
-          config?.source?.response || "data"
-        ) || [];
-
-      page = data?.page || 0;
-      total = data?.max || 0;
-    } else {
-      result = reportdata || config?.rows || [];
     }
 
+    // ✅ race safety
     if (requestId !== requestIdRef.current) return;
 
     setData(result);
@@ -641,22 +666,20 @@ const fetchData = useCallback(async () => {
   }
 }, [
   config,
-  filters,
+  searchTerm,
   currentPage,
   rowsPerPage,
-  searchTerm,
-  searchableColumns,
-  sortConfig,
+  filters,
   onSidebarChange,
   filterTabs,
   groupBy,
+  sortConfig,
+  searchableColumns,
   activeDateCol,
   dateOperator,
-  dateRange?.start,
-  dateRange?.end,
-  reportdata,
+  dateRange.start,
+  dateRange.end,
 ]);
-
 useEffect(() => {
   if (!config) return;
 
@@ -965,25 +988,8 @@ useEffect(() => {
   setOpenGroups(initialState);
 }, [groupBy, paginatedGroupedData]);
 
-  if (!config) {
-    return (
-      <div className="flex items-center justify-center h-48">
-        <div className="text-gray-500">Loading...</div>
-      </div>
-    );
-  }
 
-  const {
-    title,
-    toolbar,
-    actions,
-    buttons,
-    datagrid,
-    uiswitcher,
-    compactMode,
-  } = config;
 
-const searchableColumns = Object.entries(datagrid) .filter(([, col]) => col?.searchable === true) .map(([key, col]) => ({ key, ...col }));
 
   const dateRangeColumns = Object.entries(datagrid)
     .filter(([, col]) => col?.filter?.type === "daterange")
