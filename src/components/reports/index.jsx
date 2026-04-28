@@ -496,36 +496,61 @@ const visibleColumns = useMemo(() => {
 };
 
 
-
 const fetchData = useCallback(async () => {
   if (!config) return;
 
   const requestId = ++requestIdRef.current;
-  
 
   try {
     setDataLoading(true);
+
     const transformedFilters = Object.fromEntries(
-  Object.entries(filters || {}).map(([key, { type, value }]) => {
-    if (type === "text") return [key, [value, "LIKE"]];
+      Object.entries(filters || {})
+        .filter(([, v]) => v?.value !== undefined && v?.value !== null && v?.value !== "")
+        .map(([key, { type, value }]) => {
+          if (type === "text") return [key, [value, "LIKE"]];
 
-    if (type === "date") {
-      const start = new Date(value + "T00:00:00")
-        .toISOString()
-        .replace("T", " ")
-        .slice(0, 19);
+          if (type === "date") {
+            const start = new Date(value + "T00:00:00")
+              .toISOString()
+              .replace("T", " ")
+              .slice(0, 19);
 
-      const end = new Date(value + "T23:59:59")
-        .toISOString()
-        .replace("T", " ")
-        .slice(0, 19);
+            const end = new Date(value + "T23:59:59")
+              .toISOString()
+              .replace("T", " ")
+              .slice(0, 19);
 
-      return [key, [[start, end], "range"]];
-    }
+            return [key, [[start, end], "range"]];
+          }
 
-    return [key, value];
-  })
-);
+          return [key, value];
+        })
+    );
+
+    const dateFilter =
+      activeDateCol && dateOperator && dateRange?.start
+        ? {
+            [activeDateCol]:
+              dateOperator === "between"
+                ? [[dateRange.start, dateRange.end], "range"]
+                : dateOperator === "eq"
+                ? [dateRange.start, "like"]
+                : [[dateRange.start, dateRange.end], "range"],
+          }
+        : {};
+
+    const hasFilterTabs =
+      filterTabs && Object.keys(filterTabs).length > 0;
+
+    const tabFilters = hasFilterTabs
+      ? Object.fromEntries(
+          Object.entries(filterTabs).map(([key, { value }]) => [
+            key,
+            [value, "LIKE"],
+          ])
+        )
+      : {};
 
     let result = [];
     let page = 0;
@@ -550,30 +575,49 @@ const fetchData = useCallback(async () => {
 
       const refid = config?.endPoints?.refid;
 
+      const payload = {
+        queryid: config?.source?.queryid,
+
+        ...(!hasFilterTabs && {
+          stxt: searchTerm,
+          cols: searchableColumns?.map((c) => c.key),
+        }),
+
+        filter: {
+          ...config?.source?.defaultFilters,
+          ...onSidebarChange,
+          ...tabFilters,
+          ...transformedFilters,
+          ...dateFilter,
+        },
+
+        ...(groupBy && { group_by: groupBy }),
+        ...(refid && { refid }),
+
+        limit: rowsPerPage,
+        page: currentPage,
+
+        ...(sortConfig?.key && {
+          orderby: `${sortConfig.key} ${sortConfig.direction}`,
+        }),
+      };
+
       const { data } = await axios({
         method: config?.source?.method || "post",
         url:
           config?.source?.url ||
           `${config?.endPoints?.baseURL}${config?.endPoints.runQuery}`,
-        headers: config?.source?.headers || config?.endPoints?.headers,
-       data: {
-          queryid: config?.source?.queryid,
-          stxt: searchTerm,
-          cols: searchableColumns?.map(c => c.key),
-          filter: {
-            ...config?.source?.defaultFilters,
-            ...onSidebarChange,
-            ...transformedFilters
-          },
-          limit: rowsPerPage,
-          page: currentPage,
-          ...(sortConfig?.key && {
-            orderby: `${sortConfig.key} ${sortConfig.direction}`
-          })
-        },
+        headers:
+          config?.source?.headers || config?.endPoints?.headers,
+        data: payload,
       });
 
-      result = getValueByPath(data, config?.source?.response || "data") || [];
+      result =
+        getValueByPath(
+          data,
+          config?.source?.response || "data"
+        ) || [];
+
       page = data?.page || 0;
       total = data?.max || 0;
     } else {
@@ -585,21 +629,33 @@ const fetchData = useCallback(async () => {
     setData(result);
     setCurrentPage(page);
     setTotalData(total);
-
   } catch (err) {
     if (requestId !== requestIdRef.current) return;
     console.error(err);
   } finally {
     if (requestId === requestIdRef.current) {
       setDataLoading(false);
-      setIsSwitching(false)
-
-      setIsConfigLoading(false); 
+      setIsSwitching(false);
+      setIsConfigLoading(false);
     }
   }
-}, [config, filters, currentPage, rowsPerPage]);
-
-
+}, [
+  config,
+  filters,
+  currentPage,
+  rowsPerPage,
+  searchTerm,
+  searchableColumns,
+  sortConfig,
+  onSidebarChange,
+  filterTabs,
+  groupBy,
+  activeDateCol,
+  dateOperator,
+  dateRange?.start,
+  dateRange?.end,
+  reportdata,
+]);
 
 useEffect(() => {
   if (!config) return;
