@@ -37294,7 +37294,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Rr.canvg ? Promise.resolve(Rr.canvg) : import("./index.es-k2fADm4a.js")).catch(function(f) {
+  return (Rr.canvg ? Promise.resolve(Rr.canvg) : import("./index.es-BBaxasB9.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
@@ -94852,7 +94852,7 @@ function m6e({
         }
         const ki = s?.endPoints?.refid, { data: hi } = await Ai({
           method: s?.source?.method || "post",
-          url: s?.source?.url || `${s?.endPoints?.baseURL}${s?.endPoints.runQuery}`,
+          url: `${s?.endPoints?.baseURL}${s?.source?.url || s?.endPoints.runQuery}`,
           headers: s?.source?.headers || s?.endPoints?.headers,
           data: {
             queryid: s?.source?.queryid,
