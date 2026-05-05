@@ -16412,13 +16412,14 @@ const Cle = [
       return rr.has(ze) ? rr.delete(ze) : rr.add(ze), rr;
     });
   }, _t = _n(() => {
+    if (!r?.tree_type || !G) return /* @__PURE__ */ new Map();
     const ze = /* @__PURE__ */ new Map();
     return Object.values(e).flat().forEach((it) => {
       const rr = S(it, G);
       rr && (ze.has(rr) || ze.set(rr, []), ze.get(rr).push(it));
     }), ze;
-  }, [e]), Tt = (ze) => {
-    if (!r?.tree_type) return ze;
+  }, [e, G, r?.tree_type]), Tt = (ze) => {
+    if (!r?.tree_type || !G) return ze;
     const it = /* @__PURE__ */ new Map(), rr = /* @__PURE__ */ new Map();
     ze.forEach((Nt) => {
       const nr = S(Nt, "id"), yt = S(Nt, G);
@@ -16737,9 +16738,9 @@ const Cle = [
                   "div",
                   {
                     className: "relative group flex items-center",
-                    style: r.tree_type && kt === 0 ? { paddingLeft: `${Nt * 16}px` } : {},
+                    style: r?.tree_type && G && kt === 0 ? { paddingLeft: `${Nt * 16}px` } : {},
                     children: [
-                      r.tree_type && kt === 0 && yt && /* @__PURE__ */ H.jsx(
+                      r?.tree_type && G && kt === 0 && yt && /* @__PURE__ */ H.jsx(
                         "span",
                         {
                           className: "mr-1 text-xs cursor-pointer",
@@ -37346,7 +37347,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (zr.canvg ? Promise.resolve(zr.canvg) : import("./index.es-dRGojgzj.js")).catch(function(f) {
+  return (zr.canvg ? Promise.resolve(zr.canvg) : import("./index.es-BSUvwBOI.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
