@@ -175,7 +175,7 @@ useEffect(() => {
   }, [currentView]);
 
   useEffect(() => {
-    if (config?.DEBUG === true) {
+    if (config?.DEBUG === true && config?.source?.type === "sql") {
       // debugg_URL
       (async () => {
         const axiosObject = {
@@ -501,6 +501,11 @@ const fetchData = useCallback(async () => {
   const {datagrid}=config
   const requestId = ++requestIdRef.current;
 
+  if(config?.rows){
+    setData(config?.rows)
+    return false
+  }
+
   let result = [];
   let page = 0;
   let total = 0;
@@ -521,7 +526,6 @@ const searchableColumns = Object.entries(datagrid) .filter(([, col]) => col?.sea
           }
         : {};
 
-    // ✅ FILTER TABS
     const hasFilterTabs =
       filterTabs && Object.keys(filterTabs).length > 0;
 
@@ -535,7 +539,6 @@ const searchableColumns = Object.entries(datagrid) .filter(([, col]) => col?.sea
           )
         : {};
 
-    // ✅ COLUMN FILTERS (NO CLEANUP → match original)
     const transformedFilters = Object.fromEntries(
       Object.entries(filters || {}).map(
         ([key, { type, value }]) => {
@@ -563,10 +566,8 @@ const searchableColumns = Object.entries(datagrid) .filter(([, col]) => col?.sea
       )
     );
 
-    // ✅ EXACT SAME CONDITION AS OLD CODE
-      if (config?.source?.type === "sql") {
-        // ✅ ensure queryid
-        if (!config?.source?.queryid) {
+      if (config?.source?.type === "sql" || config?.source?.type === "api") {
+        if (!config?.source?.queryid && config?.source?.type === "sql") {
           const { table, cols, join, where } = config.source;
 
           const { data: saveQuerydata } = await axios({
@@ -586,16 +587,13 @@ const searchableColumns = Object.entries(datagrid) .filter(([, col]) => col?.sea
 
         const { data } = await axios({
           method: config?.source?.method || "post",
-          url:
-            config?.source?.url ||
-            `${config?.endPoints?.baseURL}${config?.endPoints.runQuery}`,
+          url: `${config?.endPoints?.baseURL}${config?.source?.url || config?.endPoints.runQuery}`,
           headers:
             config?.source?.headers ||
             config?.endPoints?.headers,
           data: {
             queryid: config?.source?.queryid,
 
-            // ✅ EXACT: only when NO tabs
             ...(!hasFilterTabs && {
               stxt: searchTerm,
               cols: searchableColumns?.map((col) => col.key),
@@ -637,7 +635,6 @@ const searchableColumns = Object.entries(datagrid) .filter(([, col]) => col?.sea
       }
     
 
-    // ✅ race safety
     if (requestId !== requestIdRef.current) return;
 
     setData(result);
@@ -961,20 +958,6 @@ useEffect(() => {
   }, {});
 }, [currentData, groupBy]);
 
-
-useEffect(() => {
-  if (!groupBy) return;
-
-  const initialState = Object.keys(paginatedGroupedData || {}).reduce(
-    (acc, key) => {
-      acc[key] = true;
-      return acc;
-    },
-    {}
-  );
-
-  setOpenGroups(initialState);
-}, [groupBy, paginatedGroupedData]);
 
   if (!config) {
     return (
@@ -1353,25 +1336,39 @@ if (!isReady) {
        
           </div>
                <div className="flex  report-action-bar">
-              {actions &&
-                Object.entries(actions).map(([key, action]) => (
+             {actions &&
+              Object.entries(actions).map(([key, action]) => {
+                const isDisabled =
+                       action?.onselect === true && selectedRows.size === 0;
+                
+                return (
                   <button
+                    key={key}
+                    disabled={isDisabled}
+                    title={
+                      isDisabled
+                        ? "Select at least one row to enable this action"
+                        :  action?.label
+                    }
                     onClick={() =>
+                      !isDisabled &&
                       handleButtonClick(key, action, {
                         ids: [...selectedRows],
                         count: selectedRows.length,
                       })
                     }
-                    key={key}
-                    className={
-                      action?.class ??
-                      "inline-flex items-center px-2 py-1 text-sm font-medium cursor-pointer bg-action rounded-md"
-                    }
+                    className={`inline-flex items-center px-2 py-1 text-sm font-medium rounded-md ${
+                      isDisabled
+                        ? "opacity-50 cursor-not-allowed bg-gray-300"
+                        : action?.class ??
+                          "cursor-pointer bg-action"
+                    }`}
                   >
                     {getIconComponent(action?.icon)}
                     {action?.label}
                   </button>
-                ))}
+                );
+              })}
             </div>
           <div className="hidden sm:flex items-center gap-2 flex-shrink-0">
             {toolbar?.print !== false && (

@@ -47,6 +47,16 @@ const TableView = ({
     fixLastColumn,
     compactMode,
   } = config;
+  const parent_column_name =
+  typeof config?.tree_type === "string"
+    ? config.tree_type
+    : config?.tree_type?.parent_column_name;
+
+  const { open_icon, close_icon } =
+    typeof config?.tree_type === "object" ? config.tree_type : {};
+    
+  
+
   const [copiedCell, setCopiedCell] = useState(null);
   const dropdownRef = useRef(null);
   const reportTitle = config?.title?.toLowerCase().trim().replace(/\s+/g, "_");
@@ -59,6 +69,7 @@ const TableView = ({
   });
   const containerRefs = useRef({});
 const [visibleRange, setVisibleRange] = useState({});
+const [expandedRows, setExpandedRows] = useState(new Set());
 
 
 const BUFFER = 10;
@@ -71,6 +82,68 @@ const VIEWPORT_HEIGHT = 800;
     }));
   };
 
+  const toggleTreeRow = (id) => {
+  setExpandedRows((prev) => {
+    const next = new Set(prev);
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
+    return next;
+  });
+};
+const childrenMap = useMemo(() => {
+  if (!config?.tree_type || !parent_column_name) return new Map();
+
+  const map = new Map();
+
+  Object.values(paginatedGroupedData).flat().forEach((row) => {
+    const parentId = getRowValue(row, parent_column_name);
+    if (!parentId) return;
+
+    if (!map.has(parentId)) map.set(parentId, []);
+    map.get(parentId).push(row);
+  });
+
+  return map;
+}, [paginatedGroupedData, parent_column_name, config?.tree_type]);
+const getTreeVisibleRows = (rows) => {
+  if (!config?.tree_type || !parent_column_name) return rows;
+
+  const rowMap = new Map();
+  const childrenMap = new Map();
+
+  rows.forEach((row) => {
+    const id = getRowValue(row, "id");
+    const parentId = getRowValue(row, parent_column_name);
+
+    rowMap.set(id, row);
+
+    if (parentId) {
+      if (!childrenMap.has(parentId)) childrenMap.set(parentId, []);
+      childrenMap.get(parentId).push(row);
+    }
+  });
+
+  const result = [];
+
+  const traverse = (row, level = 0) => {
+  const id = getRowValue(row, "id");
+
+  result.push({ ...row, level });
+
+  if (!expandedRows.has(id)) return;
+
+  const children = childrenMap.get(id) || [];
+  children.forEach((child) => traverse(child, level + 1));
+};
+
+  rows.forEach((row) => {
+    if (!getRowValue(row, parent_column_name)) {
+      traverse(row, 0);
+    }
+  });
+
+  return result;
+};
 
   useEffect(() => {
     setVisibleRange({ start: 0, end: 30 });
@@ -89,19 +162,16 @@ const VIEWPORT_HEIGHT = 800;
     return () => document.removeEventListener("mousedown", handleOutsideClick);
   }, [openDropdown]);
 
-  useEffect(() => {
+useEffect(() => {
   Object.entries(containerRefs.current).forEach(([groupKey, el]) => {
     if (!el) return;
 
     const onScroll = () => {
       const scrollTop = el.scrollTop;
-      const rows = paginatedGroupedData[groupKey] || [];
 
-      const start = Math.max(
-        0,
-        Math.floor(scrollTop / ROW_HEIGHT) - BUFFER
-      );
+      const rows = getTreeVisibleRows(paginatedGroupedData[groupKey] || []);
 
+      const start = Math.max(0, Math.floor(scrollTop / ROW_HEIGHT) - BUFFER);
       const end = Math.min(
         rows.length,
         Math.ceil((scrollTop + VIEWPORT_HEIGHT) / ROW_HEIGHT) + BUFFER
@@ -122,7 +192,7 @@ const VIEWPORT_HEIGHT = 800;
       el.removeEventListener("scroll", () => {});
     });
   };
-}, [paginatedGroupedData]);
+}, [paginatedGroupedData, expandedRows]);  
 
   const buildGroupedHeaders = () => {
     const groups = [];
@@ -350,9 +420,19 @@ const getEffectiveRows = (rows) => {
 
     setOpenGroups(initialState);
   }, [groupBy, paginatedGroupedData]);
+  useEffect(() => {
+  setVisibleRange((prev) => {
+    const next = {};
+    Object.keys(paginatedGroupedData || {}).forEach((key) => {
+      next[key] = { start: 0, end: 30 };
+    });
+    return next;
+  });
+}, [expandedRows]);
+
 
   
-const renderRow = (row, rowIndex) => {
+const renderRow = (row, rowIndex,currentRows) => {
   const rowRules = config?.rules?.row_class || {};
   let dynamicRowClass = "";
 
@@ -363,6 +443,16 @@ const renderRow = (row, rowIndex) => {
     }
   });
 
+  const level = row.level || 0;
+const rowId = getRowValue(row, "id");
+
+// detect children using currentRows (already scoped per group)
+const hasChildren = childrenMap.has(rowId);
+
+
+const isExpanded = expandedRows.has(rowId);
+
+
   return (
     <tr
       id={`${reportTitle}_tr_${getRowValue(row, "id")}`}
@@ -371,9 +461,9 @@ key={getRowValue(row, "id") ?? `${rowIndex}-${groupBy}`}      className={`${styl
         ${compactMode ? "text-xs py-0.5" : ""} 
         ${stripedRows && rowIndex % 2 === 1 ? "bg-gray-50" : ""}
         ${dynamicRowClass.trim()}`}
-      onClick={() =>
-        rowClickSelection && handleSelectRow(getRowValue(row, "id"))
-      }
+     onClick={() => { 
+  rowClickSelection && handleSelectRow(getRowValue(row, "id"));
+}}
     >
     
                               {hasButtons && (
@@ -522,6 +612,8 @@ key={getRowValue(row, "id") ?? `${rowIndex}-${groupBy}`}      className={`${styl
                                   dynamicColClass =
                                     valueMap[getRowValue(row, key)];
                                 }
+
+                               
                                 return (
                                   <td
                                     id={`${reportTitle}_tr_${getRowValue(
@@ -534,7 +626,31 @@ key={getRowValue(row, "id") ?? `${rowIndex}-${groupBy}`}      className={`${styl
                                       "px-2  py-1 text-sm text-gray-900"
                                     } ${fixedClass} ${dynamicColClass.trim()}`}
                                   >
-                                    <div className="relative group flex items-center">
+                                    <div className="relative group flex items-center"
+                                     style={
+  config?.tree_type && parent_column_name && colIndex === 0
+                    ? { paddingLeft: `${level * 16}px` }
+                    : {}
+                }
+                                    >
+{config?.tree_type && parent_column_name && colIndex === 0 && hasChildren && (  <span
+    className="mr-1 text-xs cursor-pointer"
+    onClick={(e) => {
+      e.stopPropagation();
+      toggleTreeRow(rowId);
+    }}
+  >
+ <i
+      className={
+        isExpanded
+          ? open_icon || "fa-solid fa-chevron-down"
+          : close_icon || "fa-solid fa-chevron-right"
+      }
+    />
+    
+      </span>
+)}
+                                          
                                       <div
                                         className={
                                           wrapLines
@@ -542,6 +658,8 @@ key={getRowValue(row, "id") ?? `${rowIndex}-${groupBy}`}      className={`${styl
                                             : "truncate max-w-xs sm:max-w-none"
                                         }
                                       >
+                                          
+                             
                                         {col.unilink ? (
                                           <button
                                             type="button"
@@ -673,16 +791,20 @@ key={getRowValue(row, "id") ?? `${rowIndex}-${groupBy}`}      className={`${styl
 
           const isOpen = openGroups[groupKey];
 const currentRows = paginatedGroupedData[groupKey] || [];
-const totalRows = currentRows.length;
-
 const range = visibleRange[groupKey] || { start: 0, end: 30 };
 
-const visibleRows = currentRows.slice(range.start, range.end);
+const treeRows = getTreeVisibleRows(currentRows);
 
-const topSpacerHeight = range.start * ROW_HEIGHT;
+const safeStart = Math.min(range.start, treeRows.length);
+const safeEnd = Math.min(range.end, treeRows.length);
 
-const bottomSpacerHeight =
-  (totalRows - range.end) * ROW_HEIGHT;
+const visibleRows = treeRows.slice(safeStart, safeEnd);
+
+const totalRows = treeRows.length;
+
+const topSpacerHeight = Math.max(0, safeStart * ROW_HEIGHT);
+const bottomSpacerHeight = Math.max(0, (totalRows - safeEnd) * ROW_HEIGHT);
+
           return (
             <div key={groupKey} className="border-b border-gray-50">
               {groupBy && (
@@ -942,8 +1064,8 @@ const bottomSpacerHeight =
       )}
 
       {visibleRows.map((row, index) =>
-        renderRow(row, visibleRange.start + index)
-      )}
+  renderRow(row, visibleRange.start + index, treeRows)
+)}
 
       {bottomSpacerHeight > 0 && (
         <tr>
