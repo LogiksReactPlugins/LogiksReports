@@ -148,6 +148,7 @@ const [activeVersion, setActiveVersion] = useState(0);
 const [isConfigLoading, setIsConfigLoading] = useState(false);
 const controllerRef = useRef(null);
 const prevModuleRef = useRef();
+const [showFilterIcon,setShowFilterIcon]=useState(false)
   // console.log({"onSidebarChange____IND":onSidebarChange})
 
 
@@ -224,17 +225,20 @@ const visibleColumns = useMemo(() => {
   if (!config?.datagrid) return [];
   return Object.entries(config.datagrid).filter(([, col]) => !col.hidden);
 }, [config?.datagrid]);
-  // useEffect(() => {
-  //   if (!showTableFilters || !visibleColumns) return;
 
-  //   visibleColumns?.forEach(async ([key, col]) => {
-  //     const filter = col.filter;
-  //     if (filter?.type === "select" && !filter.options) {
-  //       const options = await fetchSelectOptions(filter);
-  //       setSelectOptions((prev) => ({ ...prev, [key]: options }));
-  //     }
-  //   });
-  // }, [showTableFilters, visibleColumns]);
+
+useEffect(() => {
+  if (!visibleColumns) return;
+
+  const filterColumnCount = visibleColumns.reduce(
+    (count, [, col]) => (col?.filter ? count + 1 : count),
+    0
+  );
+  setShowFilterIcon(filterColumnCount || false);
+}, [visibleColumns]);
+
+
+
   function setViewHistory(view) {
     const STORAGE_KEY = getPathKey();
     const localOverrides =
@@ -1724,12 +1728,15 @@ if (!isReady) {
                   <Settings className="w-4 h-4" />
                 </button>
               )}
+              {
+                showFilterIcon &&
               <button
-                onClick={() => setShowTableFilters((prev) => !prev)}
-                className={`inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md transition-colors  bg-action cursor-pointer`}
+              onClick={() => setShowTableFilters((prev) => !prev)}
+              className={`inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md transition-colors  bg-action cursor-pointer`}
               >
                 <FilterIcon className="w-4 h-4" />
               </button>
+              }
             </div>
           </div>
         </div>
