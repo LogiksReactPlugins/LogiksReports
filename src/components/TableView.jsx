@@ -35,7 +35,8 @@ const TableView = ({
   resolvePlaceholders,
   methods,
   groupBy,
-  errorMsg
+  errorMsg,
+  getLocalRefData
 }) => {
   const { datagrid } = config;
   const {
@@ -70,8 +71,42 @@ const TableView = ({
   const containerRefs = useRef({});
 const [visibleRange, setVisibleRange] = useState({});
 const [expandedRows, setExpandedRows] = useState(new Set());
+  const activeLocalRef =
+  config?.module_refid
+
+const getStoredRowId = (data) => {
+  if (!data || typeof data !== "object") return null;
+
+  // direct id
+  if (data.id !== undefined && data.id !== null) {
+    return data.id;
+  }
+
+  // support tblname.id
+  const dynamicIdKey = Object.keys(data).find((key) =>
+    key.toLowerCase().endsWith(".id")
+  );
+
+  if (dynamicIdKey) {
+    return data[dynamicIdKey];
+  }
+
+  return null;
+};
 
 
+const highlightedRowId = activeLocalRef
+  ? getStoredRowId(
+      getLocalRefData(
+        typeof activeLocalRef === "string"
+          ? activeLocalRef
+          : Object.keys(activeLocalRef)[0]
+      )
+    )
+  : null;
+const [activeHighlightedRowId, setActiveHighlightedRowId] =
+  useState(highlightedRowId);
+ 
 const BUFFER = 10;
 const VIEWPORT_HEIGHT = 800;
 
@@ -420,6 +455,8 @@ const getEffectiveRows = (rows) => {
 
     setOpenGroups(initialState);
   }, [groupBy, paginatedGroupedData]);
+
+
   useEffect(() => {
   setVisibleRange((prev) => {
     const next = {};
@@ -430,8 +467,11 @@ const getEffectiveRows = (rows) => {
   });
 }, [expandedRows]);
 
+ useEffect(() => {
+  setActiveHighlightedRowId(highlightedRowId || null);
+}, [highlightedRowId]);
 
-  
+
 const renderRow = (row, rowIndex,currentRows) => {
   const rowRules = config?.rules?.row_class || {};
   let dynamicRowClass = "";
@@ -448,7 +488,8 @@ const rowId = getRowValue(row, "id");
 
 // detect children using currentRows (already scoped per group)
 const hasChildren = childrenMap.has(rowId);
-
+const isHighlighted =
+  String(rowId) === String(activeHighlightedRowId);
 
 const isExpanded = expandedRows.has(rowId);
 
@@ -460,7 +501,9 @@ key={getRowValue(row, "id") ?? `${rowIndex}-${groupBy}`}      className={`${styl
         ${rowClickSelection ? "cursor-pointer" : ""} 
         ${compactMode ? "text-xs py-0.5" : ""} 
         ${stripedRows && rowIndex % 2 === 1 ? "bg-gray-50" : ""}
-        ${dynamicRowClass.trim()}`}
+        ${dynamicRowClass.trim()}
+            ${isHighlighted ? "highlight-row" : ""}
+        `}
      onClick={() => { 
   rowClickSelection && handleSelectRow(getRowValue(row, "id"));
 }}
@@ -665,6 +708,7 @@ key={getRowValue(row, "id") ?? `${rowIndex}-${groupBy}`}      className={`${styl
                                             type="button"
                                             onClick={(e) => {
                                               e.stopPropagation();
+                                                setActiveHighlightedRowId(rowId);
                                               handleButtonClick(
                                                 col.unilink,
                                                 col,

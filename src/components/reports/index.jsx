@@ -98,7 +98,8 @@ function Reports({
   data: reportdata,
   onButtonClick,
   components,
-  api
+  api,
+  getLocalRefData
 }) {
   const [config, setConfig] = useState(null);
   const [currentView, setCurrentView] = useState();
@@ -1977,7 +1978,8 @@ if (!isReady) {
           resolvePlaceholders={resolvePlaceholders}
           methods={methods}
           groupBy={groupBy}
-        errorMsg={errorMsg}
+          errorMsg={errorMsg}
+          getLocalRefData={getLocalRefData}
         />
       )}
        </div>
