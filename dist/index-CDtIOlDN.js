@@ -16605,7 +16605,7 @@ const Cle = [
       }), gt;
     });
   }, [je]);
-  const pr = r?.highlight_local_ref || r?.get_local_ref, Lt = pr ? Q(
+  const pr = r?.module_refid, Lt = pr ? Q(
     typeof pr == "string" ? pr : Object.keys(pr)[0]
   )?.id : null;
   xr(() => {
@@ -37369,7 +37369,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (zr.canvg ? Promise.resolve(zr.canvg) : import("./index.es-DcN6n8yz.js")).catch(function(f) {
+  return (zr.canvg ? Promise.resolve(zr.canvg) : import("./index.es-DaidaZR1.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
