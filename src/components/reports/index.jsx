@@ -67,6 +67,7 @@ import GanttView from "../GanttView";
 import GmapView from "../GmapView";
 import { ModalProvider, useModal } from "../../helpers/ModalContext";
 import Sidebar from "../sidebar/Sidebar";
+import MatrixView from "../MatrixReportView";
 const getRowValue = (row, key) => {
   if (key in row) return row[key];
   console.log({ key });
@@ -167,7 +168,7 @@ useEffect(() => {
 
   useEffect(() => {
     setCurrentPage(0);
-    setRowsPerPage(config?.rowsPerPage);
+    setRowsPerPage(config?.rowsPerPage || 10);
   }, [config?.rowsPerPage]);
 
 
@@ -269,6 +270,7 @@ useEffect(() => {
 
   const allViews = [
     { key: "table", icon: <List className="w-4 h-4" />, title: "Table" },
+    { key: "matrix", icon: <List className="w-4 h-4" />, title: "matrix" },
     { key: "cards", icon: <LayoutGrid className="w-4 h-4" />, title: "Cards" },
     { key: "kanban", icon: <Columns className="w-4 h-4" />, title: "Kanban" },
     {
@@ -1218,13 +1220,50 @@ const formatted = formatCellValue(
     if (!iconStr) return null;
     return <i className={`${iconStr}`}></i>;
   };
-  const getRowValue = (row, key) => {
-    if (key in row) return row[key];
-    const lastKey = key.split(".").pop();
-    if (lastKey in row) return row[lastKey];
-    const match = Object.keys(row).find((k) => k.split(".").pop() === lastKey);
-    return match ? row[match] : undefined;
-  };
+const getRowValue = (row, key) => {
+  if (
+    !row ||
+    typeof row !== "object" ||
+    !key ||
+    typeof key !== "string"
+  ) {
+    return undefined;
+  }
+
+  if (key in row) {
+    return row[key];
+  }
+
+  const trimmedKey = key.trim();
+
+  if (!trimmedKey) {
+    return undefined;
+  }
+
+  const lastKey = trimmedKey
+    .split(".")
+    .pop();
+
+  if (!lastKey) {
+    return undefined;
+  }
+
+  if (lastKey in row) {
+    return row[lastKey];
+  }
+
+  const match = Object.keys(row).find(
+    (k) =>
+      typeof k === "string" &&
+      k.split(".").pop() === lastKey
+  );
+
+  return match
+    ? row[match]
+    : undefined;
+};
+
+
   function resolvePlaceholders(template, rowData = {}) {
     return template.replace(/\{([^}]+)\}/g, (_, key) => {
       return getRowValue(rowData, key) !== undefined
@@ -1944,7 +1983,47 @@ if (!isReady) {
           loading={dataLoading}
           errorMsg={errorMsg}
         />
-      ) : (
+      ) : 
+      currentView === "matrix" ?  (
+        <MatrixView
+        key={`${config?.module_refid}-${visibleColumns.map(c => c[0]).join(",")}`}
+        style={style?.table}
+          config={config}
+          getRowValue={getRowValue}
+          paginatedGroupedData={paginatedGroupedData}
+          visibleColumns={visibleColumns}
+          hasButtons={hasButtons}
+          visibleButtons={visibleButtons}
+          moreButtons={moreButtons}
+          sortConfig={sortConfig}
+          showExtraColumn={showExtraColumn}
+          selectAll={selectAll}
+          selectedRows={selectedRows}
+          openDropdown={openDropdown}
+          handleSort={handleSort}
+          handleSelectAll={handleSelectAll}
+          handleSelectRow={handleSelectRow}
+          handleButtonClick={handleButtonClick}
+          toggleDropdown={toggleDropdown}
+          setOpenDropdown={setOpenDropdown}
+          parseStyle={parseStyle}
+          formatCellValue={formatCellValue}
+          renderSortIcon={renderSortIcon}
+          getIconComponent={getIconComponent}
+          loading={dataLoading}
+          showTableFilters={showTableFilters}
+          selectOption={selectOptions}
+          filters={filters}
+          setFilters={setFilters}
+          resolvePlaceholders={resolvePlaceholders}
+          methods={methods}
+          groupBy={groupBy}
+          errorMsg={errorMsg}
+          getLocalRefData={getLocalRefData}
+          data={data}
+        />
+      ):
+      (
         <TableView
         key={`${config?.module_refid}-${visibleColumns.map(c => c[0]).join(",")}`}
         style={style?.table}
