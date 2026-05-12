@@ -23279,8 +23279,9 @@ function jC(r, e, t = {}, n = {}, i, a) {
     case "file":
     case "attachment": {
       if (!r) return "No File";
-      const o = String(r).split(",").map((s) => s.trim()).filter(Boolean);
-      return /* @__PURE__ */ Q.jsx("div", { className: "flex flex-col gap-1", children: o.map((s, l) => /* @__PURE__ */ Q.jsx(Afe, { url: s, index: l, config: i }, l)) });
+      let o = [];
+      const s = String(r).trim();
+      return s.startsWith("data:") ? o = [s] : o = s.split(",").map((u) => u.trim()).filter(Boolean), /* @__PURE__ */ Q.jsx("div", { className: "flex flex-col gap-1", children: o.map((u, A) => /* @__PURE__ */ Q.jsx(Afe, { url: u, index: A, config: i }, A)) });
     }
     case "json":
       try {
@@ -37432,7 +37433,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (jr.canvg ? Promise.resolve(jr.canvg) : import("./index.es-50EGdlOE.js")).catch(function(f) {
+  return (jr.canvg ? Promise.resolve(jr.canvg) : import("./index.es-BG_u6U0j.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
