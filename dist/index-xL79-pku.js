@@ -23400,33 +23400,40 @@ function ufe({ abstract: r, content: e }) {
   ] });
 }
 function Afe({ url: r, index: e, config: t }) {
-  const [n, i] = _n.useState(!1), [a, o] = _n.useState(null), [s, l] = _n.useState(!1), [u, A] = _n.useState(!0), c = r.split("/").pop(), f = /^https?:\/\//i.test(r), h = r.replace(/^[^&]*&/, "");
+  const [n, i] = _n.useState(!1), [a, o] = _n.useState(null), [s, l] = _n.useState(!1), [u, A] = _n.useState(!0), c = r?.split("/").pop() || "Preview", f = /^https?:\/\//i.test(r), h = /^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/.test(
+    r
+  ), d = r.includes("&") ? r.split("&").slice(1).join("&") : r;
   _n.useEffect(() => {
-    if (!n || f) return;
-    let v;
+    if (!n || f || h) return;
+    let g;
     return (async () => {
       try {
         l(!0), A(!0);
-        const m = await fetch(
-          `${t.endPoints.preview}?uri=${encodeURIComponent(h)}`,
-          { headers: t?.endPoints?.headers }
+        const y = await fetch(
+          `${t.endPoints.preview}?uri=${encodeURIComponent(
+            d
+          )}`,
+          {
+            headers: t?.endPoints?.headers
+          }
         );
-        if (!m.ok) throw new Error("Preview fetch failed");
-        const y = m.headers.get("content-type") || "", w = await m.blob(), x = URL.createObjectURL(w);
-        if (v = x, o(x), !y.startsWith("image/") && !y.includes("pdf")) {
+        if (!y.ok)
+          throw new Error("Preview fetch failed");
+        const w = y.headers.get("content-type") || "", x = await y.blob(), b = URL.createObjectURL(x);
+        if (g = b, o(b), !w.startsWith("image/") && !w.includes("pdf")) {
           setTimeout(() => i(!1), 300);
           return;
         }
-      } catch (m) {
-        console.error("Preview load failed", m), o(null);
+      } catch (y) {
+        console.error("Preview load failed", y), o(null);
       } finally {
         l(!1);
       }
     })(), () => {
-      v && URL.revokeObjectURL(v);
+      g && URL.revokeObjectURL(g);
     };
-  }, [n, r, f, t]);
-  const d = f ? r : a;
+  }, [n, r, f, h, t]);
+  const v = f || h ? r : a;
   return /* @__PURE__ */ Q.jsxs(Q.Fragment, { children: [
     /* @__PURE__ */ Q.jsx(
       "span",
@@ -23445,18 +23452,26 @@ function Afe({ url: r, index: e, config: t }) {
           children: "✕"
         }
       ),
-      /* @__PURE__ */ Q.jsx("div", { className: "mb-3 text-sm font-medium text-gray-700", children: c }),
-      (s || u) && /* @__PURE__ */ Q.jsx("div", { className: "flex items-center justify-center h-[60vh] text-sm text-gray-500", children: "Loading preview…" }),
-      d && /* @__PURE__ */ Q.jsx(
+      /* @__PURE__ */ Q.jsx("div", { className: "mb-3 text-sm font-medium text-gray-700 break-all", children: c }),
+      (s || u) && /* @__PURE__ */ Q.jsx("div", { className: "flex items-center justify-center h-[60vh] text-sm text-gray-500", children: "Loading preview..." }),
+      v && /* @__PURE__ */ Q.jsx(Q.Fragment, { children: v.startsWith("data:image") ? /* @__PURE__ */ Q.jsx(
+        "img",
+        {
+          src: v,
+          alt: c,
+          onLoad: () => A(!1),
+          className: `max-w-full max-h-[60vh] mx-auto rounded ${s || u ? "hidden" : "block"}`
+        }
+      ) : /* @__PURE__ */ Q.jsx(
         "iframe",
         {
-          src: d,
+          src: v,
           title: c,
           onLoad: () => A(!1),
           className: `w-full h-[60vh] border border-slate-200 rounded ${s || u ? "hidden" : "block"}`
         }
-      ),
-      !s && !d && /* @__PURE__ */ Q.jsx("div", { className: "text-sm text-red-500", children: "Preview not available" })
+      ) }),
+      !s && !v && /* @__PURE__ */ Q.jsx("div", { className: "text-sm text-red-500", children: "Preview not available" })
     ] }) })
   ] });
 }
@@ -37368,7 +37383,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (jr.canvg ? Promise.resolve(jr.canvg) : import("./index.es-DHuYgpo4.js")).catch(function(f) {
+  return (jr.canvg ? Promise.resolve(jr.canvg) : import("./index.es-CJToA_b8.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
