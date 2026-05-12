@@ -23399,79 +23399,128 @@ function ufe({ abstract: r, content: e }) {
     ] }) })
   ] });
 }
-function Afe({ url: r, index: e, config: t }) {
-  const [n, i] = _n.useState(!1), [a, o] = _n.useState(null), [s, l] = _n.useState(!1), [u, A] = _n.useState(!0), c = r?.split("/").pop() || "Preview", f = /^https?:\/\//i.test(r), h = /^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/.test(
-    r
-  ), d = r.includes("&") ? r.split("&").slice(1).join("&") : r;
+function Afe({
+  url: r,
+  index: e,
+  config: t
+}) {
+  const [n, i] = _n.useState(!1), [a, o] = _n.useState(null), [s, l] = _n.useState(!1), [u, A] = _n.useState(!0), c = r?.split("/")?.pop() || "Preview", f = /^https?:\/\//i.test(r), h = typeof r == "string" && r.startsWith("data:"), d = r.includes("&") ? r.split("&").slice(1).join("&") : r;
   _n.useEffect(() => {
-    if (!n || f || h) return;
-    let g;
+    if (!n || f || h)
+      return;
+    let y;
     return (async () => {
       try {
         l(!0), A(!0);
-        const y = await fetch(
-          `${t.endPoints.preview}?uri=${encodeURIComponent(
+        const x = await fetch(
+          `${t?.endPoints?.preview}?uri=${encodeURIComponent(
             d
           )}`,
           {
-            headers: t?.endPoints?.headers
+            headers: t?.endPoints?.headers || {}
           }
         );
-        if (!y.ok)
-          throw new Error("Preview fetch failed");
-        const w = y.headers.get("content-type") || "", x = await y.blob(), b = URL.createObjectURL(x);
-        if (g = b, o(b), !w.startsWith("image/") && !w.includes("pdf")) {
-          setTimeout(() => i(!1), 300);
-          return;
-        }
-      } catch (y) {
-        console.error("Preview load failed", y), o(null);
+        if (!x.ok)
+          throw new Error(
+            "Preview fetch failed"
+          );
+        const b = x.headers.get(
+          "content-type"
+        ) || "", S = await x.blob();
+        if (!(b.startsWith(
+          "image/"
+        ) || b.includes(
+          "pdf"
+        )))
+          throw new Error(
+            "Preview not supported"
+          );
+        const D = URL.createObjectURL(
+          S
+        );
+        y = D, o(D);
+      } catch (x) {
+        console.error(
+          "Preview load failed",
+          x
+        ), o(null);
       } finally {
         l(!1);
       }
     })(), () => {
-      g && URL.revokeObjectURL(g);
+      y && URL.revokeObjectURL(
+        y
+      );
     };
-  }, [n, r, f, h, t]);
-  const v = f || h ? r : a;
+  }, [
+    n,
+    r,
+    f,
+    h,
+    d,
+    t
+  ]);
+  const v = f || h ? r : a, g = v?.startsWith(
+    "data:image"
+  ) || /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(
+    v || ""
+  ), m = v?.startsWith(
+    "data:application/pdf"
+  ) || /\.pdf$/i.test(
+    v || ""
+  );
   return /* @__PURE__ */ Q.jsxs(Q.Fragment, { children: [
     /* @__PURE__ */ Q.jsx(
       "span",
       {
         className: "text-blue-600 underline cursor-pointer text-sm",
-        onClick: () => i(!0),
+        onClick: () => {
+          i(!0), A(!0);
+        },
         children: "LINK"
       }
     ),
-    n && /* @__PURE__ */ Q.jsx("div", { className: "fixed inset-0 z-50 flex items-center justify-center bg-black/40", children: /* @__PURE__ */ Q.jsxs("div", { className: "bg-white max-w-3xl w-full rounded shadow-lg p-4 relative max-h-[80vh] overflow-y-auto", children: [
-      /* @__PURE__ */ Q.jsx(
-        "button",
-        {
-          className: "absolute top-2 right-2 cursor-pointer text-gray-500 bg-gray-200 px-2 py-1",
-          onClick: () => i(!1),
-          children: "✕"
-        }
-      ),
-      /* @__PURE__ */ Q.jsx("div", { className: "mb-3 text-sm font-medium text-gray-700 break-all", children: c }),
-      (s || u) && /* @__PURE__ */ Q.jsx("div", { className: "flex items-center justify-center h-[60vh] text-sm text-gray-500", children: "Loading preview..." }),
-      v && /* @__PURE__ */ Q.jsx(Q.Fragment, { children: v.startsWith("data:image") ? /* @__PURE__ */ Q.jsx(
-        "img",
-        {
-          src: v,
-          alt: c,
-          onLoad: () => A(!1),
-          className: `max-w-full max-h-[60vh] mx-auto rounded ${s || u ? "hidden" : "block"}`
-        }
-      ) : /* @__PURE__ */ Q.jsx(
-        "iframe",
-        {
-          src: v,
-          title: c,
-          onLoad: () => A(!1),
-          className: `w-full h-[60vh] border border-slate-200 rounded ${s || u ? "hidden" : "block"}`
-        }
-      ) }),
-      !s && !v && /* @__PURE__ */ Q.jsx("div", { className: "text-sm text-red-500", children: "Preview not available" })
+    n && /* @__PURE__ */ Q.jsx("div", { className: "fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4", children: /* @__PURE__ */ Q.jsxs("div", { className: "bg-white max-w-5xl w-full rounded-xl shadow-lg relative overflow-hidden", children: [
+      /* @__PURE__ */ Q.jsxs("div", { className: "flex items-center justify-between border-b px-4 py-3", children: [
+        /* @__PURE__ */ Q.jsx("div", { className: "text-sm font-medium text-gray-700 break-all", children: c }),
+        /* @__PURE__ */ Q.jsx(
+          "button",
+          {
+            className: "cursor-pointer text-gray-500 hover:text-black bg-gray-100 hover:bg-gray-200 rounded px-2 py-1 text-sm",
+            onClick: () => i(!1),
+            children: "✕"
+          }
+        )
+      ] }),
+      /* @__PURE__ */ Q.jsxs("div", { className: "p-4 min-h-[300px] flex items-center justify-center", children: [
+        (s || u) && /* @__PURE__ */ Q.jsx("div", { className: "text-sm text-gray-500", children: "Loading preview..." }),
+        !s && v && /* @__PURE__ */ Q.jsxs(Q.Fragment, { children: [
+          g && /* @__PURE__ */ Q.jsx(
+            "img",
+            {
+              src: v,
+              alt: c,
+              onLoad: () => A(
+                !1
+              ),
+              className: `max-w-full max-h-[75vh] rounded ${u ? "hidden" : "block"}`
+            }
+          ),
+          m && /* @__PURE__ */ Q.jsx(
+            "iframe",
+            {
+              src: v,
+              title: c,
+              onLoad: () => A(
+                !1
+              ),
+              className: `w-full h-[75vh] border rounded ${u ? "hidden" : "block"}`
+            }
+          ),
+          !g && !m && /* @__PURE__ */ Q.jsx("div", { className: "text-sm text-red-500", children: "Preview not supported" })
+        ] }),
+        !s && !v && /* @__PURE__ */ Q.jsx("div", { className: "text-sm text-red-500", children: "Preview not available" })
+      ] })
     ] }) })
   ] });
 }
@@ -37383,7 +37432,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (jr.canvg ? Promise.resolve(jr.canvg) : import("./index.es-CJToA_b8.js")).catch(function(f) {
+  return (jr.canvg ? Promise.resolve(jr.canvg) : import("./index.es-50EGdlOE.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
