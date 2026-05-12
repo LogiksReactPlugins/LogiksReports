@@ -387,11 +387,21 @@ function AttachmentPopup({ url, index, config }) {
   const [loading, setLoading] = React.useState(false);
   const [frameLoading, setFrameLoading] = React.useState(true);
 
-  const fileName = url.split("/").pop();
+  const fileName = url?.split("/").pop() || "Preview";
+
   const isHttp = /^https?:\/\//i.test(url);
- const cleanPath = url.replace(/^[^&]*&/, "");
+
+  const isBase64 =
+    /^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/.test(
+      url
+    );
+
+  const cleanPath = url.includes("&")
+    ? url.split("&").slice(1).join("&")
+    : url;
+
   React.useEffect(() => {
-    if (!open || isHttp) return;
+    if (!open || isHttp || isBase64) return;
 
     let revokedUrl;
 
@@ -401,19 +411,30 @@ function AttachmentPopup({ url, index, config }) {
         setFrameLoading(true);
 
         const res = await fetch(
-          `${config.endPoints.preview}?uri=${encodeURIComponent(cleanPath)}`,
-          { headers: config?.endPoints?.headers }
+          `${config.endPoints.preview}?uri=${encodeURIComponent(
+            cleanPath
+          )}`,
+          {
+            headers: config?.endPoints?.headers,
+          }
         );
 
-        if (!res.ok) throw new Error("Preview fetch failed");
+        if (!res.ok) {
+          throw new Error("Preview fetch failed");
+        }
 
-        const contentType = res.headers.get("content-type") || "";
+        const contentType =
+          res.headers.get("content-type") || "";
 
         const blob = await res.blob();
+
         const blobUrl = URL.createObjectURL(blob);
+
         revokedUrl = blobUrl;
+
         setPreviewUrl(blobUrl);
 
+        // allow only image/pdf
         if (
           !contentType.startsWith("image/") &&
           !contentType.includes("pdf")
@@ -423,20 +444,26 @@ function AttachmentPopup({ url, index, config }) {
         }
       } catch (e) {
         console.error("Preview load failed", e);
+
         setPreviewUrl(null);
       } finally {
         setLoading(false);
-      }
+      }  // final preview source
+
     };
 
     loadPreview();
 
     return () => {
-      if (revokedUrl) URL.revokeObjectURL(revokedUrl);
+      if (revokedUrl) {
+        URL.revokeObjectURL(revokedUrl);
+      }
     };
-  }, [open, url, isHttp, config]);
+  }, [open, url, isHttp, isBase64, config]);
 
-  const finalUrl = isHttp ? url : previewUrl;
+  const finalUrl = isHttp || isBase64
+    ? url
+    : previewUrl;
 
   return (
     <>
@@ -457,29 +484,53 @@ function AttachmentPopup({ url, index, config }) {
               ✕
             </button>
 
-            <div className="mb-3 text-sm font-medium text-gray-700">
+            <div className="mb-3 text-sm font-medium text-gray-700 break-all">
               {fileName}
             </div>
 
             {(loading || frameLoading) && (
               <div className="flex items-center justify-center h-[60vh] text-sm text-gray-500">
-                Loading preview…
+                Loading preview...
               </div>
             )}
 
             {finalUrl && (
-              <iframe
-                src={finalUrl}
-                title={fileName}
-                onLoad={() => setFrameLoading(false)}
-                className={`w-full h-[60vh] border border-slate-200 rounded ${
-                  loading || frameLoading ? "hidden" : "block"
-                }`}
-              />
+              <>
+                {/* image preview */}
+                {finalUrl.startsWith("data:image") ? (
+                  <img
+                    src={finalUrl}
+                    alt={fileName}
+                    onLoad={() =>
+                      setFrameLoading(false)
+                    }
+                    className={`max-w-full max-h-[60vh] mx-auto rounded ${
+                      loading || frameLoading
+                        ? "hidden"
+                        : "block"
+                    }`}
+                  />
+                ) : (
+                  <iframe
+                    src={finalUrl}
+                    title={fileName}
+                    onLoad={() =>
+                      setFrameLoading(false)
+                    }
+                    className={`w-full h-[60vh] border border-slate-200 rounded ${
+                      loading || frameLoading
+                        ? "hidden"
+                        : "block"
+                    }`}
+                  />
+                )}
+              </>
             )}
 
             {!loading && !finalUrl && (
-              <div className="text-sm text-red-500">Preview not available</div>
+              <div className="text-sm text-red-500">
+                Preview not available
+              </div>
             )}
           </div>
         </div>
