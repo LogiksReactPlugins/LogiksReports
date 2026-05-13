@@ -16631,7 +16631,7 @@ const Ble = [
       "tr",
       {
         id: `${ce}_tr_${S(Ze, "id")}`,
-        className: `${x?.tr || "hover:bg-secondary"} 
+        className: `h-[42px] ${x?.tr || "hover:bg-secondary"} 
         ${j ? "cursor-pointer" : ""} 
         ${V ? "text-xs py-0.5" : ""} 
         ${ee && ot % 2 === 1 ? "bg-gray-50" : ""}
@@ -16754,7 +16754,8 @@ const Ble = [
                   Ze,
                   "id"
                 )}_${jt}`,
-                className: `${x?.td || "px-2  py-1 text-sm text-gray-900"} ${Ht} ${an.trim()}`,
+                className: `
+    h-[42px]${x?.td || "px-2  py-1 text-sm text-gray-900"} ${Ht} ${an.trim()}`,
                 style: Et.style ? g(Et.style) : {},
                 children: /* @__PURE__ */ Q.jsxs(
                   "div",
@@ -16780,7 +16781,7 @@ const Ble = [
                       /* @__PURE__ */ Q.jsx(
                         "div",
                         {
-                          className: J ? "whitespace-pre-wrap break-words max-w-none" : "truncate max-w-xs sm:max-w-none",
+                          className: "truncate whitespace-nowrap overflow-hidden",
                           children: Et.unilink ? /* @__PURE__ */ Q.jsx(
                             "button",
                             {
@@ -37466,7 +37467,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (jr.canvg ? Promise.resolve(jr.canvg) : import("./index.es-CCblnt6k.js")).catch(function(f) {
+  return (jr.canvg ? Promise.resolve(jr.canvg) : import("./index.es-BUdfDNVg.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
@@ -95551,7 +95552,8 @@ function y6e({
   onButtonClick: i,
   components: a,
   api: o,
-  getLocalRefData: s
+  getLocalRefData: s = () => {
+  }
 }) {
   const [l, u] = Ot(null), [A, c] = Ot(), [f, h] = Ot(""), [d, v] = Ot({ key: null, direction: "asc" }), [g, m] = Ot(null), [y, w] = Ot(0), [x, b] = Ot(/* @__PURE__ */ new Set()), [S, C] = Ot(!1), [D, T] = Ot(!1), [N, I] = Ot(null), [M, P] = Ot(!1), k = An(null), [H, W] = Ot(null), [J, j] = Ot([]), ee = J || [], [re, Z] = Ot(!1), [O, V] = Ot(null), [G, K] = Ot(!1), te = An(null), [Ae, he] = Ot(!1), [fe, ce] = Ot(!1), [Se, Te] = Ot(null), [Ge, We] = Ot(0), [ue, Ue] = Ot(0), [je, pt] = Ot(""), [Je, Tt] = Ot(!1), [wt, Yt] = Ot(null), [It, Cr] = Ot({ start: "", end: "" }), [Ir, _r] = Ot(20), [Br, dr] = Ot(), [Dt, Sr] = Ot("eq"), [Pt, bn] = Ot({}), [Gr, Dr] = Ot(!1), Tr = An(null), [Ze, ot] = Ot({}), [Rt, bt] = Ot({}), { openConfirm: Gt, openPrompt: Ar, openAlert: mt } = h6e(), [lt, Ut] = Ot(""), [dn, jt] = Ot(null), [Et, $t] = Ot(null), Ht = An(0), [Wr, gn] = Ot(!1);
   An(0);
