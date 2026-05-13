@@ -100,7 +100,7 @@ function Reports({
   onButtonClick,
   components,
   api,
-  getLocalRefData
+  getLocalRefData=()=>{},
 }) {
   const [config, setConfig] = useState(null);
   const [currentView, setCurrentView] = useState();

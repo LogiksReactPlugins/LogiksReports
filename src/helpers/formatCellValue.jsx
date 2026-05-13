@@ -171,11 +171,23 @@ export default function formatCellValue(
     case "file":
     case "attachment": {
       if (!value) return "No File";
+  let links = [];
 
-      const links = String(value)
-        .split(",")
-        .map((v) => v.trim())
-        .filter(Boolean);
+        const stringValue = String(value).trim();
+
+
+  const isBase64 =
+    stringValue.startsWith("data:");
+
+  if (isBase64) {
+    links = [stringValue];
+  } else {
+    links = stringValue
+      .split(",")
+      .map((v) => v.trim())
+      .filter(Boolean);
+  }
+
 
       return (
         <div className="flex flex-col gap-1">
@@ -381,27 +393,51 @@ function ContentPopup({ abstract, content }) {
     </>
   );
 }
-function AttachmentPopup({ url, index, config }) {
-  const [open, setOpen] = React.useState(false);
-  const [previewUrl, setPreviewUrl] = React.useState(null);
-  const [loading, setLoading] = React.useState(false);
-  const [frameLoading, setFrameLoading] = React.useState(true);
 
-  const fileName = url?.split("/").pop() || "Preview";
+function AttachmentPopup({
+  url,
+  index,
+  config,
+}) {
+  const [open, setOpen] =
+    React.useState(false);
 
-  const isHttp = /^https?:\/\//i.test(url);
+  const [previewUrl, setPreviewUrl] =
+    React.useState(null);
 
+  const [loading, setLoading] =
+    React.useState(false);
+
+  const [frameLoading, setFrameLoading] =
+    React.useState(true);
+
+  const fileName =
+    url?.split("/")?.pop() || "Preview";
+
+  // public url
+  const isHttp =
+    /^https?:\/\//i.test(url);
+
+  // base64
   const isBase64 =
-    /^data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+);base64,/.test(
-      url
-    );
+    typeof url === "string" &&
+    url.startsWith("data:");
 
+  // internal/private file path
   const cleanPath = url.includes("&")
     ? url.split("&").slice(1).join("&")
     : url;
 
   React.useEffect(() => {
-    if (!open || isHttp || isBase64) return;
+    // direct preview supported
+    // no api call required
+    if (
+      !open ||
+      isHttp ||
+      isBase64
+    ) {
+      return;
+    }
 
     let revokedUrl;
 
@@ -411,127 +447,204 @@ function AttachmentPopup({ url, index, config }) {
         setFrameLoading(true);
 
         const res = await fetch(
-          `${config.endPoints.preview}?uri=${encodeURIComponent(
+          `${config?.endPoints?.preview}?uri=${encodeURIComponent(
             cleanPath
           )}`,
           {
-            headers: config?.endPoints?.headers,
+            headers:
+              config?.endPoints?.headers ||
+              {},
           }
         );
 
         if (!res.ok) {
-          throw new Error("Preview fetch failed");
+          throw new Error(
+            "Preview fetch failed"
+          );
         }
 
         const contentType =
-          res.headers.get("content-type") || "";
+          res.headers.get(
+            "content-type"
+          ) || "";
 
-        const blob = await res.blob();
+        const blob =
+          await res.blob();
 
-        const blobUrl = URL.createObjectURL(blob);
+        // supported preview check
+        const isSupported =
+          contentType.startsWith(
+            "image/"
+          ) ||
+          contentType.includes(
+            "pdf"
+          );
+
+        if (!isSupported) {
+          throw new Error(
+            "Preview not supported"
+          );
+        }
+
+        const blobUrl =
+          URL.createObjectURL(
+            blob
+          );
 
         revokedUrl = blobUrl;
 
         setPreviewUrl(blobUrl);
-
-        // allow only image/pdf
-        if (
-          !contentType.startsWith("image/") &&
-          !contentType.includes("pdf")
-        ) {
-          setTimeout(() => setOpen(false), 300);
-          return;
-        }
       } catch (e) {
-        console.error("Preview load failed", e);
+        console.error(
+          "Preview load failed",
+          e
+        );
 
         setPreviewUrl(null);
       } finally {
         setLoading(false);
-      }  // final preview source
-
+      }
     };
 
     loadPreview();
 
     return () => {
       if (revokedUrl) {
-        URL.revokeObjectURL(revokedUrl);
+        URL.revokeObjectURL(
+          revokedUrl
+        );
       }
     };
-  }, [open, url, isHttp, isBase64, config]);
+  }, [
+    open,
+    url,
+    isHttp,
+    isBase64,
+    cleanPath,
+    config,
+  ]);
 
-  const finalUrl = isHttp || isBase64
-    ? url
-    : previewUrl;
+  // final source
+  const finalUrl =
+    isHttp || isBase64
+      ? url
+      : previewUrl;
+
+  // detect file type
+  const isImage =
+    finalUrl?.startsWith(
+      "data:image"
+    ) ||
+    /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(
+      finalUrl || ""
+    );
+
+  const isPdf =
+    finalUrl?.startsWith(
+      "data:application/pdf"
+    ) ||
+    /\.pdf$/i.test(
+      finalUrl || ""
+    );
 
   return (
     <>
       <span
         className="text-blue-600 underline cursor-pointer text-sm"
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          setOpen(true);
+          setFrameLoading(true);
+        }}
       >
         LINK
       </span>
 
       {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="bg-white max-w-3xl w-full rounded shadow-lg p-4 relative max-h-[80vh] overflow-y-auto">
-            <button
-              className="absolute top-2 right-2 cursor-pointer text-gray-500 bg-gray-200 px-2 py-1"
-              onClick={() => setOpen(false)}
-            >
-              ✕
-            </button>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+          <div className="bg-white max-w-5xl w-full rounded-xl shadow-lg relative overflow-hidden">
+            {/* header */}
+            <div className="flex items-center justify-between border-b px-4 py-3">
+              <div className="text-sm font-medium text-gray-700 break-all">
+                {fileName}
+              </div>
 
-            <div className="mb-3 text-sm font-medium text-gray-700 break-all">
-              {fileName}
+              <button
+                className="cursor-pointer text-gray-500 hover:text-black bg-gray-100 hover:bg-gray-200 rounded px-2 py-1 text-sm"
+                onClick={() =>
+                  setOpen(false)
+                }
+              >
+                ✕
+              </button>
             </div>
 
-            {(loading || frameLoading) && (
-              <div className="flex items-center justify-center h-[60vh] text-sm text-gray-500">
-                Loading preview...
-              </div>
-            )}
+            {/* body */}
+            <div className="p-4 min-h-[300px] flex items-center justify-center">
+              {(loading ||
+                frameLoading) && (
+                <div className="text-sm text-gray-500">
+                  Loading preview...
+                </div>
+              )}
 
-            {finalUrl && (
-              <>
-                {/* image preview */}
-                {finalUrl.startsWith("data:image") ? (
-                  <img
-                    src={finalUrl}
-                    alt={fileName}
-                    onLoad={() =>
-                      setFrameLoading(false)
-                    }
-                    className={`max-w-full max-h-[60vh] mx-auto rounded ${
-                      loading || frameLoading
-                        ? "hidden"
-                        : "block"
-                    }`}
-                  />
-                ) : (
-                  <iframe
-                    src={finalUrl}
-                    title={fileName}
-                    onLoad={() =>
-                      setFrameLoading(false)
-                    }
-                    className={`w-full h-[60vh] border border-slate-200 rounded ${
-                      loading || frameLoading
-                        ? "hidden"
-                        : "block"
-                    }`}
-                  />
+              {!loading &&
+                finalUrl && (
+                  <>
+                    {/* image */}
+                    {isImage && (
+                      <img
+                        src={finalUrl}
+                        alt={fileName}
+                        onLoad={() =>
+                          setFrameLoading(
+                            false
+                          )
+                        }
+                        className={`max-w-full max-h-[75vh] rounded ${
+                          frameLoading
+                            ? "hidden"
+                            : "block"
+                        }`}
+                      />
+                    )}
+
+                    {/* pdf */}
+                    {isPdf && (
+                      <iframe
+                        src={finalUrl}
+                        title={fileName}
+                        onLoad={() =>
+                          setFrameLoading(
+                            false
+                          )
+                        }
+                        className={`w-full h-[75vh] border rounded ${
+                          frameLoading
+                            ? "hidden"
+                            : "block"
+                        }`}
+                      />
+                    )}
+
+                    {/* fallback */}
+                    {!isImage &&
+                      !isPdf && (
+                        <div className="text-sm text-red-500">
+                          Preview not
+                          supported
+                        </div>
+                      )}
+                  </>
                 )}
-              </>
-            )}
 
-            {!loading && !finalUrl && (
-              <div className="text-sm text-red-500">
-                Preview not available
-              </div>
-            )}
+              {!loading &&
+                !finalUrl && (
+                  <div className="text-sm text-red-500">
+                    Preview not
+                    available
+                  </div>
+                )}
+            </div>
           </div>
         </div>
       )}

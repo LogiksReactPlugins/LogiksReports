@@ -2,7 +2,6 @@ import { Copy, MoreVertical } from "lucide-react";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import ShimmerTableRow from "./loadings/ShimmerTableRow";
 import copyToClipboard from "../helpers/copyToClipboard";
-const ROW_HEIGHT = 42;
 
 const TableView = ({
   config,
@@ -38,6 +37,7 @@ const TableView = ({
   errorMsg,
   getLocalRefData
 }) => {
+  const rowHeightsRef = useRef({});
   const { datagrid } = config;
   const {
     wrapLines,
@@ -48,6 +48,8 @@ const TableView = ({
     fixLastColumn,
     compactMode,
   } = config;
+  const ROW_HEIGHT = compactMode ? 30 : 42;
+
   const parent_column_name =
   typeof config?.tree_type === "string"
     ? config.tree_type
@@ -108,7 +110,6 @@ const [activeHighlightedRowId, setActiveHighlightedRowId] =
   useState(highlightedRowId);
  
 const BUFFER = 10;
-const VIEWPORT_HEIGHT = 800;
 
   const toggleGroup = (groupKey) => {
     setOpenGroups((prev) => ({
@@ -197,37 +198,100 @@ const getTreeVisibleRows = (rows) => {
     return () => document.removeEventListener("mousedown", handleOutsideClick);
   }, [openDropdown]);
 
-useEffect(() => {
+
+  useEffect(() => {
+  const listeners = [];
+
   Object.entries(containerRefs.current).forEach(([groupKey, el]) => {
     if (!el) return;
 
+    let ticking = false;
+
     const onScroll = () => {
-      const scrollTop = el.scrollTop;
+      if (ticking) return;
 
-      const rows = getTreeVisibleRows(paginatedGroupedData[groupKey] || []);
+      ticking = true;
 
-      const start = Math.max(0, Math.floor(scrollTop / ROW_HEIGHT) - BUFFER);
-      const end = Math.min(
-        rows.length,
-        Math.ceil((scrollTop + VIEWPORT_HEIGHT) / ROW_HEIGHT) + BUFFER
-      );
+      requestAnimationFrame(() => {
+        const scrollTop = el.scrollTop;
+        const viewportHeight = el.clientHeight;
 
-      setVisibleRange((prev) => ({
-        ...prev,
-        [groupKey]: { start, end },
-      }));
+        const rows = getTreeVisibleRows(
+          paginatedGroupedData[groupKey] || []
+        );
+let accumulatedHeight = 0;
+let start = 0;
+
+for (let i = 0; i < rows.length; i++) {
+  const row = rows[i];
+
+  accumulatedHeight +=
+    rowHeightsRef.current[
+      `${groupKey}-${getRowValue(row, "id")}`
+    ] || ROW_HEIGHT;
+
+  if (accumulatedHeight >= scrollTop) {
+    start = Math.max(0, i - BUFFER);
+    break;
+  }
+}
+
+accumulatedHeight = 0;
+
+let end = rows.length;
+
+for (let i = start; i < rows.length; i++) {
+  const row = rows[i];
+
+  accumulatedHeight +=
+    rowHeightsRef.current[
+      `${groupKey}-${getRowValue(row, "id")}`
+    ] || ROW_HEIGHT;
+
+  if (
+    accumulatedHeight >=
+    viewportHeight + BUFFER * ROW_HEIGHT
+  ) {
+    end = Math.min(rows.length, i + BUFFER);
+    break;
+  }
+}
+
+        setVisibleRange((prev) => {
+          const current = prev[groupKey];
+
+          if (
+            current &&
+            current.start === start &&
+            current.end === end
+          ) {
+            return prev;
+          }
+
+          return {
+            ...prev,
+            [groupKey]: { start, end },
+          };
+        });
+
+        ticking = false;
+      });
     };
 
+    listeners.push({ el, onScroll });
+
     el.addEventListener("scroll", onScroll);
+
+    onScroll();
   });
 
   return () => {
-    Object.values(containerRefs.current).forEach((el) => {
-      if (!el) return;
-      el.removeEventListener("scroll", () => {});
+    listeners.forEach(({ el, onScroll }) => {
+      el.removeEventListener("scroll", onScroll);
     });
   };
-}, [paginatedGroupedData, expandedRows]);  
+}, [paginatedGroupedData, expandedRows]);
+
 
   const buildGroupedHeaders = () => {
     const groups = [];
@@ -471,8 +535,23 @@ const getEffectiveRows = (rows) => {
   setActiveHighlightedRowId(highlightedRowId || null);
 }, [highlightedRowId]);
 
+const compactRowClass = compactMode
+  ? "text-[11px]"
+  : "text-sm";
 
-const renderRow = (row, rowIndex,currentRows) => {
+const compactCellClass = compactMode
+  ? "px-1 py-0.5"
+  : "px-2 py-1";
+
+const compactHeaderClass = compactMode
+  ? "px-1 py-1 text-[10px]"
+  : "px-2 py-2 text-xs";
+
+const compactRowHeight = compactMode
+  ? "h-[30px]"
+  : "h-[42px]";
+
+const renderRow = (row, rowIndex,currentRows,groupKey) => {
   const rowRules = config?.rules?.row_class || {};
   let dynamicRowClass = "";
 
@@ -496,8 +575,26 @@ const isExpanded = expandedRows.has(rowId);
 
   return (
     <tr
-      id={`${reportTitle}_tr_${getRowValue(row, "id")}`}
-key={getRowValue(row, "id") ?? `${rowIndex}-${groupBy}`}      className={`${style?.tr || "hover:bg-secondary"} 
+     ref={(el) => {
+    if (!el) return;
+
+    const height = el.getBoundingClientRect().height;
+
+    if (
+      rowHeightsRef.current[
+        `${groupKey}-${rowId}`
+      ] !== height
+    ) {
+      rowHeightsRef.current[
+        `${groupKey}-${rowId}`
+      ] = height;
+    }
+  }}
+
+id={`${reportTitle}_tr_${groupKey}_${getRowValue(row, "id")}`}
+
+key={`row-${groupKey}-${getRowValue(row, "id")}`}
+className={`${compactRowHeight} ${style?.tr || "hover:bg-secondary"}
         ${rowClickSelection ? "cursor-pointer" : ""} 
         ${compactMode ? "text-xs py-0.5" : ""} 
         ${stripedRows && rowIndex % 2 === 1 ? "bg-gray-50" : ""}
@@ -511,10 +608,10 @@ key={getRowValue(row, "id") ?? `${rowIndex}-${groupBy}`}      className={`${styl
     
                               {hasButtons && (
                                 <td
-                                  className={
-                                    style?.td ||
-                                    "px-2 py-1 whitespace-nowrap text-sm text-gray-900"
-                                  }
+                                className={
+  style?.td ||
+  `${compactCellClass} whitespace-nowrap ${compactRowClass} text-gray-900`
+}
                                 >
                                   <div className="flex items-center">
                                     {visibleButtons.map(
@@ -616,10 +713,10 @@ key={getRowValue(row, "id") ?? `${rowIndex}-${groupBy}`}      className={`${styl
 
                               {showExtraColumn === "checkbox" && (
                                 <td
-                                  className={
-                                    style?.td ||
-                                    "px-2  py-1 whitespace-nowrap text-sm text-gray-900"
-                                  }
+                               className={
+  style?.td ||
+  `${compactCellClass} whitespace-nowrap ${compactRowClass} text-gray-900`
+}
                                 >
                                   <input
                                     type="checkbox"
@@ -664,10 +761,15 @@ key={getRowValue(row, "id") ?? `${rowIndex}-${groupBy}`}      className={`${styl
                                       "id",
                                     )}_${key}`}
                                     key={key}
-                                    className={`${
-                                      style?.td ||
-                                      "px-2  py-1 text-sm text-gray-900"
-                                    } ${fixedClass} ${dynamicColClass.trim()}`}
+                                className={`
+  ${compactRowHeight}
+  ${compactCellClass}
+  ${compactRowClass}
+  ${fixedClass}
+  ${dynamicColClass.trim()}
+`}
+                                 style={col.style ? parseStyle(col.style) : {}}
+
                                   >
                                     <div className="relative group flex items-center"
                                      style={
@@ -695,11 +797,7 @@ key={getRowValue(row, "id") ?? `${rowIndex}-${groupBy}`}      className={`${styl
 )}
                                           
                                       <div
-                                        className={
-                                          wrapLines
-                                            ? "whitespace-pre-wrap break-words max-w-none"
-                                            : "truncate max-w-xs sm:max-w-none"
-                                        }
+                                        className="truncate whitespace-nowrap overflow-hidden"
                                       >
                                           
                              
@@ -846,8 +944,21 @@ const visibleRows = treeRows.slice(safeStart, safeEnd);
 
 const totalRows = treeRows.length;
 
-const topSpacerHeight = Math.max(0, safeStart * ROW_HEIGHT);
-const bottomSpacerHeight = Math.max(0, (totalRows - safeEnd) * ROW_HEIGHT);
+const getRowHeight = (row) => {
+  return (
+    rowHeightsRef.current[
+      `${groupKey}-${getRowValue(row, "id")}`
+    ] || ROW_HEIGHT
+  );
+};
+
+const topSpacerHeight = treeRows
+  .slice(0, safeStart)
+  .reduce((sum, row) => sum + getRowHeight(row), 0);
+
+const bottomSpacerHeight = treeRows
+  .slice(safeEnd)
+  .reduce((sum, row) => sum + getRowHeight(row), 0);
 
           return (
             <div key={groupKey} className="border-b border-gray-50">
@@ -876,7 +987,8 @@ const bottomSpacerHeight = Math.max(0, (totalRows - safeEnd) * ROW_HEIGHT);
               {(!groupBy || isOpen) && (
                 <div
                 ref={(el) => (containerRefs.current[groupKey] = el)}
-                className="overflow-x-auto overflow-y-auto max-h-screen thin-scrollbar">
+                className="overflow-x-auto overflow-y-auto thin-scrollbar report-container"
+                >
                   <table
                     className="min-w-full table-fixed border border-gray-200"
                     id="printable"
@@ -905,10 +1017,10 @@ const bottomSpacerHeight = Math.max(0, (totalRows - safeEnd) * ROW_HEIGHT);
                       <tr>
                         {hasButtons && (
                           <th
-                            className={
-                              style?.th ||
-                              "px-2 py-2 text-xs font-bold uppercase"
-                            }
+                            className={`
+                              ${compactHeaderClass}
+                              font-bold uppercase
+                              `}
                           >
                             Actions
                           </th>
@@ -936,14 +1048,13 @@ const bottomSpacerHeight = Math.max(0, (totalRows - safeEnd) * ROW_HEIGHT);
                           return (
                             <th
                               key={key}
-                              className={`${
-                                style?.th ||
-                                "px-2 py-2 text-xs font-bold uppercase"
-                              } 
-                        ${
-                          col.sortable ? "cursor-pointer hover:bg-gray-100" : ""
-                        } 
-                        ${fixedClass} ${col?.classes}`}
+                             className={`
+  ${compactHeaderClass}
+  font-bold uppercase
+  ${col.sortable ? "cursor-pointer hover:bg-gray-100" : ""}
+  ${fixedClass}
+  ${col?.classes || ""}
+`}
                               style={col.style ? parseStyle(col.style) : {}}
                               onClick={() => col.sortable && handleSort(key)}
                             >
@@ -967,7 +1078,10 @@ const bottomSpacerHeight = Math.max(0, (totalRows - safeEnd) * ROW_HEIGHT);
                             switch (filter.type) {
                               case "text":
                                 return (
-                                  <th key={key} className="px-2 py-1">
+                                  <th key={key} className="px-2 py-1"
+                                                                style={col.style ? parseStyle(col.style) : {}}
+
+                                  >
                                     <input
                                       type="text"
                                       value={filters[key]?.value || ""}
@@ -987,7 +1101,10 @@ const bottomSpacerHeight = Math.max(0, (totalRows - safeEnd) * ROW_HEIGHT);
 
                               case "date":
                                 return (
-                                  <th key={key} className="px-2 py-1">
+                                  <th key={key} className="px-2 py-1"
+                                                                style={col.style ? parseStyle(col.style) : {}}
+
+                                  >
                                     <input
                                       type="date"
                                       value={filters[key]?.value || ""}
@@ -1006,7 +1123,10 @@ const bottomSpacerHeight = Math.max(0, (totalRows - safeEnd) * ROW_HEIGHT);
                                 );
                                 case "month":
                               return (
-                                <th key={key} className="px-2 py-1">
+                                <th key={key} className="px-2 py-1"
+                                                              style={col.style ? parseStyle(col.style) : {}}
+
+                                >
                                   <input
                                     type="month"
                                     value={filters[key]?.value || ""}
@@ -1037,7 +1157,9 @@ const bottomSpacerHeight = Math.max(0, (totalRows - safeEnd) * ROW_HEIGHT);
                                   : rawOptions;
 
                                 return (
-                                  <th key={key} className="px-2 py-1">
+                                  <th key={key} className="px-2 py-1"
+                                    style={col.style ? parseStyle(col.style) : {}}
+                                  >
                                     <select
                                       value={filters[key]?.value ?? ""}
                                       onChange={(e) =>
@@ -1108,7 +1230,7 @@ const bottomSpacerHeight = Math.max(0, (totalRows - safeEnd) * ROW_HEIGHT);
       )}
 
       {visibleRows.map((row, index) =>
-  renderRow(row, visibleRange.start + index, treeRows)
+  renderRow(row, visibleRange.start + index, treeRows,groupKey)
 )}
 
       {bottomSpacerHeight > 0 && (
