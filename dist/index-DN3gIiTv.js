@@ -16925,8 +16925,7 @@ const Ble = [
         "div",
         {
           ref: (mt) => We.current[Ge] = mt,
-          className: "overflow-x-auto overflow-y-auto thin-scrollbar",
-          style: { height: "100%" },
+          className: "overflow-x-auto overflow-y-auto thin-scrollbar report-container",
           children: /* @__PURE__ */ Q.jsxs(
             "table",
             {
@@ -37481,7 +37480,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (jr.canvg ? Promise.resolve(jr.canvg) : import("./index.es-Dc8Zo6rR.js")).catch(function(f) {
+  return (jr.canvg ? Promise.resolve(jr.canvg) : import("./index.es-DyW8TuXs.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
