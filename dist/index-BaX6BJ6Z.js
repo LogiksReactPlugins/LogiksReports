@@ -16960,12 +16960,9 @@ const Cle = [
                           "th",
                           {
                             className: `
-  ${er}
-  font-bold uppercase
-  ${col.sortable ? "cursor-pointer hover:bg-gray-100" : ""}
-  ${fixedClass}
-  ${col?.classes || ""}
-`,
+                              ${er}
+                              font-bold uppercase
+                              `,
                             children: "Actions"
                           }
                         ),
@@ -37495,7 +37492,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Kr.canvg ? Promise.resolve(Kr.canvg) : import("./index.es-BGvNiRvU.js")).catch(function(f) {
+  return (Kr.canvg ? Promise.resolve(Kr.canvg) : import("./index.es-BA1H57b1.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
