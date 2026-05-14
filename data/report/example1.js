@@ -15,6 +15,7 @@ export const report = {
     "addRecord": {
       "label": "adddddd",
       "icon": "fa fa-plus",
+      "onselect":true,
        "event":{
         "click":"addButtonClick"
       }

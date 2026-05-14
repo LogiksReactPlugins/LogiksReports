@@ -396,7 +396,6 @@ function ContentPopup({ abstract, content }) {
 
 function AttachmentPopup({
   url,
-  index,
   config,
 }) {
   const [open, setOpen] =
@@ -405,17 +404,63 @@ function AttachmentPopup({
   const [previewUrl, setPreviewUrl] =
     React.useState(null);
 
+  const [previewType, setPreviewType] =
+    React.useState("");
+
   const [loading, setLoading] =
     React.useState(false);
 
   const [frameLoading, setFrameLoading] =
-    React.useState(true);
+    React.useState(false);
 
-  const fileName =
-    url?.split("/")?.pop() || "Preview";
+  const objectUrlRef =
+    React.useRef(null);
 
-  // public url
+const getFileName = () => {
+  if (!url) {
+    return "Preview";
+  }
+
+  // base64
+  if (
+    typeof url === "string" &&
+    url.startsWith("data:")
+  ) {
+    if (
+      url.includes("image/")
+    ) {
+      return "Image Preview";
+    }
+
+    if (
+      url.includes("pdf")
+    ) {
+      return "PDF Preview";
+    }
+
+    return "File Preview";
+  }
+
+  try {
+    const clean =
+      url.split("?")[0];
+
+    return (
+      clean.split("/")?.pop() ||
+      "Preview"
+    );
+  } catch {
+    return "Preview";
+  }
+};
+
+const fileName =
+  getFileName();
+
+
+  // external/public url
   const isHttp =
+    typeof url === "string" &&
     /^https?:\/\//i.test(url);
 
   // base64
@@ -424,95 +469,180 @@ function AttachmentPopup({
     url.startsWith("data:");
 
   // internal/private file path
-  const cleanPath = url.includes("&")
-    ? url.split("&").slice(1).join("&")
-    : url;
+  const cleanPath =
+    typeof url === "string" &&
+    url.includes("&")
+      ? url
+          .split("&")
+          .slice(1)
+          .join("&")
+      : url;
 
   React.useEffect(() => {
-    // direct preview supported
-    // no api call required
+    // reset when closed
+    if (!open) {
+      setPreviewUrl(null);
+      setPreviewType("");
+      setLoading(false);
+      setFrameLoading(false);
+
+      return;
+    }
+
+    // direct preview
+    if (isHttp || isBase64) {
+      setPreviewUrl(url);
+
+      if (
+        url?.startsWith(
+          "data:image"
+        )
+      ) {
+        setPreviewType("image");
+      } else if (
+        url?.startsWith(
+          "data:application/pdf"
+        )
+      ) {
+        setPreviewType("pdf");
+      } else if (
+        /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(
+          url
+        )
+      ) {
+        setPreviewType("image");
+      } else if (
+        /\.pdf$/i.test(url)
+      ) {
+        setPreviewType("pdf");
+      }
+
+      return;
+    }
+
     if (
-      !open ||
-      isHttp ||
-      isBase64
+      !cleanPath ||
+      !config?.endPoints?.preview
     ) {
       return;
     }
 
-    let revokedUrl;
+    const controller =
+      new AbortController();
 
-    const loadPreview = async () => {
-      try {
-        setLoading(true);
-        setFrameLoading(true);
+    const loadPreview =
+      async () => {
+        try {
+          setLoading(true);
+          setFrameLoading(true);
 
-        const res = await fetch(
-          `${config?.endPoints?.preview}?uri=${encodeURIComponent(
-            cleanPath
-          )}`,
-          {
-            headers:
-              config?.endPoints?.headers ||
-              {},
+          const res = await fetch(
+            `${config?.endPoints?.preview}?uri=${encodeURIComponent(
+              cleanPath
+            )}`,
+            {
+              headers:
+                config?.endPoints
+                  ?.headers || {},
+              signal:
+                controller.signal,
+            }
+          );
+
+          if (!res.ok) {
+            throw new Error(
+              "Preview fetch failed"
+            );
           }
-        );
 
-        if (!res.ok) {
-          throw new Error(
-            "Preview fetch failed"
-          );
+          const contentType =
+            res.headers.get(
+              "content-type"
+            ) || "";
+
+          const blob =
+            await res.blob();
+
+          const isSupported =
+            contentType.startsWith(
+              "image/"
+            ) ||
+            contentType.includes(
+              "pdf"
+            );
+
+          if (!isSupported) {
+            throw new Error(
+              "Preview not supported"
+            );
+          }
+
+          // cleanup old blob
+          if (
+            objectUrlRef.current
+          ) {
+            URL.revokeObjectURL(
+              objectUrlRef.current
+            );
+          }
+
+          const blobUrl =
+            URL.createObjectURL(
+              blob
+            );
+
+          objectUrlRef.current =
+            blobUrl;
+
+          setPreviewUrl(blobUrl);
+
+          if (
+            contentType.startsWith(
+              "image/"
+            )
+          ) {
+            setPreviewType(
+              "image"
+            );
+          } else if (
+            contentType.includes(
+              "pdf"
+            )
+          ) {
+            setPreviewType("pdf");
+          }
+        } catch (e) {
+          if (
+            e.name !==
+            "AbortError"
+          ) {
+            console.error(
+              "Preview load failed",
+              e
+            );
+          }
+
+          setPreviewUrl(null);
+          setPreviewType("");
+        } finally {
+          setLoading(false);
         }
-
-        const contentType =
-          res.headers.get(
-            "content-type"
-          ) || "";
-
-        const blob =
-          await res.blob();
-
-        // supported preview check
-        const isSupported =
-          contentType.startsWith(
-            "image/"
-          ) ||
-          contentType.includes(
-            "pdf"
-          );
-
-        if (!isSupported) {
-          throw new Error(
-            "Preview not supported"
-          );
-        }
-
-        const blobUrl =
-          URL.createObjectURL(
-            blob
-          );
-
-        revokedUrl = blobUrl;
-
-        setPreviewUrl(blobUrl);
-      } catch (e) {
-        console.error(
-          "Preview load failed",
-          e
-        );
-
-        setPreviewUrl(null);
-      } finally {
-        setLoading(false);
-      }
-    };
+      };
 
     loadPreview();
 
     return () => {
-      if (revokedUrl) {
+      controller.abort();
+
+      if (
+        objectUrlRef.current
+      ) {
         URL.revokeObjectURL(
-          revokedUrl
+          objectUrlRef.current
         );
+
+        objectUrlRef.current =
+          null;
       }
     };
   }, [
@@ -521,31 +651,32 @@ function AttachmentPopup({
     isHttp,
     isBase64,
     cleanPath,
-    config,
+    config?.endPoints?.preview,
   ]);
 
-  // final source
-  const finalUrl =
-    isHttp || isBase64
-      ? url
-      : previewUrl;
-
-  // detect file type
   const isImage =
-    finalUrl?.startsWith(
-      "data:image"
-    ) ||
-    /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(
-      finalUrl || ""
-    );
+    previewType === "image";
 
   const isPdf =
-    finalUrl?.startsWith(
-      "data:application/pdf"
-    ) ||
-    /\.pdf$/i.test(
-      finalUrl || ""
-    );
+    previewType === "pdf";
+
+  const handleClose = () => {
+    setOpen(false);
+    setPreviewUrl(null);
+    setPreviewType("");
+    setFrameLoading(false);
+
+    if (
+      objectUrlRef.current
+    ) {
+      URL.revokeObjectURL(
+        objectUrlRef.current
+      );
+
+      objectUrlRef.current =
+        null;
+    }
+  };
 
   return (
     <>
@@ -553,25 +684,39 @@ function AttachmentPopup({
         className="text-blue-600 underline cursor-pointer text-sm"
         onClick={() => {
           setOpen(true);
-          setFrameLoading(true);
         }}
       >
         LINK
       </span>
 
       {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          onClick={(e) => {
+            if (
+              e.target ===
+              e.currentTarget
+            ) {
+              handleClose();
+            }
+          }}
+        >
           <div className="bg-white max-w-5xl w-full rounded-xl shadow-lg relative overflow-hidden">
             {/* header */}
             <div className="flex items-center justify-between border-b px-4 py-3">
-              <div className="text-sm font-medium text-gray-700 break-all">
+              <div 
+                className="text-sm font-medium text-gray-700 truncate max-w-[85%]"
+                title={fileName}
+              >
                 {fileName}
               </div>
 
               <button
                 className="cursor-pointer text-gray-500 hover:text-black bg-gray-100 hover:bg-gray-200 rounded px-2 py-1 text-sm"
-                onClick={() =>
-                  setOpen(false)
+                onClick={
+                  handleClose
                 }
               >
                 ✕
@@ -583,19 +728,27 @@ function AttachmentPopup({
               {(loading ||
                 frameLoading) && (
                 <div className="text-sm text-gray-500">
-                  Loading preview...
+                  Loading
+                  preview...
                 </div>
               )}
 
               {!loading &&
-                finalUrl && (
+                previewUrl && (
                   <>
                     {/* image */}
                     {isImage && (
                       <img
-                        src={finalUrl}
+                        src={
+                          previewUrl
+                        }
                         alt={fileName}
                         onLoad={() =>
+                          setFrameLoading(
+                            false
+                          )
+                        }
+                        onError={() =>
                           setFrameLoading(
                             false
                           )
@@ -611,9 +764,18 @@ function AttachmentPopup({
                     {/* pdf */}
                     {isPdf && (
                       <iframe
-                        src={finalUrl}
-                        title={fileName}
+                        src={
+                          previewUrl
+                        }
+                        title={
+                          fileName
+                        }
                         onLoad={() =>
+                          setFrameLoading(
+                            false
+                          )
+                        }
+                        onError={() =>
                           setFrameLoading(
                             false
                           )
@@ -626,7 +788,7 @@ function AttachmentPopup({
                       />
                     )}
 
-                    {/* fallback */}
+                    {/* unsupported */}
                     {!isImage &&
                       !isPdf && (
                         <div className="text-sm text-red-500">
@@ -638,10 +800,23 @@ function AttachmentPopup({
                 )}
 
               {!loading &&
-                !finalUrl && (
-                  <div className="text-sm text-red-500">
-                    Preview not
-                    available
+                !previewUrl && (
+                  <div className="text-sm text-red-500 flex flex-col items-center gap-2">
+                    <div>
+                      Preview not
+                      available
+                    </div>
+
+                    {url && (
+                      <a
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 underline text-sm"
+                      >
+                        Open File
+                      </a>
+                    )}
                   </div>
                 )}
             </div>

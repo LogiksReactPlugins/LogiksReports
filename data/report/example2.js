@@ -7,7 +7,7 @@ const baseRows = [
     name: "Alice",
     gender: "female",
     blocked: false,
-    dtoc: "2023-01-01sss",
+    dtoc: "2023-01-01",
     dtoe: "2023-01-01T10:30:00",
   },
   {
@@ -22,6 +22,7 @@ const baseRows = [
     blocked: true,
     dtoc: "2023-01-15",
     dtoe: "2023-01-15T14:45:00",
+    parent_id:1
   },
   {
     id: 3,
@@ -34,6 +35,7 @@ const baseRows = [
     blocked: false,
     dtoc: "2023-02-01",
     dtoe: "2023-02-01T09:15:00",
+    parent_id:7
   },
   {
     id: 4,
@@ -43,6 +45,7 @@ const baseRows = [
     userid: "user004",
     name: "Diana",
     gender: "female",
+    parent_id:2,
     blocked: true,
     dtoc: "2023-02-10",
     dtoe: "2023-02-10T16:20:00",
@@ -73,6 +76,7 @@ const baseRows = [
     userid: "user007",
     name: "Grace",
     gender: "female",
+    parent_id:6,
     blocked: true,
     dtoc: "2023-02-25",
     dtoe: "2023-02-25T08:30:00",
@@ -83,6 +87,7 @@ const baseRows = [
     userid: "user008",
     name: "Henry",
     gender: "male",
+    parent_id:6,
     blocked: false,
     dtoc: "2023-03-01",
     dtoe: "2023-03-01T15:10:00",
@@ -93,6 +98,7 @@ const baseRows = [
     userid: "user009",
     name: "Ivy",
     gender: "female",
+    parent_id:7,
     blocked: false,
     dtoc: "2023-03-05",
     dtoe: "2023-03-05T12:20:00",
@@ -143,6 +149,7 @@ const baseRows = [
     userid: "user014",
     name: "Noah",
     gender: "male",
+    parent_id:7,
     blocked: false,
     dtoc: "2023-03-30",
     dtoe: "2023-03-30T16:25:00",
@@ -170,14 +177,17 @@ export const report = {
   showExtraColumn: "checkbox",
   custombar: false,
   DEBUG: false,
-
-  buttons: {
+  tree_type : "parent_id",
+  actions: {
     "form@demo": {
       label: "a {userid}",
       icon: "fa fa-plus",
+      onselect:true
     },
   },
-  aggregatePosition: "top",
+   "buttons": {
+        },
+  aggregatePosition: "bottom",
   toolbar: {
     search: true,
     print: false,
@@ -320,7 +330,46 @@ export const report = {
     ...row,
     score: 10 + index,
     rating: 3 + (index % 5),
-    salary: 3000 + index * 500,
+    salary: 3000 + (index===2?1:index) * 500,
     min_salary: 1000 + index * 100,
   })),
+  matrix: {
+  "row": {
+    key: "gender",
+    label: "gender",
+    sortable: true,
+    type:"string",
+       aggregate: {
+        column:"salary",
+        type: "sum",
+        label: "Total Records",
+      },
+  },
+
+  "column": {
+    key: "salary",
+    label: "salary",
+    sortable: true,
+    type:"number",
+       aggregate: {
+        column:"salary",
+        type: "sum",
+        label: "Total Records",
+      },
+  },
+
+   "colmap": {
+            "title": "userid",
+            "descs": "desc",
+            "category": "gender",
+            "due_date": "dtoc",
+        },
+ "colormap": {
+            "male": "bg-green-400",
+            "female": "bg-yellow-400",
+            "probationary": "bg-blue-400"
+        },
+        "unilink": "staff.main",
+
+}
 };
