@@ -1358,10 +1358,16 @@ const handleRequestPrintAll = async (
     });
 
     // send request
+    console.log({
+      method: "POST",
+      url:config?.toolbar?.printRequest?.url || `${config?.endPoints?.baseURL}${config?.endPoints.printRequest}`,
+      headers: config?.endPoints?.headers,
+      data: payload,
+    })
     const { data:printRequestResponse } = await axios({
       method: "POST",
-      url:config?.toolbar?.printRequest?.url    ||    `${config?.endPoints?.baseURL}${config?.endPoints.printRequest}`,
-      headers:      config?.endPoints?.headers,
+      url:config?.toolbar?.printRequest?.url || `${config?.endPoints?.baseURL}${config?.endPoints.printRequest}`,
+      headers: config?.endPoints?.headers,
       data: payload,
     });
 
