@@ -54,7 +54,7 @@ import TableView from "../TableView";
 import KanbanView from "../KanbanView";
 import CalendarView from "../CalendarView";
 import "./../../index.css";
-import axios from "axios";
+import defaultAxios from "axios";
 import SettingPopup from "../SettingPopup";
 import mergeConfig from "../../helpers/mergeConfig";
 import formatCellValue from "../../helpers/formatCellValue";
@@ -102,6 +102,7 @@ function Reports({
   api,
   getLocalRefData=()=>{},
 }) {
+
   const [config, setConfig] = useState(null);
   const [currentView, setCurrentView] = useState();
   const [searchTerm, setSearchTerm] = useState("");
@@ -143,15 +144,24 @@ function Reports({
   const [onSidebarChange,setOnSidebarChange]=useState(null)
   const [sidebarDataCount,setSidebarDataCount]=useState(null)
   const request = typeof api === "function" ? api : axios;
-const requestIdRef = useRef(0);
-const [isSwitching, setIsSwitching] = useState(false);
-const versionRef = useRef(0);
-const [activeVersion, setActiveVersion] = useState(0);
-const [isConfigLoading, setIsConfigLoading] = useState(false);
-const controllerRef = useRef(null);
-const prevModuleRef = useRef();
-const [showFilterIcon,setShowFilterIcon]=useState(false)
+  const requestIdRef = useRef(0);
+  const [isSwitching, setIsSwitching] = useState(false);
+  const versionRef = useRef(0);
+  const [activeVersion, setActiveVersion] = useState(0);
+  const [isConfigLoading, setIsConfigLoading] = useState(false);
+  const controllerRef = useRef(null);
+  const prevModuleRef = useRef();
+  const [showFilterIcon,setShowFilterIcon]=useState(false)
   // console.log({"onSidebarChange____IND":onSidebarChange})
+const axios = async (config) => {
+    if (api) {
+      const response = await api(config);
+
+      return { data: response };
+    }
+
+    return defaultAxios(config);
+  };
 
 
 
@@ -630,6 +640,7 @@ const searchableColumns = Object.entries(datagrid) .filter(([, col]) => col?.sea
               : {}),
           },
         });
+        console.log({"data----------":data})
 
         result =
           getValueByPath(
@@ -1216,6 +1227,197 @@ const formatted = formatCellValue(
   }
 };
 
+
+const handleRequestPrintAll = async (
+  print_type = "EXCEL"
+) => {
+      const confirmMessage =
+        config?.toolbar?.printRequest
+          ?.lgksConfirm;
+
+      if (confirmMessage !== false) {
+        const ok = await openConfirm(
+          typeof confirmMessage ===
+            "string"
+            ? confirmMessage
+            : "Large reports will be processed in the background and may take some time to generate. Do you want to continue?"
+        );
+
+        if (!ok) return;
+      }
+  try {
+    // create query first if not exists
+    if (!config?.source?.queryid) {
+      const {
+        table,
+        cols,
+        join,
+        where,
+      } = config.source;
+
+      const {
+        data: saveQueryData,
+      } = await axios({
+        method: "POST",
+
+        url:
+          config?.endPoints
+            ?.saveQuery,
+
+        headers:
+          config?.endPoints
+            ?.headers,
+
+        data: {
+          query: {
+            table,
+            cols,
+            join,
+            where,
+          },
+
+          dbkey:
+            config?.source
+              ?.dbkey,
+        },
+      });
+
+      config.source.queryid =
+        saveQueryData?.queryid;
+    }
+
+  const hasFilterTabs = filterTabs && Object.keys(filterTabs).length > 0;
+
+    const dateFilter =
+      activeDateCol && dateOperator
+        ? {
+            [activeDateCol]:
+              dateOperator === "between"
+                ? [[dateRange.start, dateRange.end], "range"]
+                : dateOperator === "eq"
+                ? [dateRange.start, "like"]
+                : [[dateRange.start, dateRange.end], "range"],
+          }
+        : {};
+        const refid = config?.endPoints?.refid;
+
+
+    // final print payload
+    const payload = {
+      module_name:
+        config?.toolbar?.printRequest?.module || config?.module_refid || config?.title || "Report",
+
+      query_id:
+        config?.source?.queryid,
+
+      print_type:  config?.toolbar?.printRequest?.print_type || print_type,
+
+      filters_json: {
+        queryid: config?.source?.queryid,
+
+        ...(!hasFilterTabs && {
+          stxt: searchTerm,
+          cols: searchableColumns.map((col) => col.key),
+        }),
+
+        filter: {
+          ...(hasFilterTabs &&
+            Object.fromEntries(
+              Object.entries(filterTabs || {}).map(([key, { value }]) => [
+                key,
+                [value, "LIKE"],
+              ])
+            )),
+
+          ...Object.fromEntries(
+            Object.entries(filters || {}).map(([key, { type, value }]) => {
+              if (type === "text") return [key, [value, "LIKE"]];
+              return [key, value];
+            })
+          ),
+
+          ...dateFilter,
+        },
+
+        ...(groupBy && { group_by: groupBy }),
+        ...(refid ? { refid } : {}),
+
+        // limit: config?.exportLimit || CONSTANTS.EXPORT_LIMIT || 1000,
+        // page: 0,
+
+        ...(sortConfig?.key
+          ? { orderby: `${sortConfig.key} ${sortConfig.direction}` }
+          : {}),
+      },
+
+    };
+
+    console.log({
+      PRINT_REQUEST_PAYLOAD:
+        payload,
+    });
+
+    // send request
+    const { data:printRequestResponse } = await axios({
+      method: "POST",
+      url:config?.toolbar?.printRequest?.url    ||    `${config?.endPoints?.baseURL}${config?.endPoints.printRequest}`,
+      headers:      config?.endPoints?.headers,
+      data: payload,
+    });
+
+    console.log({
+      PRINT_REQUEST_RESPONSE:
+        printRequestResponse,
+    });
+
+    // success
+    if (printRequestResponse?.status) {
+     const alertMessage =
+  config?.toolbar?.printRequest
+    ?.lgksAlert;
+
+// if explicitly false -> no alert
+if (alertMessage !== false) {
+openAlert(typeof alertMessage ===
+      "string"
+        ? alertMessage
+        : "Print request submitted successfully. You can download the file once processing is completed.",
+  );
+}
+
+      return printRequestResponse;
+    }
+
+    
+
+    // failed response
+    // methods?.SHOW_SNACKBAR?.({
+    //   type: "error",
+
+    //   message:
+    //     data?.message ||
+    //     "Failed to submit print request",
+    // });
+
+    return printRequestResponse;
+  } catch (error) {
+    console.error(
+      "PRINT REQUEST ERROR:",
+      error
+    );
+
+   
+
+    return {
+      status: false,
+
+      error:
+        error?.message ||
+        "Something went wrong",
+    };
+  }
+};
+
   const getIconComponent = (iconStr) => {
     if (!iconStr) return null;
     return <i className={`${iconStr}`}></i>;
@@ -1484,6 +1686,15 @@ if (!isReady) {
                 >
                   <Upload className="w-4 h-4 mr-1" />
                   Export All
+                </button>
+              )}
+                {toolbar?.printRequest !== false && (
+                <button
+                onClick={()=>handleRequestPrintAll()}
+                  className="inline-flex items-center px-3 py-1 text-sm font-medium bg-action rounded-md hover:bg-gray-100 cursor-pointer"
+                >
+                  <Upload className="w-4 h-4 mr-1" />
+                {toolbar?.printRequest?.label ||"Export Request" }  
                 </button>
               )}
             {toolbar?.email !== false && (
