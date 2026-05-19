@@ -1694,7 +1694,7 @@ if (!isReady) {
                   Export All
                 </button>
               )}
-                {toolbar?.printRequest !== false && (
+                {/* {toolbar?.printRequest !== false && (
                 <button
                 onClick={()=>handleRequestPrintAll()}
                   className="inline-flex items-center px-3 py-1 text-sm font-medium bg-action rounded-md hover:bg-gray-100 cursor-pointer"
@@ -1702,7 +1702,7 @@ if (!isReady) {
                   <Upload className="w-4 h-4 mr-1" />
                 {toolbar?.printRequest?.label ||"Export Request" }  
                 </button>
-              )}
+              )} */}
             {toolbar?.email !== false && (
               <button className="inline-flex items-center px-3 py-1 text-sm font-medium bg-action rounded-md hover:bg-gray-100 cursor-pointer">
                 <Mail className="w-4 h-4 mr-1" />
