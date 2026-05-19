@@ -413,62 +413,68 @@ function AttachmentPopup({
   const [frameLoading, setFrameLoading] =
     React.useState(false);
 
+  const [csvText, setCsvText] =
+    React.useState("");
+
   const objectUrlRef =
     React.useRef(null);
 
-const getFileName = () => {
-  if (!url) {
-    return "Preview";
-  }
-
-  // base64
-  if (
-    typeof url === "string" &&
-    url.startsWith("data:")
-  ) {
-    if (
-      url.includes("image/")
-    ) {
-      return "Image Preview";
+  const getFileName = () => {
+    if (!url) {
+      return "Preview";
     }
 
+    // base64
     if (
-      url.includes("pdf")
+      typeof url === "string" &&
+      url.startsWith("data:")
     ) {
-      return "PDF Preview";
+      if (
+        url.includes("image/")
+      ) {
+        return "Image Preview";
+      }
+
+      if (
+        url.includes("pdf")
+      ) {
+        return "PDF Preview";
+      }
+
+      if (
+        url.includes("csv")
+      ) {
+        return "CSV Preview";
+      }
+
+      return "File Preview";
     }
 
-    return "File Preview";
-  }
+    try {
+      const clean =
+        url.split("?")[0];
 
-  try {
-    const clean =
-      url.split("?")[0];
+      return (
+        clean
+          .split("/")
+          ?.pop() || "Preview"
+      );
+    } catch {
+      return "Preview";
+    }
+  };
 
-    return (
-      clean.split("/")?.pop() ||
-      "Preview"
-    );
-  } catch {
-    return "Preview";
-  }
-};
+  const fileName =
+    getFileName();
 
-const fileName =
-  getFileName();
-
-
-  // external/public url
   const isHttp =
     typeof url === "string" &&
     /^https?:\/\//i.test(url);
 
-  // base64
   const isBase64 =
     typeof url === "string" &&
     url.startsWith("data:");
 
-  // internal/private file path
   const cleanPath =
     typeof url === "string" &&
     url.includes("&")
@@ -478,44 +484,183 @@ const fileName =
           .join("&")
       : url;
 
+      const unsupportedPreviewConfig = {
+  excel: {
+    title: "Excel File",
+    description:
+      "Excel preview is not supported in browser",
+    buttonText:
+      "Download Excel File",
+    bg: "from-green-50 to-white",
+    button:
+      "bg-green-600 hover:bg-green-700",
+    iconBg: "bg-green-600",
+    icon: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        className="w-14 h-14"
+      >
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm0 1.5L18.5 8H14zM8.6 17l1.9-3-1.8-2.9h1.8l1 1.8 1-1.8h1.8L13.5 14l1.9 3h-1.9l-1.1-1.9L11.3 17z" />
+      </svg>
+    ),
+  },
+
+  doc: {
+    title: "Word Document",
+    description:
+      "Document preview is not supported in browser",
+    buttonText:
+      "Download Document",
+    bg: "from-blue-50 to-white",
+    button:
+      "bg-blue-600 hover:bg-blue-700",
+    iconBg: "bg-blue-600",
+    icon: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        className="w-14 h-14"
+      >
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm0 1.5L18.5 8H14zM8 12h8v1.5H8zm0 3h6v1.5H8zm0-6h8v1.5H8z" />
+      </svg>
+    ),
+  },
+
+  ppt: {
+    title:
+      "PowerPoint Presentation",
+    description:
+      "Presentation preview is not supported in browser",
+    buttonText:
+      "Download Presentation",
+    bg: "from-orange-50 to-white",
+    button:
+      "bg-orange-600 hover:bg-orange-700",
+    iconBg:
+      "bg-orange-600",
+    icon: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        className="w-14 h-14"
+      >
+        <path d="M6 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 7h4a3 3 0 1 1 0 6H9v3H8zm1 1v4h3a2 2 0 1 0 0-4z" />
+      </svg>
+    ),
+  },
+
+  zip: {
+    title: "Archive File",
+    description:
+      "Archive preview is not supported in browser",
+    buttonText:
+      "Download Archive",
+    bg: "from-gray-50 to-white",
+    button:
+      "bg-gray-700 hover:bg-gray-800",
+    iconBg: "bg-gray-700",
+    icon: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        className="w-14 h-14"
+      >
+        <path d="M7 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-6-6zm3 1v5h5v12H7V4h3zm1 8h2v2h-2zm0 3h2v2h-2z" />
+      </svg>
+    ),
+  },
+};
+
+const unsupportedPreview =
+  unsupportedPreviewConfig[
+    previewType
+  ];
+
+const showUnsupportedPreview =
+  Boolean(
+    unsupportedPreview
+  );
+
+
   React.useEffect(() => {
-    // reset when closed
     if (!open) {
       setPreviewUrl(null);
       setPreviewType("");
+      setCsvText("");
       setLoading(false);
       setFrameLoading(false);
 
       return;
     }
 
+    const resetState = () => {
+      setPreviewUrl(null);
+      setPreviewType("");
+      setCsvText("");
+      setFrameLoading(false);
+    };
+
     // direct preview
     if (isHttp || isBase64) {
+      resetState();
+
       setPreviewUrl(url);
 
       if (
         url?.startsWith(
           "data:image"
-        )
-      ) {
-        setPreviewType("image");
-      } else if (
-        url?.startsWith(
-          "data:application/pdf"
-        )
-      ) {
-        setPreviewType("pdf");
-      } else if (
+        ) ||
         /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(
           url
         )
       ) {
         setPreviewType("image");
       } else if (
+        url?.startsWith(
+          "data:application/pdf"
+        ) ||
         /\.pdf$/i.test(url)
       ) {
         setPreviewType("pdf");
-      }
+      }  else if (
+  /\.(xlsx|xls)$/i.test(
+    url
+  )
+) {
+  setPreviewType(
+    "excel"
+  );
+} else if (
+  /\.(doc|docx)$/i.test(
+    url
+  )
+) {
+  setPreviewType("doc");
+} else if (
+  /\.(ppt|pptx)$/i.test(
+    url
+  )
+) {
+  setPreviewType("ppt");
+} else if (
+  /\.(zip|rar|7z)$/i.test(
+    url
+  )
+) {
+  setPreviewType("zip");
+} else if (
+  /\.csv$/i.test(url)
+) {
+  setPreviewType("csv");
+}
+
+      setLoading(false);
+      setFrameLoading(false);
 
       return;
     }
@@ -524,6 +669,9 @@ const fileName =
       !cleanPath ||
       !config?.endPoints?.preview
     ) {
+      setLoading(false);
+      setFrameLoading(false);
+
       return;
     }
 
@@ -535,6 +683,8 @@ const fileName =
         try {
           setLoading(true);
           setFrameLoading(true);
+
+          resetState();
 
           const res = await fetch(
             `${config?.endPoints?.preview}?uri=${encodeURIComponent(
@@ -563,13 +713,61 @@ const fileName =
           const blob =
             await res.blob();
 
+          const isExcelType =
+            contentType.includes(
+              "spreadsheet"
+            ) ||
+            contentType.includes(
+              "excel"
+            );
+
+          const isCsvType =
+            contentType.includes(
+              "csv"
+            ) ||
+            contentType.includes(
+              "text/plain"
+            ) ||
+            contentType.includes(
+              "text/csv"
+            );
+            const isDocType =
+  contentType.includes(
+    "word"
+  ) ||
+  contentType.includes(
+    "document"
+  );
+
+const isPptType =
+  contentType.includes(
+    "presentation"
+  ) ||
+  contentType.includes(
+    "powerpoint"
+  );
+
+const isZipType =
+  contentType.includes(
+    "zip"
+  ) ||
+  contentType.includes(
+    "compressed"
+  );
+
+
           const isSupported =
             contentType.startsWith(
               "image/"
             ) ||
             contentType.includes(
               "pdf"
-            );
+            ) ||
+            isExcelType ||
+            isCsvType ||
+  isDocType ||
+  isPptType ||
+  isZipType;
 
           if (!isSupported) {
             throw new Error(
@@ -610,6 +808,33 @@ const fileName =
             )
           ) {
             setPreviewType("pdf");
+         } else if (
+  isExcelType
+) {
+  setPreviewType(
+    "excel"
+  );
+} else if (
+  isDocType
+) {
+  setPreviewType("doc");
+} else if (
+  isPptType
+) {
+  setPreviewType("ppt");
+} else if (
+  isZipType
+) {
+  setPreviewType("zip");
+} else if (
+  isCsvType
+) {
+            const text =
+              await blob.text();
+
+            setCsvText(text);
+
+            setPreviewType("csv");
           }
         } catch (e) {
           if (
@@ -622,10 +847,12 @@ const fileName =
             );
           }
 
-          setPreviewUrl(null);
-          setPreviewType("");
+          resetState();
         } finally {
+          // IMPORTANT FIX
+          // prevent infinite loading
           setLoading(false);
+          setFrameLoading(false);
         }
       };
 
@@ -660,10 +887,23 @@ const fileName =
   const isPdf =
     previewType === "pdf";
 
+  const isExcel =
+    previewType === "excel";
+
+  const isCsv =
+    previewType === "csv";
+
   const handleClose = () => {
     setOpen(false);
+
     setPreviewUrl(null);
+
     setPreviewType("");
+
+    setCsvText("");
+
+    setLoading(false);
+
     setFrameLoading(false);
 
     if (
@@ -677,6 +917,82 @@ const fileName =
         null;
     }
   };
+
+  const handleDownload =
+    async () => {
+      try {
+        let downloadUrl = url;
+
+        // internal/private file
+        if (
+          !isHttp &&
+          !isBase64 &&
+          cleanPath
+        ) {
+          const res =
+            await fetch(
+              `${config?.endPoints?.preview}?uri=${encodeURIComponent(
+                cleanPath
+              )}`,
+              {
+                headers:
+                  config?.endPoints
+                    ?.headers || {},
+              }
+            );
+
+          if (!res.ok) {
+            throw new Error(
+              "Download failed"
+            );
+          }
+
+          const blob =
+            await res.blob();
+
+          downloadUrl =
+            URL.createObjectURL(
+              blob
+            );
+        }
+
+        const a =
+          document.createElement(
+            "a"
+          );
+
+        a.href = downloadUrl;
+
+        a.download =
+          fileName ||
+          "download";
+
+        document.body.appendChild(
+          a
+        );
+
+        a.click();
+
+        a.remove();
+
+        if (
+          downloadUrl?.startsWith(
+            "blob:"
+          )
+        ) {
+          setTimeout(() => {
+            URL.revokeObjectURL(
+              downloadUrl
+            );
+          }, 1000);
+        }
+      } catch (err) {
+        console.error(
+          "Download failed",
+          err
+        );
+      }
+    };
 
   return (
     <>
@@ -703,24 +1019,35 @@ const fileName =
             }
           }}
         >
-          <div className="bg-white max-w-5xl w-full rounded-xl shadow-lg relative overflow-hidden">
+          <div className="bg-white max-w-6xl w-full rounded-xl shadow-lg relative overflow-hidden">
             {/* header */}
-            <div className="flex items-center justify-between border-b px-4 py-3">
-              <div 
-                className="text-sm font-medium text-gray-700 truncate max-w-[85%]"
+            <div className="flex items-center justify-between border-b px-4 py-3 gap-3">
+              <div
+                className="text-sm font-medium text-gray-700 truncate max-w-[75%]"
                 title={fileName}
               >
                 {fileName}
               </div>
 
-              <button
-                className="cursor-pointer text-gray-500 hover:text-black bg-gray-100 hover:bg-gray-200 rounded px-2 py-1 text-sm"
-                onClick={
-                  handleClose
-                }
-              >
-                ✕
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  className="cursor-pointer text-sm bg-blue-600 hover:bg-blue-700 text-white rounded px-3 py-1"
+                  onClick={
+                    handleDownload
+                  }
+                >
+                  Download
+                </button>
+
+                <button
+                  className="cursor-pointer text-gray-500 hover:text-black bg-gray-100 hover:bg-gray-200 rounded px-2 py-1 text-sm"
+                  onClick={
+                    handleClose
+                  }
+                >
+                  ✕
+                </button>
+              </div>
             </div>
 
             {/* body */}
@@ -734,6 +1061,7 @@ const fileName =
               )}
 
               {!loading &&
+                !frameLoading &&
                 previewUrl && (
                   <>
                     {/* image */}
@@ -748,16 +1076,16 @@ const fileName =
                             false
                           )
                         }
-                        onError={() =>
+                        onError={() => {
                           setFrameLoading(
                             false
-                          )
-                        }
-                        className={`max-w-full max-h-[75vh] rounded ${
-                          frameLoading
-                            ? "hidden"
-                            : "block"
-                        }`}
+                          );
+
+                          setPreviewUrl(
+                            null
+                          );
+                        }}
+                        className="max-w-full max-h-[75vh] rounded"
                       />
                     )}
 
@@ -775,32 +1103,78 @@ const fileName =
                             false
                           )
                         }
-                        onError={() =>
+                        onError={() => {
                           setFrameLoading(
                             false
-                          )
-                        }
-                        className={`w-full h-[75vh] border rounded ${
-                          frameLoading
-                            ? "hidden"
-                            : "block"
-                        }`}
+                          );
+
+                          setPreviewUrl(
+                            null
+                          );
+                        }}
+                        className="w-full h-[75vh] border rounded"
                       />
                     )}
 
-                    {/* unsupported */}
-                    {!isImage &&
-                      !isPdf && (
-                        <div className="text-sm text-red-500">
-                          Preview not
-                          supported
-                        </div>
-                      )}
+                    {/* csv */}
+                    {isCsv && (
+                      <div className="w-full overflow-auto max-h-[75vh] border rounded p-3 bg-gray-50">
+                        <pre className="text-xs whitespace-pre-wrap">
+                          {
+                            csvText
+                          }
+                        </pre>
+                      </div>
+                    )}
+
+                    {/* excel */}
+                {/* excel */}
+{/* unsupported preview */}
+{showUnsupportedPreview && (
+  <div
+    className={`w-full min-h-[420px] flex flex-col items-center justify-center gap-5 border border-gray-200 rounded-xl bg-gradient-to-b ${unsupportedPreview.bg}`}
+  >
+    {/* icon */}
+    <div
+      className={`w-24 h-24 rounded-2xl text-white flex items-center justify-center shadow-lg text-2xl font-bold ${unsupportedPreview.iconBg}`}
+    >
+      {
+        unsupportedPreview.icon
+      }
+    </div>
+
+    {/* text */}
+    <div className="text-center space-y-1">
+      <div className="text-lg font-semibold text-gray-800">
+        {
+          unsupportedPreview.title
+        }
+      </div>
+
+      <div className="text-sm text-gray-500 max-w-md break-all px-4">
+        {fileName}
+      </div>
+
+    </div>
+
+    {/* action */}
+    <button
+      onClick={
+        handleDownload
+      }
+      className={`${unsupportedPreview.button} text-white px-5 py-2.5 rounded-lg text-sm font-medium shadow`}
+    >
+      {
+        unsupportedPreview.buttonText
+      }
+    </button>
+  </div>
+)}
                   </>
                 )}
 
               {!loading &&
-                !previewUrl && (
+                !previewUrl &&  !showUnsupportedPreview && (
                   <div className="text-sm text-red-500 flex flex-col items-center gap-2">
                     <div>
                       Preview not
@@ -808,14 +1182,15 @@ const fileName =
                     </div>
 
                     {url && (
-                      <a
-                        href={url}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <button
+                        onClick={
+                          handleDownload
+                        }
                         className="text-blue-600 underline text-sm"
                       >
-                        Open File
-                      </a>
+                        Download
+                        File
+                      </button>
                     )}
                   </div>
                 )}

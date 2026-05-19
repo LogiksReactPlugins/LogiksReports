@@ -143,7 +143,7 @@ function Reports({
   const [errorMsg,setErrorMsg]=useState("")
   const [onSidebarChange,setOnSidebarChange]=useState(null)
   const [sidebarDataCount,setSidebarDataCount]=useState(null)
-  const request = typeof api === "function" ? api : axios;
+  // const request = typeof api === "function" ? api : axios;
   const requestIdRef = useRef(0);
   const [isSwitching, setIsSwitching] = useState(false);
   const versionRef = useRef(0);
