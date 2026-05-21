@@ -643,20 +643,19 @@ const searchableColumns = Object.entries(datagrid) .filter(([, col]) => col?.sea
         });
         console.log({"data----------":data})
 
-        result =
-          getValueByPath(
+        result =getValueByPath(
             data,
-            config?.source?.response || ""
+            config?.source?.response || "data"
           ) || [];
-
-        page = result?.data?.page || 0;
-        total = result?.data?.max || 0;
+        console.log({result})
+        page = (config?.source?.response ? result?.page:data?.page) || 0;
+        total = ( config?.source?.response ? result?.max:data.max) || 0;
       }
     
 
     if (requestId !== requestIdRef.current) return;
 
-    setData(result?.data || []);
+    setData(result?.data || data || []);
     setCurrentPage(page);
     setTotalData(total);
   } catch (err) {
