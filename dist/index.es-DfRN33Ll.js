@@ -1,4 +1,4 @@
-import { c as Da, _ as Va, g as il } from "./index-BOI-3sDs.js";
+import { c as Da, _ as Va, g as il } from "./index-BK52ZAN1.js";
 var fn = {}, cn = {}, cr, vn;
 function Q() {
   if (vn) return cr;
