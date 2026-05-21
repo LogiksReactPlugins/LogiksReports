@@ -655,7 +655,7 @@ const searchableColumns = Object.entries(datagrid) .filter(([, col]) => col?.sea
 
     if (requestId !== requestIdRef.current) return;
 
-    setData(  (config?.source?.response ? result?.data : data?.data) || []);
+    setData(  (config?.source?.response ? result?.data : result) || []);
     setCurrentPage(page);
     setTotalData(total);
   } catch (err) {
