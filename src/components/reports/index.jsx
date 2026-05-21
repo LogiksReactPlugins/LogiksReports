@@ -101,6 +101,7 @@ function Reports({
   components,
   api,
   getLocalRefData=()=>{},
+  appData
 }) {
 
   const [config, setConfig] = useState(null);
@@ -645,17 +646,17 @@ const searchableColumns = Object.entries(datagrid) .filter(([, col]) => col?.sea
         result =
           getValueByPath(
             data,
-            config?.source?.response || "data"
+            config?.source?.response || ""
           ) || [];
 
-        page = data?.page || 0;
-        total = data?.max || 0;
+        page = result?.data?.page || 0;
+        total = result?.data?.max || 0;
       }
     
 
     if (requestId !== requestIdRef.current) return;
 
-    setData(result);
+    setData(result?.data);
     setCurrentPage(page);
     setTotalData(total);
   } catch (err) {
@@ -1685,25 +1686,32 @@ if (!isReady) {
                 </div>
               )}
             </div>
-              {toolbar?.exportAll !== false && (
-                <button
-  onClick={() => handleExportAll("excel")}
+              {
+              
+              toolbar?.exportAll !== false && 
+              (
+                totalData<(appData?.settings?.export_all_limit || 2000)?
+                
+                (
+                  <button
+                  onClick={() => handleExportAll("excel")}
                   className="inline-flex items-center px-3 py-1 text-sm font-medium bg-action rounded-md hover:bg-gray-100 cursor-pointer"
-                >
+                  >
                   <Upload className="w-4 h-4 mr-1" />
                   Export All
                 </button>
-              )}
-                {/* {toolbar?.printRequest !== false && (
-                <button
+              )
+            :
+    <button
                 onClick={()=>handleRequestPrintAll()}
                   className="inline-flex items-center px-3 py-1 text-sm font-medium bg-action rounded-md hover:bg-gray-100 cursor-pointer"
                 >
                   <Upload className="w-4 h-4 mr-1" />
-                {toolbar?.printRequest?.label ||"Export Request" }  
+                Export Request
                 </button>
-              )} */}
-            {toolbar?.email !== false && (
+            
+            )}
+              {toolbar?.email !== false && (
               <button className="inline-flex items-center px-3 py-1 text-sm font-medium bg-action rounded-md hover:bg-gray-100 cursor-pointer">
                 <Mail className="w-4 h-4 mr-1" />
                 Email
