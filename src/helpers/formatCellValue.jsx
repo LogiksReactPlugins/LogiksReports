@@ -311,9 +311,14 @@ export default function formatCellValue(
         return <span dangerouslySetInnerHTML={{ __html: cleanValue }} />;
       }
 
-      const abstract = cleanValue.slice(0, 35) + " ...";
+     const plainText = cleanValue.replace(/<[^>]+>/g, "");
 
-      return <ContentPopup abstract={abstract} content={cleanValue} />;
+const abstract =
+  plainText.length > 35
+    ? plainText.slice(0, 35) + " ..."
+    : plainText;
+
+return <ContentPopup abstract={abstract} content={cleanValue} />;
     }
     case "template":
       if (columnInfo?.template) {

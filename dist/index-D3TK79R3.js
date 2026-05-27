@@ -23436,8 +23436,8 @@ function jC(r, e, t = {}, n = {}, i, a) {
       const o = String(r).replace(/\\r\\n/g, "<br>").replace(/\\n/g, "<br>").replace(/\\'s/g, "'s").replace(/\\"/g, '"');
       if (o.length <= 40)
         return /* @__PURE__ */ R.jsx("span", { dangerouslySetInnerHTML: { __html: o } });
-      const s = o.slice(0, 35) + " ...";
-      return /* @__PURE__ */ R.jsx(lfe, { abstract: s, content: o });
+      const s = o.replace(/<[^>]+>/g, ""), l = s.length > 35 ? s.slice(0, 35) + " ..." : s;
+      return /* @__PURE__ */ R.jsx(lfe, { abstract: l, content: o });
     }
     case "template":
       return n?.template ? n.template.replace(
@@ -37784,7 +37784,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (jr.canvg ? Promise.resolve(jr.canvg) : import("./index.es-o6fmLlQV.js")).catch(function(f) {
+  return (jr.canvg ? Promise.resolve(jr.canvg) : import("./index.es-R_ysKH0s.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;

@@ -1178,27 +1178,35 @@ const handleExportAll = async (type = "excel") => {
       
         let value = getRowValue(raw, key);
 
-// apply formatter first
-const formatted = formatCellValue(
-  value,
-  col.formatter,
-  raw,
-  col,
-  config,
-  methods
-);
+if (col?.exportRaw !== true) {
+  const formatted = formatCellValue(
+    value,
+    col.formatter,
+    raw,
+    col,
+    config,
+    methods
+  );
 
   if (React.isValidElement(formatted)) {
     value = extractTextFromReactNode(formatted);
   } else if (typeof formatted === "string") {
     value = formatted.replace(/<[^>]*>/g, "");
-  } else if (typeof formatted === "number" || typeof formatted === "boolean") {
+  } else if (
+    typeof formatted === "number" ||
+    typeof formatted === "boolean"
+  ) {
     value = formatted;
   } else {
     value = formatted != null ? String(formatted) : "";
   }
+}
 
-  obj[col.label] = value;
+obj[col.label] = value;
+
+    
+
+
       });
 
       return obj;
