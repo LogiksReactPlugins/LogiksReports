@@ -37785,7 +37785,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (jr.canvg ? Promise.resolve(jr.canvg) : import("./index.es-HSUKsvmb.js")).catch(function(f) {
+  return (jr.canvg ? Promise.resolve(jr.canvg) : import("./index.es-CfBzDoDm.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
@@ -96438,7 +96438,7 @@ function m6e({
                   }),
                   className: `inline-flex items-center px-2 py-1 text-sm font-medium rounded-md ${Ot ? "opacity-50 cursor-not-allowed bg-gray-300" : Le?.class ?? "cursor-pointer bg-action"}`,
                   children: [
-                    qa(Le?.icon),
+                    qa(`mr-2 action-icon ${Le?.icon}`),
                     Le?.label
                   ]
                 },
@@ -96469,14 +96469,14 @@ function m6e({
                     ]
                   }
                 ),
-                P && /* @__PURE__ */ R.jsx("div", { className: "absolute right-0 z-50 mt-2 w-48 rounded-md bg-white border border-gray-200 shadow-lg", children: /* @__PURE__ */ R.jsxs("ul", { className: "py-1 text-sm text-action", children: [
+                P && /* @__PURE__ */ R.jsx("div", { className: "absolute right-0 z-50 mt-2 w-48 rounded-md bg-white border border-gray-200 shadow-lg export-button-dropdown", children: /* @__PURE__ */ R.jsxs("ul", { className: "py-1 text-sm text-action", children: [
                   LA.EXPORT_ORDER.filter(
                     (Ee) => Ii?.export === !1 ? !1 : Array.isArray(Ii?.export) ? Ii.export.includes(Ee) : LA.DEFAULT_EXPORTS.includes(Ee)
                   ).map((Ee) => /* @__PURE__ */ R.jsx("li", { children: /* @__PURE__ */ R.jsxs(
                     "button",
                     {
                       onClick: () => Tl(Ee),
-                      className: "block w-full text-left px-4 py-1.5 cursor-pointer hover:bg-gray-100",
+                      className: "block w-full text-left px-4 py-1 cursor-pointer hover:bg-gray-100",
                       children: [
                         LA.EXPORT_LABELS[Ee],
                         V == Ee && /* @__PURE__ */ R.jsx(mw, { className: "w-4 h-4 animate-spin text-blue-500" })

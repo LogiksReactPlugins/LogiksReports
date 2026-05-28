@@ -1628,7 +1628,7 @@ if (!isReady) {
                           "cursor-pointer bg-action"
                     }`}
                   >
-                    {getIconComponent(action?.icon)}
+                    {getIconComponent(`mr-2 action-icon ${action?.icon}`)}
                     {action?.label}
                   </button>
                 );
@@ -1659,7 +1659,7 @@ if (!isReady) {
 
 
               {open && (
-                <div className="absolute right-0 z-50 mt-2 w-48 rounded-md bg-white border border-gray-200 shadow-lg">
+                <div className="absolute right-0 z-50 mt-2 w-48 rounded-md bg-white border border-gray-200 shadow-lg export-button-dropdown">
                   <ul className="py-1 text-sm text-action">
                     {CONSTANTS.EXPORT_ORDER.filter((key) =>
                       toolbar?.export === false
@@ -1671,7 +1671,7 @@ if (!isReady) {
                       <li key={key}>
                         <button
                           onClick={() => handleExport(key)}
-                          className="block w-full text-left px-4 py-1.5 cursor-pointer hover:bg-gray-100"
+                          className="block w-full text-left px-4 py-1 cursor-pointer hover:bg-gray-100"
                         >
                           {CONSTANTS.EXPORT_LABELS[key]}
                           {loading == key && (
