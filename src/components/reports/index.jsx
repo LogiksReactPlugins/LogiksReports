@@ -1545,6 +1545,10 @@ const getRowValue = (row, key) => {
 
   const handleExport = async (type) => {
     // console.log("Exporting as:", type);
+    if(type=="all"){
+      handleExportAll("excel")
+      return false
+    }
     try {
       setLoading(type);
       await exportTable(type,`${config?.title || "export"}`);
@@ -1693,18 +1697,7 @@ if (!isReady) {
                 </div>
               )}
             </div>
-              {
-              
-              toolbar?.exportAll !== false && 
-           
-                  <button
-                  onClick={() => handleExportAll("excel")}
-                  className="inline-flex items-center px-3 py-1 text-sm font-medium bg-action rounded-md hover:bg-gray-100 cursor-pointer"
-                  >
-                  <Upload className="w-4 h-4 mr-1" />
-                  Export All
-                </button>
-}
+      
  { toolbar?.printRequest ==true && 
     <button
                 onClick={()=>handleRequestPrintAll()}
@@ -1935,8 +1928,8 @@ if (!isReady) {
                 </div>
               )}
 
-            <div className="flex flex-wrap gap-2">
-              {uiswitcher !== false && (
+            <div className="flex flex-wrap gap-2 ">
+              {(uiswitcher !== false && activeViews.length>1) && (
                 <div className="flex items-center bg-gray-100 rounded-lg p-1">
                   {activeViews.map(({ key, icon, title }) => (
                     <button
