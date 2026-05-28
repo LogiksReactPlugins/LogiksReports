@@ -142,7 +142,7 @@ const renderList = (key, source) => {
   });
 
   return (
-    <div key={key} className={`mb-4 px-2 list-${key}`}>
+    <div key={key} className={`mb-4 sidebar-list list-${key}`}>
       <div className={`text-md font-semibold mb-1 list-title list-${key}-title`}>
         {source?.title}
       </div>
@@ -189,7 +189,7 @@ const renderList = (key, source) => {
     if (!Array.isArray(list) || list.length === 0) return null;
 
     return (
-      <div key={key} className={`mb-4 px-2 filter-${key}`}>
+      <div key={key} className={`mb-4 sidebar-filter filter-${key}`}>
         <div className={`text-md font-semibold mb-1 filter-${key}-title`}>
           {source?.title}
         </div>

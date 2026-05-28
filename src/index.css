@@ -183,3 +183,7 @@
 .virtual-table-wrapper .sticky.right-0 {
   right: 0;
 }
+
+.report-export-button span{
+  display: none;
+}

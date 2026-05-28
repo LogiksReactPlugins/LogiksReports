@@ -37785,7 +37785,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (jr.canvg ? Promise.resolve(jr.canvg) : import("./index.es-CfBzDoDm.js")).catch(function(f) {
+  return (jr.canvg ? Promise.resolve(jr.canvg) : import("./index.es-DB1UvSoA.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
@@ -95110,7 +95110,7 @@ const A6e = ({ lat: r, lng: e }) => {
     const S = i[x] || [];
     if (!Array.isArray(S) || S.length === 0) return null;
     const C = A[x] || "", D = S.filter((T) => (d(T, "title") || "").toLowerCase().includes(C.toLowerCase()));
-    return /* @__PURE__ */ R.jsxs("div", { className: `mb-4 px-2 list-${x}`, children: [
+    return /* @__PURE__ */ R.jsxs("div", { className: `mb-4 sidebar-list list-${x}`, children: [
       /* @__PURE__ */ R.jsx("div", { className: `text-md font-semibold mb-1 list-title list-${x}-title`, children: b?.title }),
       /* @__PURE__ */ R.jsxs("div", { className: `list-items list-${x}-items`, children: [
         /* @__PURE__ */ R.jsx(
@@ -95138,7 +95138,7 @@ const A6e = ({ lat: r, lng: e }) => {
     ] }, x);
   }, y = (x, b) => {
     const S = i[x] || [];
-    return !Array.isArray(S) || S.length === 0 ? null : /* @__PURE__ */ R.jsxs("div", { className: `mb-4 px-2 filter-${x}`, children: [
+    return !Array.isArray(S) || S.length === 0 ? null : /* @__PURE__ */ R.jsxs("div", { className: `mb-4 sidebar-filter filter-${x}`, children: [
       /* @__PURE__ */ R.jsx("div", { className: `text-md font-semibold mb-1 filter-${x}-title`, children: b?.title }),
       /* @__PURE__ */ R.jsxs(
         "select",
@@ -96457,15 +96457,15 @@ function m6e({
                   ]
                 }
               ),
-              /* @__PURE__ */ R.jsxs("div", { className: "relative inline-block text-left", ref: H, children: [
+              /* @__PURE__ */ R.jsxs("div", { className: "relative inline-block text-left report-export-button", ref: H, children: [
                 Ii?.export !== !1 && /* @__PURE__ */ R.jsxs(
                   "button",
                   {
                     onClick: () => k(!P),
                     className: "inline-flex items-center px-3 py-1 text-sm font-medium bg-action rounded-md hover:bg-gray-100 cursor-pointer",
                     children: [
-                      /* @__PURE__ */ R.jsx(fM, { className: "w-4 h-4 mr-1" }),
-                      "Export"
+                      /* @__PURE__ */ R.jsx(fM, { className: "w-4 h-4 export-icon" }),
+                      /* @__PURE__ */ R.jsx("span", { children: "Export" })
                     ]
                   }
                 ),
@@ -96782,23 +96782,25 @@ function m6e({
             }
           ),
           /* @__PURE__ */ R.jsxs("div", { className: "flex-1 overflow-auto report", children: [
-            (c === "table" || !c || c === "cards") && /* @__PURE__ */ R.jsx("div", { className: "px-2 md:px-6 py-1 sticky z-30 top-0 bg-white  border-y border-gray-200", children: /* @__PURE__ */ R.jsxs("div", { className: "flex flex-row items-center justify-between gap-3", children: [
-              je && /* @__PURE__ */ R.jsxs("div", { className: "hidden md:block text-sm text-gray-500", children: [
-                je ? Ka + 1 : 0,
-                " - ",
-                Math.min(ma, je),
-                " of",
-                " ",
-                je
-              ] }),
-              /* @__PURE__ */ R.jsxs("div", { className: "block md:hidden text-sm text-gray-500", children: [
-                Ka + 1,
-                "–",
-                Math.min(ma, je),
-                " / ",
-                je
-              ] }),
-              /* @__PURE__ */ R.jsxs("div", { className: "flex items-center justify-center sm:justify-end md:gap-2", children: [
+            (c === "table" || !c || c === "cards") && /* @__PURE__ */ R.jsx("div", { className: "px-2 md:px-6 py-1 sticky z-30 top-0 bg-white  border-y border-gray-200 report-pagination", children: /* @__PURE__ */ R.jsxs("div", { className: "flex flex-row items-center justify-between gap-3", children: [
+              je ? /* @__PURE__ */ R.jsxs(R.Fragment, { children: [
+                /* @__PURE__ */ R.jsxs("div", { className: "hidden md:block text-sm text-gray-500", children: [
+                  je ? Ka + 1 : 0,
+                  " - ",
+                  Math.min(ma, je),
+                  " of",
+                  " ",
+                  je
+                ] }),
+                /* @__PURE__ */ R.jsxs("div", { className: "block md:hidden text-sm text-gray-500", children: [
+                  Ka + 1,
+                  "–",
+                  Math.min(ma, je),
+                  " / ",
+                  je
+                ] })
+              ] }) : null,
+              Qe ? /* @__PURE__ */ R.jsxs("div", { className: "flex items-center justify-center sm:justify-end md:gap-2", children: [
                 /* @__PURE__ */ R.jsx(
                   "button",
                   {
@@ -96822,7 +96824,7 @@ function m6e({
                     children: /* @__PURE__ */ R.jsx(j9, { className: "w-4 h-4" })
                   }
                 )
-              ] })
+              ] }) : null
             ] }) }),
             $a === "checkbox" && b.size > 0 && /* @__PURE__ */ R.jsx("div", { className: "px-4 sm:px-6 py-2 bg-blue-50 border-t border-blue-200", children: /* @__PURE__ */ R.jsxs("div", { className: "text-sm text-blue-700", children: [
               b.size,

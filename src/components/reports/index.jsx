@@ -1645,14 +1645,16 @@ if (!isReady) {
               </button>
             )}
 
-            <div className="relative inline-block text-left" ref={dropdownRef}>
+            <div className="relative inline-block text-left report-export-button" ref={dropdownRef}>
               {toolbar?.export !== false && (
                 <button
                   onClick={() => setOpen(!open)}
                   className="inline-flex items-center px-3 py-1 text-sm font-medium bg-action rounded-md hover:bg-gray-100 cursor-pointer"
                 >
-                  <Upload className="w-4 h-4 mr-1" />
+                  <Upload className="w-4 h-4 export-icon" />
+                  <span>
                   Export
+                  </span>
                 </button>
               )}
 
@@ -2056,18 +2058,23 @@ if (!isReady) {
        
       {/* Pagination */}
       {(currentView === "table" || !currentView || currentView === "cards") && (
-          <div className="px-2 md:px-6 py-1 sticky z-30 top-0 bg-white  border-y border-gray-200">
+          <div className="px-2 md:px-6 py-1 sticky z-30 top-0 bg-white  border-y border-gray-200 report-pagination">
             <div className="flex flex-row items-center justify-between gap-3">
            {
-            totalData &&
+            totalData ?
+<>
               <div className="hidden md:block text-sm text-gray-500">
                  {totalData ? startIndex + 1 : 0} - {Math.min(endIndex, totalData)} of{" "}
                 {totalData} 
               </div>
-              }
+              
               <div className="block md:hidden text-sm text-gray-500">
                 {startIndex + 1}–{Math.min(endIndex, totalData)} / {totalData}
               </div>
+
+</>        :null      }{
+                totalPages
+              ?
               <div className="flex items-center justify-center sm:justify-end md:gap-2">
                 <button
                   onClick={() =>
@@ -2093,6 +2100,7 @@ if (!isReady) {
                   <ChevronRight className="w-4 h-4" />
                 </button>
               </div>
+:null}
             </div>
           </div>
         )}
