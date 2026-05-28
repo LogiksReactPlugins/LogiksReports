@@ -37784,7 +37784,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (jr.canvg ? Promise.resolve(jr.canvg) : import("./index.es-D1GYgLmO.js")).catch(function(f) {
+  return (jr.canvg ? Promise.resolve(jr.canvg) : import("./index.es-UALHFUSM.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
@@ -95110,8 +95110,8 @@ const A6e = ({ lat: r, lng: e }) => {
     if (!Array.isArray(S) || S.length === 0) return null;
     const C = A[x] || "", D = S.filter((T) => (d(T, "title") || "").toLowerCase().includes(C.toLowerCase()));
     return /* @__PURE__ */ R.jsxs("div", { className: `mb-4 px-2 list-${x}`, children: [
-      /* @__PURE__ */ R.jsx("div", { className: `text-md font-semibold mb-1 list-${x}-title`, children: b?.title }),
-      /* @__PURE__ */ R.jsxs("div", { className: `list-${x}-items`, children: [
+      /* @__PURE__ */ R.jsx("div", { className: `text-md font-semibold mb-1 list-title list-${x}-title`, children: b?.title }),
+      /* @__PURE__ */ R.jsxs("div", { className: `list-items list-${x}-items`, children: [
         /* @__PURE__ */ R.jsx(
           "div",
           {

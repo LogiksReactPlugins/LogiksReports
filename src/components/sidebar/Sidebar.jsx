@@ -143,11 +143,11 @@ const renderList = (key, source) => {
 
   return (
     <div key={key} className={`mb-4 px-2 list-${key}`}>
-      <div className={`text-md font-semibold mb-1 list-${key}-title`}>
+      <div className={`text-md font-semibold mb-1 list-title list-${key}-title`}>
         {source?.title}
       </div>
 
-      <div className={`list-${key}-items`}>
+      <div className={`list-items list-${key}-items`}>
         <div
   className={`text-sm cursor-pointer px-2 py-1 rounded ${
     !selectedFilters[key] ? "active" : "hover:bg-gray-100"
