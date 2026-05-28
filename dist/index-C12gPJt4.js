@@ -37784,7 +37784,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (jr.canvg ? Promise.resolve(jr.canvg) : import("./index.es-DfDV4hJv.js")).catch(function(f) {
+  return (jr.canvg ? Promise.resolve(jr.canvg) : import("./index.es-D1GYgLmO.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
@@ -96791,15 +96791,13 @@ function m6e({
           ),
           /* @__PURE__ */ R.jsxs("div", { className: "flex-1 overflow-auto report", children: [
             (c === "table" || !c || c === "cards") && /* @__PURE__ */ R.jsx("div", { className: "px-2 md:px-6 py-1 sticky z-30 top-0 bg-white  border-y border-gray-200", children: /* @__PURE__ */ R.jsxs("div", { className: "flex flex-row items-center justify-between gap-3", children: [
-              /* @__PURE__ */ R.jsxs("div", { className: "hidden md:block text-sm text-gray-500", children: [
-                "Showing ",
+              je && /* @__PURE__ */ R.jsxs("div", { className: "hidden md:block text-sm text-gray-500", children: [
                 je ? Ka + 1 : 0,
-                " to ",
+                " - ",
                 Math.min(ma, je),
                 " of",
                 " ",
-                je,
-                " records"
+                je
               ] }),
               /* @__PURE__ */ R.jsxs("div", { className: "block md:hidden text-sm text-gray-500", children: [
                 Ka + 1,
@@ -96809,16 +96807,13 @@ function m6e({
                 je
               ] }),
               /* @__PURE__ */ R.jsxs("div", { className: "flex items-center justify-center sm:justify-end md:gap-2", children: [
-                /* @__PURE__ */ R.jsxs(
+                /* @__PURE__ */ R.jsx(
                   "button",
                   {
                     onClick: () => x((Ee) => Math.max(Ee - 1, 0)),
                     disabled: w === 0,
                     className: "inline-flex cursor-pointer items-center px-1 py-0.5 text-sm font-medium text-action  rounded-md   disabled:opacity-50 disabled:cursor-not-allowed",
-                    children: [
-                      /* @__PURE__ */ R.jsx(G9, { className: "w-4 h-4" }),
-                      /* @__PURE__ */ R.jsx("span", { className: "hidden sm:inline", children: "Previous" })
-                    ]
+                    children: /* @__PURE__ */ R.jsx(G9, { className: "w-4 h-4" })
                   }
                 ),
                 /* @__PURE__ */ R.jsxs("span", { className: "text-sm text-gray-700 ", children: [
@@ -96826,16 +96821,13 @@ function m6e({
                   " of ",
                   Qe
                 ] }),
-                /* @__PURE__ */ R.jsxs(
+                /* @__PURE__ */ R.jsx(
                   "button",
                   {
                     onClick: () => x((Ee) => Math.min(Ee + 1, Qe)),
                     disabled: w === Qe - 1,
                     className: "inline-flex cursor-pointer items-center px-1 py-0.5 text-sm font-medium text-action  rounded-md   disabled:opacity-50 disabled:cursor-not-allowed",
-                    children: [
-                      /* @__PURE__ */ R.jsx("span", { className: "hidden sm:inline", children: "Next" }),
-                      /* @__PURE__ */ R.jsx(j9, { className: "w-4 h-4" })
-                    ]
+                    children: /* @__PURE__ */ R.jsx(j9, { className: "w-4 h-4" })
                   }
                 )
               ] })

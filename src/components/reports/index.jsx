@@ -2065,10 +2065,13 @@ if (!isReady) {
       {(currentView === "table" || !currentView || currentView === "cards") && (
           <div className="px-2 md:px-6 py-1 sticky z-30 top-0 bg-white  border-y border-gray-200">
             <div className="flex flex-row items-center justify-between gap-3">
+           {
+            totalData &&
               <div className="hidden md:block text-sm text-gray-500">
-                Showing {totalData ? startIndex + 1 : 0} to {Math.min(endIndex, totalData)} of{" "}
-                {totalData} records
+                 {totalData ? startIndex + 1 : 0} - {Math.min(endIndex, totalData)} of{" "}
+                {totalData} 
               </div>
+              }
               <div className="block md:hidden text-sm text-gray-500">
                 {startIndex + 1}–{Math.min(endIndex, totalData)} / {totalData}
               </div>
@@ -2081,7 +2084,7 @@ if (!isReady) {
                   className="inline-flex cursor-pointer items-center px-1 py-0.5 text-sm font-medium text-action  rounded-md   disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <ChevronLeft className="w-4 h-4" />
-                  <span className="hidden sm:inline">Previous</span>
+                  {/* <span className="hidden sm:inline">Previous</span> */}
                 </button>
                 <span className="text-sm text-gray-700 ">
                   {currentPage + 1} of {totalPages}
@@ -2093,7 +2096,7 @@ if (!isReady) {
                   disabled={currentPage === totalPages - 1}
                   className="inline-flex cursor-pointer items-center px-1 py-0.5 text-sm font-medium text-action  rounded-md   disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <span className="hidden sm:inline">Next</span>
+                  {/* <span className="hidden sm:inline">Next</span> */}
                   <ChevronRight className="w-4 h-4" />
                 </button>
               </div>
