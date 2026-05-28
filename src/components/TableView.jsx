@@ -46,7 +46,7 @@ const TableView = ({
     fixFirstColumn,
     fixFirstTwoColumns,
     fixLastColumn,
-    compactMode,
+    compactMode=true,
   } = config;
   const ROW_HEIGHT = compactMode ? 30 : 42;
 

@@ -16401,7 +16401,7 @@ const Cle = [
     fixFirstColumn: J,
     fixFirstTwoColumns: O,
     fixLastColumn: V,
-    compactMode: G
+    compactMode: G = !0
   } = r, K = G ? 30 : 42, ee = typeof r?.tree_type == "string" ? r.tree_type : r?.tree_type?.parent_column_name, { open_icon: Ae, close_icon: de } = typeof r?.tree_type == "object" ? r.tree_type : {}, [fe, ce] = Nt(null), Se = rn(null), Te = r?.title?.toLowerCase().trim().replace(/\s+/g, "_"), [Ye, je] = Nt(() => P ? Object.keys(e || {}).reduce((et, st) => (et[st] = !0, et), {}) : {}), ue = rn({}), [Qe, We] = Nt({}), [pt, Je] = Nt(/* @__PURE__ */ new Set()), Lt = r?.module_refid, Mt = Lt ? ((et) => {
     if (!et || typeof et != "object") return null;
     if (et.id !== void 0 && et.id !== null)
@@ -37784,7 +37784,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (jr.canvg ? Promise.resolve(jr.canvg) : import("./index.es-D5QatL3z.js")).catch(function(f) {
+  return (jr.canvg ? Promise.resolve(jr.canvg) : import("./index.es-DfDV4hJv.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
