@@ -148,6 +148,14 @@ const renderList = (key, source) => {
       </div>
 
       <div className={`list-${key}-items`}>
+        <div
+  className={`text-sm cursor-pointer px-2 py-1 rounded ${
+    !selectedFilters[key] ? "active" : "hover:bg-gray-100"
+  }`}
+  onClick={() => handleFilterChange(key, "")}
+>
+  All
+</div>
         {filteredList.map((item, i) => {
           const value = getItemValue(item, "value");
           const isActive = selectedFilters[key] === value;
@@ -192,9 +200,8 @@ const renderList = (key, source) => {
           onChange={(e) => handleFilterChange(key, e.target.value)}
         >
           <option value="">
-            {source?.["no-option"] || "Select"}
+            All
           </option>
-
           {list.map((item, i) => (
             <option key={i} value={getItemValue(item, "value")}>
               {getItemValue(item, "title")}
@@ -222,15 +229,8 @@ const renderList = (key, source) => {
   return (
     <div>
      <div className="px-2 sidebar-title flex items-center justify-between">
-  <span>{config?.sidebar?.title}</span>
-
-  <button
-    onClick={handleClearFilters}
-    className="text-xs text-blue-600 hover:underline"
-  >
-    Clear
-  </button>
-</div>
+        <span>{config?.sidebar?.title}</span>
+      </div>
       {Object.entries(config?.sidebar?.source || {}).map(
         ([key, source]) => (
           <div key={key}>
