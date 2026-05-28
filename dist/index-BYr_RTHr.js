@@ -22812,7 +22812,7 @@ const {
     email: "Email Report",
     all: "Export All"
   },
-  EXPORT_ORDER: ["pdf", "csv", "xml", "htm", "img", "csvdown"],
+  EXPORT_ORDER: ["pdf", "csv", "xml", "htm", "img", "csvdown", "all"],
   REPORT_LOCALSTORAGE_PRIFIX: "RPT-",
   EXPORT_LIMIT: 2e3
 };
@@ -37785,7 +37785,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (jr.canvg ? Promise.resolve(jr.canvg) : import("./index.es-BxaQbbN8.js")).catch(function(f) {
+  return (jr.canvg ? Promise.resolve(jr.canvg) : import("./index.es-HSUKsvmb.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
