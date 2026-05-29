@@ -63,7 +63,6 @@ saveQuery: "http://192.168.0.20:9999/api/query/save",
         },
         "toolbar": {
             "search": true,
-            "print": true,
             "export": true,
             "email": false
         },
