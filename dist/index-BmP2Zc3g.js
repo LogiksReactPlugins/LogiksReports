@@ -37795,7 +37795,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Xr.canvg ? Promise.resolve(Xr.canvg) : import("./index.es-amhNZ3Gk.js")).catch(function(f) {
+  return (Xr.canvg ? Promise.resolve(Xr.canvg) : import("./index.es-DUF0qT32.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
@@ -96609,21 +96609,8 @@ function x6e({
               className: e?.searchBarContainer || " report-search-container flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-4",
               children: [
                 /* @__PURE__ */ k.jsxs("div", { className: "flex items-center gap-3 flex-1 items-start", children: [
-                  bn?.search !== !1 && /* @__PURE__ */ k.jsxs("div", { className: "flex ", children: [
+                  bn?.search !== !1 && /* @__PURE__ */ k.jsxs("div", { className: "flex w-full justify-between", children: [
                     /* @__PURE__ */ k.jsxs("div", { className: "flex items-center  flex-1 border border-gray-300 rounded-md overflow-hidden focus-within:ring-1 focus-within:ring-gray-300 toolbar-search", children: [
-                      _u && u.sidebar && rr > 0 && /* @__PURE__ */ k.jsx(
-                        "button",
-                        {
-                          onClick: () => $e(!Me),
-                          className: `
-  z-50  
-  transition-all duration-300
-
-  ${Me ? "relative left-[240px]" : ""}
-`,
-                          children: Me ? /* @__PURE__ */ k.jsx(gle, { className: " text-gray-400 w-4 h-4" }) : /* @__PURE__ */ k.jsx(ple, { className: " text-gray-400 w-4 h-4" })
-                        }
-                      ),
                       /* @__PURE__ */ k.jsxs("div", { className: "relative flex-1 search-input-div", children: [
                         /* @__PURE__ */ k.jsx(ble, { className: "absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" }),
                         /* @__PURE__ */ k.jsx(
@@ -96675,14 +96662,30 @@ function x6e({
                         }
                       )
                     ] }),
-                    he && /* @__PURE__ */ k.jsx(
-                      "button",
-                      {
-                        onClick: () => Cr((Be) => !Be),
-                        className: "ml-1 inline-flex md:hidden items-center px-3 py-1.5 text-sm font-medium rounded-md transition-colors  bg-action cursor-pointer",
-                        children: /* @__PURE__ */ k.jsx(cM, { className: "w-4 h-4" })
-                      }
-                    )
+                    /* @__PURE__ */ k.jsxs("div", { className: "flex", children: [
+                      he && /* @__PURE__ */ k.jsx(
+                        "button",
+                        {
+                          onClick: () => Cr((Be) => !Be),
+                          className: "ml-1 inline-flex md:hidden items-center px-3 py-1.5 text-sm font-medium rounded-md transition-colors  bg-action cursor-pointer",
+                          children: /* @__PURE__ */ k.jsx(cM, { className: "w-4 h-4" })
+                        }
+                      ),
+                      "        ",
+                      _u && u.sidebar && rr > 0 && /* @__PURE__ */ k.jsx(
+                        "button",
+                        {
+                          onClick: () => $e(!Me),
+                          className: `
+  z-50  
+  transition-all duration-300
+
+  ${Me ? "relative left-[240px]" : ""}
+`,
+                          children: Me ? /* @__PURE__ */ k.jsx(gle, { className: " text-gray-400 w-4 h-4" }) : /* @__PURE__ */ k.jsx(ple, { className: " text-gray-400 w-4 h-4" })
+                        }
+                      )
+                    ] })
                   ] }),
                   /* @__PURE__ */ k.jsxs("div", { className: " flex gap-2", children: [
                     ai.length == 1 && /* @__PURE__ */ k.jsxs(
