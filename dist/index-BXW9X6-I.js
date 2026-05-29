@@ -17025,7 +17025,7 @@ const Lle = [
                           );
                         })
                       ] }),
-                      C && /* @__PURE__ */ k.jsxs("tr", { className: "bg-gray-50", children: [
+                      C && /* @__PURE__ */ k.jsxs("tr", { className: "bg-gray-50 report-filter-row", children: [
                         n && /* @__PURE__ */ k.jsx("th", {}),
                         o === "checkbox" && /* @__PURE__ */ k.jsx("th", {}),
                         t.map(([lt, bt]) => {
@@ -17036,7 +17036,6 @@ const Lle = [
                               return /* @__PURE__ */ k.jsx(
                                 "th",
                                 {
-                                  className: "px-2 py-1",
                                   style: bt.style ? g(bt.style) : {},
                                   children: /* @__PURE__ */ k.jsx(
                                     "input",
@@ -17050,7 +17049,7 @@ const Lle = [
                                           value: yt.target.value
                                         }
                                       })),
-                                      className: "w-full border rounded px-2 py-1 text-xs"
+                                      className: "w-full border  px-2 py-1 text-xs"
                                     }
                                   )
                                 },
@@ -17060,7 +17059,6 @@ const Lle = [
                               return /* @__PURE__ */ k.jsx(
                                 "th",
                                 {
-                                  className: "px-2 py-1",
                                   style: bt.style ? g(bt.style) : {},
                                   children: /* @__PURE__ */ k.jsx(
                                     "input",
@@ -17074,7 +17072,7 @@ const Lle = [
                                           value: yt.target.value
                                         }
                                       })),
-                                      className: "w-full border rounded px-2 py-1 text-xs"
+                                      className: "w-full border  px-2 py-1 text-xs"
                                     }
                                   )
                                 },
@@ -17084,7 +17082,6 @@ const Lle = [
                               return /* @__PURE__ */ k.jsx(
                                 "th",
                                 {
-                                  className: "px-2 py-1",
                                   style: bt.style ? g(bt.style) : {},
                                   children: /* @__PURE__ */ k.jsx(
                                     "input",
@@ -17098,7 +17095,7 @@ const Lle = [
                                           value: yt.target.value
                                         }
                                       })),
-                                      className: "w-full border rounded px-2 py-1 text-xs"
+                                      className: "w-full border  px-2 py-1 text-xs"
                                     }
                                   )
                                 },
@@ -17112,7 +17109,6 @@ const Lle = [
                               return /* @__PURE__ */ k.jsx(
                                 "th",
                                 {
-                                  className: "px-2 py-1",
                                   style: bt.style ? g(bt.style) : {},
                                   children: /* @__PURE__ */ k.jsxs(
                                     "select",
@@ -17125,7 +17121,7 @@ const Lle = [
                                           value: me.target.value
                                         }
                                       })),
-                                      className: "w-full border rounded px-2 py-1 text-xs",
+                                      className: "w-full border  px-2 py-1 text-xs",
                                       children: [
                                         /* @__PURE__ */ k.jsx("option", { value: "", children: ir.nofilter || "--" }),
                                         Object.entries(ae).map(
@@ -37795,7 +37791,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Xr.canvg ? Promise.resolve(Xr.canvg) : import("./index.es-DUF0qT32.js")).catch(function(f) {
+  return (Xr.canvg ? Promise.resolve(Xr.canvg) : import("./index.es-BcSzHEaK.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
@@ -96421,7 +96417,7 @@ function x6e({
     );
   if (!(!yt && u))
     return /* @__PURE__ */ k.jsx("div", { className: "flex items-center justify-center h-40", children: /* @__PURE__ */ k.jsx(mw, { className: "w-6 h-6 animate-spin text-gray-400" }) });
-  const _u = window.innerWidth < 768, ls = _u && $s?.length > 10 ? `${$s.slice(0, 10)}...` : $s;
+  const _u = window.innerWidth < 768, ls = _u && $s?.length > 15 ? `${$s.slice(0, 15)}...` : $s;
   return /* @__PURE__ */ k.jsxs(
     "div",
     {
@@ -96606,7 +96602,7 @@ function x6e({
           /* @__PURE__ */ k.jsxs(
             "div",
             {
-              className: e?.searchBarContainer || " report-search-container flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-4",
+              className: e?.searchBarContainer || " report-search-container flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 md:gap-4 mt-4",
               children: [
                 /* @__PURE__ */ k.jsxs("div", { className: "flex items-center gap-3 flex-1 items-start", children: [
                   bn?.search !== !1 && /* @__PURE__ */ k.jsxs("div", { className: "flex w-full justify-between", children: [
@@ -96676,18 +96672,13 @@ function x6e({
                         "button",
                         {
                           onClick: () => $e(!Me),
-                          className: `
-  z-50  
-  transition-all duration-300
-
-  ${Me ? "relative left-[240px]" : ""}
-`,
-                          children: Me ? /* @__PURE__ */ k.jsx(gle, { className: " text-gray-400 w-4 h-4" }) : /* @__PURE__ */ k.jsx(ple, { className: " text-gray-400 w-4 h-4" })
+                          className: "inline-flex md:hidden items-center px-3 py-1.5 text-sm font-medium rounded-md transition-colors  bg-action cursor-pointer",
+                          children: Me ? /* @__PURE__ */ k.jsx(gle, { className: "w-4 h-4" }) : /* @__PURE__ */ k.jsx(ple, { className: "w-4 h-4" })
                         }
                       )
                     ] })
                   ] }),
-                  /* @__PURE__ */ k.jsxs("div", { className: " flex gap-2", children: [
+                  /* @__PURE__ */ k.jsxs("div", { className: " flex w-full gap-2 report-date-range-container", children: [
                     ai.length == 1 && /* @__PURE__ */ k.jsxs(
                       "button",
                       {
