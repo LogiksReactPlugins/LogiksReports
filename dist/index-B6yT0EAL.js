@@ -37795,7 +37795,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Xr.canvg ? Promise.resolve(Xr.canvg) : import("./index.es-B1Uv2lbd.js")).catch(function(f) {
+  return (Xr.canvg ? Promise.resolve(Xr.canvg) : import("./index.es-CCsBQstk.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
@@ -96431,7 +96431,7 @@ function x6e({
         " ",
         /* @__PURE__ */ k.jsxs("div", { className: "  py-2 report-header", children: [
           /* @__PURE__ */ k.jsxs("div", { className: "flex flex-row items-center justify-end md:justify-between gap-2", children: [
-            /* @__PURE__ */ k.jsx("div", { className: "flex space-x-2 justify-self-start  ", children: /* @__PURE__ */ k.jsxs(
+            /* @__PURE__ */ k.jsx("div", { className: "flex space-x-2 mr-auto  ", children: /* @__PURE__ */ k.jsxs(
               "h1",
               {
                 className: e?.title || "text-md md:text-xl font-semibold text-gray-900 flex-shrink-0",
@@ -96613,6 +96613,19 @@ function x6e({
                   bn?.search !== !1 && /* @__PURE__ */ k.jsxs("div", { className: "flex ", children: [
                     /* @__PURE__ */ k.jsxs("div", { className: "flex items-center  flex-1 border border-gray-300 rounded-md overflow-hidden focus-within:ring-1 focus-within:ring-gray-300 toolbar-search", children: [
                       /* @__PURE__ */ k.jsxs("div", { className: "relative flex-1 search-input-div", children: [
+                        _u && u.sidebar && rr > 0 && /* @__PURE__ */ k.jsx(
+                          "button",
+                          {
+                            onClick: () => $e(!Me),
+                            className: `
+  z-50  
+  transition-all duration-300
+
+  ${Me ? "relative left-[250px]" : ""}
+`,
+                            children: Me ? /* @__PURE__ */ k.jsx(gle, {}) : /* @__PURE__ */ k.jsx(ple, {})
+                          }
+                        ),
                         /* @__PURE__ */ k.jsx(ble, { className: "absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" }),
                         /* @__PURE__ */ k.jsx(
                           "input",
@@ -96883,18 +96896,6 @@ function x6e({
         ] }),
         /* @__PURE__ */ k.jsxs("div", { className: "flex", children: [
           u.sidebar && /* @__PURE__ */ k.jsxs(k.Fragment, { children: [
-            _u && u.sidebar && rr > 0 && /* @__PURE__ */ k.jsx(
-              "button",
-              {
-                onClick: () => $e(!Me),
-                className: `
-          fixed right-2 top-1/2 -translate-y-1/2
-          z-50 bg-white border shadow-lg
-          rounded-l-xl px-2 py-4
-        `,
-                children: Me ? /* @__PURE__ */ k.jsx(gle, {}) : /* @__PURE__ */ k.jsx(ple, {})
-              }
-            ),
             _u && Me && /* @__PURE__ */ k.jsx(
               "div",
               {
