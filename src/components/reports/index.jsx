@@ -48,6 +48,10 @@ import {
   Image,
   GanttChartSquare,
   MapIcon,
+  EllipsisVertical,
+  EllipsisVerticalIcon,
+  PanelLeftClose,
+  PanelLeftOpen,
 } from "lucide-react";
 import CardView from "../CardView";
 import TableView from "../TableView";
@@ -153,6 +157,9 @@ function Reports({
   const controllerRef = useRef(null);
   const prevModuleRef = useRef();
   const [showFilterIcon,setShowFilterIcon]=useState(false)
+  const [showMobileActions, setShowMobileActions] = useState(false);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+
   // console.log({"onSidebarChange____IND":onSidebarChange})
 const axios = async (config) => {
     if (api) {
@@ -1578,6 +1585,13 @@ if (!isReady) {
     </div>
   );
 }
+const isMobile = window.innerWidth < 768;
+
+const displayTitle =
+  isMobile && title?.length > 15
+    ? `${title.slice(0, 15)}...`
+    : title;
+
   return (
     <div
       className={`bg-white report-root ${
@@ -1586,56 +1600,61 @@ if (!isReady) {
     >
       {" "}
       <div className="  py-2 report-header">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div className="flex space-x-2">
+        <div className="flex flex-row items-center justify-end md:justify-between gap-2">
+          <div className="flex space-x-2 mr-auto  ">
             <h1
               className={
                 style?.title ||
-                `text-xl font-semibold text-gray-900 flex-shrink-0`
+                `text-md md:text-xl font-semibold text-gray-900 flex-shrink-0`
               }
             >
-              {title}{" "}
+              {displayTitle}{" "}
               {title && <span className="text-sm">({totalData})</span>}{" "}
             </h1>
        
           </div>
-               <div className="flex  report-action-bar">
-             {actions &&
-              Object.entries(actions).map(([key, action]) => {
-                const isDisabled =
-                       action?.onselect === true && selectedRows.size === 0;
-                
-                return (
-                  <button
-                    key={key}
-                    disabled={isDisabled}
-                    title={
-                      isDisabled
-                        ? "Select at least one row to enable this action"
-                        :  action?.label
-                    }
-                    onClick={() =>
-                      !isDisabled &&
-                      handleButtonClick(key, action, {
-                        ids: [...selectedRows],
-                        count: selectedRows.length,
-                      })
-                    }
-                    className={`inline-flex items-center px-2 py-1 text-sm font-medium rounded-md ${
-                      isDisabled
-                        ? "opacity-50 cursor-not-allowed bg-gray-300"
-                        : action?.class ??
-                          "cursor-pointer bg-action"
-                    }`}
-                  >
-                    {getIconComponent(`mr-2 action-icon ${action?.icon}`)}
-                    {action?.label}
-                  </button>
-                );
-              })}
-            </div>
-          <div className="hidden sm:flex items-center gap-2 flex-shrink-0">
-            {toolbar?.print !== false && (
+              <>
+  {/* Desktop */}
+        <div className="hidden md:flex report-action-bar">
+          {actions &&
+            Object.entries(actions).map(([key, action]) => {
+              const isDisabled =
+                action?.onselect === true && selectedRows.size === 0;
+
+              return (
+                <button
+                  key={key}
+                  disabled={isDisabled}
+                  title={
+                    isDisabled
+                      ? "Select at least one row to enable this action"
+                      : action?.label
+                  }
+                  onClick={() =>
+                    !isDisabled &&
+                    handleButtonClick(key, action, {
+                      ids: [...selectedRows],
+                      count: selectedRows.length,
+                    })
+                  }
+                  className={`inline-flex items-center px-2 py-1 text-sm font-medium rounded-md ${
+                    isDisabled
+                      ? "opacity-50 cursor-not-allowed bg-gray-300"
+                      : action?.class ?? "cursor-pointer bg-action"
+                  }`}
+                >
+                  {getIconComponent(`mr-2 action-icon ${action?.icon}`)}
+                  {action?.label}
+                </button>
+              );
+            })}
+        </div>
+
+
+</>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            
+            {toolbar?.print === true && (
               <button
                 onClick={() => window.print()}
                 className="inline-flex items-center px-3 py-1 text-sm font-medium bg-action rounded-md hover:bg-gray-100 cursor-pointer"
@@ -1716,6 +1735,93 @@ if (!isReady) {
                 Email
               </button>
             )}
+              {/* Mobile */}
+  <div className="relative md:hidden">
+    <button
+      onClick={() => setShowMobileActions(!showMobileActions)}
+      className="inline-flex items-center px-3 py-1 text-sm font-medium text-action rounded-md cursor-pointer report-mobile-action-more"
+    >
+    <EllipsisVerticalIcon size={18} />      
+    </button>
+
+    {showMobileActions && (
+      <>
+        {/* Backdrop */}
+        <div
+          className="fixed inset-0 z-40"
+          onClick={() => setShowMobileActions(false)}
+        />
+
+        {/* Dropdown */}
+        <div
+          className="
+            absolute right-0 mt-2  w-58
+            bg-white border border-slate-200 rounded-lg shadow-xl
+            z-50 overflow-hidden report-mobile-action-dropdown
+          "
+        >
+          {actions &&
+            Object.entries(actions).map(([key, action]) => {
+              const isDisabled =
+                action?.onselect === true &&
+                selectedRows.size === 0;
+
+              return (
+                <button
+                  key={key}
+                  disabled={isDisabled}
+                  title={
+                    isDisabled
+                      ? "Select at least one row to enable this action"
+                      : action?.label
+                  }
+                  onClick={() => {
+                    if (isDisabled) return;
+
+                    setShowMobileActions(false);
+
+                    handleButtonClick(key, action, {
+                      ids: [...selectedRows],
+                      count: selectedRows.length,
+                    });
+                  }}
+                  className={`
+                    w-full flex items-center gap-3
+                    px-2 py-1.5 text-left text-sm
+                    border-b border-slate-200 last:border-b-0
+                    ${
+                      isDisabled
+                        ? "opacity-50 cursor-not-allowed bg-gray-100"
+                        : "hover:bg-gray-50"
+                    }
+                  `}
+                >
+                  {getIconComponent(
+                    `action-icon ${action?.icon}`
+                  )}
+
+                  <span>{action?.label}</span>
+                </button>
+              );
+            })}
+  {config?.settings != false && (
+                <button
+                  onClick={() => setSettingsOpen(true)}
+                  className={`
+                    w-full flex items-center gap-3
+                    px-2 py-1.5 text-left text-sm
+                    border-b last:border-b-0
+                   hover:bg-gray-50
+                  `}
+                >
+                                   <Settings className="w-4 h-4" />
+
+                  <span>Settings</span>
+                </button>)}
+        </div>
+      </>
+    )}
+  </div>
           </div>
 
           {/* <button
@@ -1729,14 +1835,20 @@ if (!isReady) {
         <div
           className={
             style?.searchBarContainer ||
-            " report-search-container flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-4"
+            " report-search-container flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 md:gap-4 mt-4"
           }
         >
           <div className="flex items-center gap-3 flex-1 items-start">
             {toolbar?.search !== false && (
+              <div className="flex w-full justify-between">
+              
+              
               <div className="flex items-center  flex-1 border border-gray-300 rounded-md overflow-hidden focus-within:ring-1 focus-within:ring-gray-300 toolbar-search">
                 {/* SEARCH */}
+         
                 <div className="relative flex-1 search-input-div">
+                   
+    
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
                   <input
                     type="search"
@@ -1763,7 +1875,7 @@ if (!isReady) {
                   style={{
                     width: `${Math.min((searchColumnLabel?.length || 8) + 6, 14)}ch`,
                   }}
-                  className="h-9 px-3 text-sm bg-white text-slate-600 outline-none border-none border-l border-gray-300"
+                  className="h-9 px-1 md:px-2 text-sm bg-white text-slate-600 outline-none border-none border-l border-gray-300"
                   onChange={(e) => {
                     const label = e.target.options[e.target.selectedIndex].text;
                     if (searchColumn) {
@@ -1774,7 +1886,9 @@ if (!isReady) {
                   }}
                   value={searchColumn}
                 >
-                  <option value="">Search by</option>
+                  <option value="">
+              {window.innerWidth < 768 ? "All" : "Search by"}
+            </option>
                   {searchableColumns.map((col) => (
                     <option key={col.key} value={col.key}>
                       {col.label}
@@ -1794,8 +1908,34 @@ if (!isReady) {
                   <RotateCcw className="w-4 h-4 mr-1" />
                 </button>
               </div>
+              <div className="flex">
+
+                {
+                showFilterIcon &&
+              <button
+              onClick={() => setShowTableFilters((prev) => !prev)}
+              className={`ml-1 inline-flex md:hidden items-center px-3 py-1.5 text-sm font-medium rounded-md transition-colors  bg-action cursor-pointer`}
+              >
+                <FilterIcon className="w-4 h-4" />
+              </button>
+              }        {isMobile &&
+    config.sidebar &&
+    sidebarDataCount > 0 && (
+      <button
+        onClick={() =>
+          setMobileSidebarOpen(!mobileSidebarOpen)
+        }
+              className={`inline-flex md:hidden items-center px-3 py-1.5 text-sm font-medium rounded-md transition-colors  bg-action cursor-pointer`}
+
+      >
+        {mobileSidebarOpen ? <PanelLeftOpen className="w-4 h-4" /> : <PanelLeftClose className="w-4 h-4" />}
+      </button>
+    )}
+
+              </div>
+              </div>
             )}
-            <div className=" flex gap-2">
+            <div className=" flex w-full gap-2 report-date-range-container">
               {dateRangeColumns.length == 1 && (
                 <button
                   onClick={() => {
@@ -1987,7 +2127,7 @@ if (!isReady) {
               {config?.settings != false && (
                 <button
                   onClick={() => setSettingsOpen(true)}
-                  className={`inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md transition-colors  bg-action cursor-pointer`}
+                  className={`hidden md:inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md transition-colors  bg-action cursor-pointer`}
                 >
                   <Settings className="w-4 h-4" />
                 </button>
@@ -1996,7 +2136,7 @@ if (!isReady) {
                 showFilterIcon &&
               <button
               onClick={() => setShowTableFilters((prev) => !prev)}
-              className={`inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md transition-colors  bg-action cursor-pointer`}
+              className={`hidden md:inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md transition-colors  bg-action cursor-pointer`}
               >
                 <FilterIcon className="w-4 h-4" />
               </button>
@@ -2045,14 +2185,54 @@ if (!isReady) {
       <div className="flex">
         {
         config.sidebar && 
-        <div 
-        
-          className={`max-w-[250px] min-w-[250px] border-r border-gray-200 max-h-screen overflow-y-auto thin-scrollbar sidebar ${
-        sidebarDataCount === 0 ? "hidden" : ""
-      }`}
-        >
-           <Sidebar config={config} onChange={handleSidebarChange} onSidebarChange={onSidebarChange} setSidebarDataCount={setSidebarDataCount} />
-        </div>
+      <>
+  {/* Backdrop */}
+  {isMobile && mobileSidebarOpen && (
+    <div
+      className="fixed inset-0 bg-black/20 z-40"
+      onClick={() => setMobileSidebarOpen(false)}
+    />
+  )}
+
+  {/* Sidebar */}
+  {config.sidebar && (
+    <div
+      className={`
+        border-r border-gray-200
+        max-h-screen overflow-y-auto thin-scrollbar sidebar
+        bg-white
+        transition-all duration-300
+
+        ${
+          sidebarDataCount === 0 ? "hidden" : ""
+        }
+
+        ${
+          isMobile
+            ? `
+              fixed left-0 top-0 z-50 h-screen
+              w-[250px]
+              pt-[33px]
+              ${
+                mobileSidebarOpen
+                  ? "translate-x-0"
+                  : "-translate-x-full"
+              }
+            `
+            : "max-w-[250px] min-w-[250px]"
+        }
+      `}
+    >
+      <Sidebar
+        config={config}
+        onChange={handleSidebarChange}
+        onSidebarChange={onSidebarChange}
+        setSidebarDataCount={setSidebarDataCount}
+        mobileSidebarOpen={mobileSidebarOpen}
+      />
+    </div>
+  )}
+</>
         }
         <div className="flex-1 overflow-auto report">
        

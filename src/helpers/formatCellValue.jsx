@@ -961,24 +961,29 @@ const isZipType =
             );
         }
 
-        const a =
-          document.createElement(
-            "a"
-          );
+       if (window.Capacitor?.isNativePlatform?.()) {
+  window.location.href = downloadUrl;
 
-        a.href = downloadUrl;
+  if (downloadUrl?.startsWith("blob:")) {
+    setTimeout(() => {
+      URL.revokeObjectURL(downloadUrl);
+    }, 5000);
+  }
 
-        a.download =
-          fileName ||
-          "download";
+  return;
+}
 
-        document.body.appendChild(
-          a
-        );
+const a = document.createElement("a");
 
-        a.click();
+a.href = downloadUrl;
 
-        a.remove();
+a.download = fileName || "download";
+
+document.body.appendChild(a);
+
+a.click();
+
+a.remove();
 
         if (
           downloadUrl?.startsWith(

@@ -23730,12 +23730,14 @@ function hfe({
           H
         );
       }
-      const P = document.createElement(
-        "a"
-      );
-      P.href = M, P.download = g || "download", document.body.appendChild(
-        P
-      ), P.click(), P.remove(), M?.startsWith(
+      if (window.Capacitor?.isNativePlatform?.()) {
+        window.location.href = M, M?.startsWith("blob:") && setTimeout(() => {
+          URL.revokeObjectURL(M);
+        }, 5e3);
+        return;
+      }
+      const P = document.createElement("a");
+      P.href = M, P.download = g || "download", document.body.appendChild(P), P.click(), P.remove(), M?.startsWith(
         "blob:"
       ) && setTimeout(() => {
         URL.revokeObjectURL(
@@ -37791,7 +37793,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Xr.canvg ? Promise.resolve(Xr.canvg) : import("./index.es-BcSzHEaK.js")).catch(function(f) {
+  return (Xr.canvg ? Promise.resolve(Xr.canvg) : import("./index.es-D4jcnpry.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;

@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 
-const Sidebar = ({ config, onChange,onSidebarChange,setSidebarDataCount}) => {
+const Sidebar = ({ config, onChange,onSidebarChange,setSidebarDataCount,
+ mobileSidebarOpen}) => {
   const [dataMap, setDataMap] = useState({});
   const [loading, setLoading] = useState({});
   const [selectedFilters, setSelectedFilters] = useState({});

@@ -1067,7 +1067,7 @@ const bottomSpacerHeight = treeRows
                         })}
                       </tr>
                       {showTableFilters && (
-                        <tr className="bg-gray-50">
+                        <tr className="bg-gray-50 report-filter-row">
                           {hasButtons && <th />}
                           {showExtraColumn === "checkbox" && <th />}
 
@@ -1078,7 +1078,7 @@ const bottomSpacerHeight = treeRows
                             switch (filter.type) {
                               case "text":
                                 return (
-                                  <th key={key} className="px-2 py-1"
+                                  <th key={key} 
                                                                 style={col.style ? parseStyle(col.style) : {}}
 
                                   >
@@ -1094,14 +1094,14 @@ const bottomSpacerHeight = treeRows
                                           },
                                         }))
                                       }
-                                      className="w-full border rounded px-2 py-1 text-xs"
+                                      className="w-full border  px-2 py-1 text-xs"
                                     />
                                   </th>
                                 );
 
                               case "date":
                                 return (
-                                  <th key={key} className="px-2 py-1"
+                                  <th key={key} 
                                                                 style={col.style ? parseStyle(col.style) : {}}
 
                                   >
@@ -1117,13 +1117,13 @@ const bottomSpacerHeight = treeRows
                                           },
                                         }))
                                       }
-                                      className="w-full border rounded px-2 py-1 text-xs"
+                                      className="w-full border  px-2 py-1 text-xs"
                                     />
                                   </th>
                                 );
                                 case "month":
                               return (
-                                <th key={key} className="px-2 py-1"
+                                <th key={key} 
                                                               style={col.style ? parseStyle(col.style) : {}}
 
                                 >
@@ -1139,7 +1139,7 @@ const bottomSpacerHeight = treeRows
                                         },
                                       }))
                                     }
-                                    className="w-full border rounded px-2 py-1 text-xs"
+                                    className="w-full border  px-2 py-1 text-xs"
                                   />
                                 </th>
                               );
@@ -1157,7 +1157,7 @@ const bottomSpacerHeight = treeRows
                                   : rawOptions;
 
                                 return (
-                                  <th key={key} className="px-2 py-1"
+                                  <th key={key} 
                                     style={col.style ? parseStyle(col.style) : {}}
                                   >
                                     <select
@@ -1171,7 +1171,7 @@ const bottomSpacerHeight = treeRows
                                           },
                                         }))
                                       }
-                                      className="w-full border rounded px-2 py-1 text-xs"
+                                      className="w-full border  px-2 py-1 text-xs"
                                     >
                                       <option value="">
                                         {filter.nofilter || "--"}
