@@ -579,6 +579,25 @@ function AttachmentPopup({
       </svg>
     ),
   },
+  pdf: {
+  title: "PDF Document",
+  description:  "PDF preview is not supported on this device",
+  buttonText: "Download PDF",
+  bg: "from-red-50 to-white",
+  button:
+    "bg-red-600 hover:bg-red-700",
+  iconBg: "bg-red-600",
+  icon: (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className="w-14 h-14"
+    >
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" />
+    </svg>
+  ),
+},
 };
 
 const unsupportedPreview =
@@ -586,10 +605,12 @@ const unsupportedPreview =
     previewType
   ];
 
+const isNative =
+  window?.Capacitor?.isNativePlatform?.();
+
 const showUnsupportedPreview =
-  Boolean(
-    unsupportedPreview
-  );
+  Boolean(unsupportedPreview) ||
+  (isNative && previewType === "pdf");
 
 
   React.useEffect(() => {

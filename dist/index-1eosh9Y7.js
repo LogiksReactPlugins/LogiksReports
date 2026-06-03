@@ -23570,18 +23570,36 @@ function hfe({
           children: /* @__PURE__ */ k.jsx("path", { d: "M7 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-6-6zm3 1v5h5v12H7V4h3zm1 8h2v2h-2zm0 3h2v2h-2z" })
         }
       )
+    },
+    pdf: {
+      title: "PDF Document",
+      description: "PDF preview is not supported on this device",
+      buttonText: "Download PDF",
+      bg: "from-red-50 to-white",
+      button: "bg-red-600 hover:bg-red-700",
+      iconBg: "bg-red-600",
+      icon: /* @__PURE__ */ k.jsx(
+        "svg",
+        {
+          xmlns: "http://www.w3.org/2000/svg",
+          viewBox: "0 0 24 24",
+          fill: "currentColor",
+          className: "w-14 h-14",
+          children: /* @__PURE__ */ k.jsx("path", { d: "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" })
+        }
+      )
     }
-  }[o], S = !!b;
+  }[o], S = window?.Capacitor?.isNativePlatform?.(), C = !!b || S && o === "pdf";
   gn.useEffect(() => {
     if (!t) {
       a(null), s(""), h(""), u(!1), c(!1);
       return;
     }
-    const M = () => {
+    const P = () => {
       a(null), s(""), h(""), c(!1);
     };
     if (m || y) {
-      M(), a(r), r?.startsWith(
+      P(), a(r), r?.startsWith(
         "data:image"
       ) || /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(
         r
@@ -23604,96 +23622,96 @@ function hfe({
       u(!1), c(!1);
       return;
     }
-    const P = new AbortController();
+    const R = new AbortController();
     return (async () => {
       try {
-        u(!0), c(!0), M();
-        const H = await fetch(
+        u(!0), c(!0), P();
+        const W = await fetch(
           `${e?.endPoints?.preview}?uri=${encodeURIComponent(
             w
           )}`,
           {
             headers: e?.endPoints?.headers || {},
-            signal: P.signal
+            signal: R.signal
           }
         );
-        if (!H.ok)
+        if (!W.ok)
           throw new Error(
             "Preview fetch failed"
           );
-        const W = H.headers.get(
+        const Z = W.headers.get(
           "content-type"
-        ) || "", Z = await H.blob(), j = W.includes(
+        ) || "", j = await W.blob(), te = Z.includes(
           "spreadsheet"
-        ) || W.includes(
+        ) || Z.includes(
           "excel"
-        ), te = W.includes(
+        ), re = Z.includes(
           "csv"
-        ) || W.includes(
+        ) || Z.includes(
           "text/plain"
-        ) || W.includes(
+        ) || Z.includes(
           "text/csv"
-        ), re = W.includes(
+        ), J = Z.includes(
           "word"
-        ) || W.includes(
+        ) || Z.includes(
           "document"
-        ), J = W.includes(
+        ), O = Z.includes(
           "presentation"
-        ) || W.includes(
+        ) || Z.includes(
           "powerpoint"
-        ), O = W.includes(
+        ), V = Z.includes(
           "zip"
-        ) || W.includes(
+        ) || Z.includes(
           "compressed"
         );
-        if (!(W.startsWith(
+        if (!(Z.startsWith(
           "image/"
-        ) || W.includes(
+        ) || Z.includes(
           "pdf"
-        ) || j || te || re || J || O))
+        ) || te || re || J || O || V))
           throw new Error(
             "Preview not supported"
           );
         d.current && URL.revokeObjectURL(
           d.current
         );
-        const G = URL.createObjectURL(
-          Z
+        const K = URL.createObjectURL(
+          j
         );
-        if (d.current = G, a(G), W.startsWith(
+        if (d.current = K, a(K), Z.startsWith(
           "image/"
         ))
           s(
             "image"
           );
-        else if (W.includes(
+        else if (Z.includes(
           "pdf"
         ))
           s("pdf");
-        else if (j)
+        else if (te)
           s(
             "excel"
           );
-        else if (re)
-          s("doc");
         else if (J)
-          s("ppt");
+          s("doc");
         else if (O)
+          s("ppt");
+        else if (V)
           s("zip");
-        else if (te) {
-          const K = await Z.text();
-          h(K), s("csv");
+        else if (re) {
+          const ee = await j.text();
+          h(ee), s("csv");
         }
-      } catch (H) {
-        H.name !== "AbortError" && console.error(
+      } catch (W) {
+        W.name !== "AbortError" && console.error(
           "Preview load failed",
-          H
-        ), M();
+          W
+        ), P();
       } finally {
         u(!1), c(!1);
       }
     })(), () => {
-      P.abort(), d.current && (URL.revokeObjectURL(
+      R.abort(), d.current && (URL.revokeObjectURL(
         d.current
       ), d.current = null);
     };
@@ -23705,15 +23723,15 @@ function hfe({
     w,
     e?.endPoints?.preview
   ]);
-  const C = o === "image", D = o === "pdf", T = o === "csv", N = () => {
+  const D = o === "image", T = o === "pdf", N = o === "csv", E = () => {
     n(!1), a(null), s(""), h(""), u(!1), c(!1), d.current && (URL.revokeObjectURL(
       d.current
     ), d.current = null);
-  }, E = async () => {
+  }, M = async () => {
     try {
-      let M = r, P = null;
+      let P = r, R = null;
       if (!m && !y && w) {
-        const H = await fetch(
+        const W = await fetch(
           `${e?.endPoints?.preview}?uri=${encodeURIComponent(
             w
           )}`,
@@ -23721,29 +23739,29 @@ function hfe({
             headers: e?.endPoints?.headers || {}
           }
         );
-        if (!H.ok)
+        if (!W.ok)
           throw new Error("Download failed");
-        P = await H.blob(), M = URL.createObjectURL(P);
+        R = await W.blob(), P = URL.createObjectURL(R);
       }
-      if (e?.native?.downloadFile && typeof e.native.downloadFile == "function" && P) {
+      if (e?.native?.downloadFile && typeof e.native.downloadFile == "function" && R) {
         await e.native.downloadFile(
-          P,
+          R,
           g
         );
         return;
       }
-      const R = document.createElement("a");
-      R.href = M, R.download = g || "download", document.body.appendChild(R), R.click(), R.remove(), M?.startsWith(
+      const H = document.createElement("a");
+      H.href = P, H.download = g || "download", document.body.appendChild(H), H.click(), H.remove(), P?.startsWith(
         "blob:"
       ) && setTimeout(() => {
         URL.revokeObjectURL(
-          M
+          P
         );
       }, 1e3);
-    } catch (M) {
+    } catch (P) {
       console.error(
         "Download failed",
-        M
+        P
       );
     }
   };
@@ -23764,8 +23782,8 @@ function hfe({
         role: "dialog",
         "aria-modal": "true",
         className: "fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4",
-        onClick: (M) => {
-          M.target === M.currentTarget && N();
+        onClick: (P) => {
+          P.target === P.currentTarget && E();
         },
         children: /* @__PURE__ */ k.jsxs("div", { className: "bg-white max-w-6xl w-full rounded-xl shadow-lg relative overflow-hidden", children: [
           /* @__PURE__ */ k.jsxs("div", { className: "flex items-center justify-between border-b px-4 py-3 gap-3", children: [
@@ -23782,7 +23800,7 @@ function hfe({
                 "button",
                 {
                   className: "cursor-pointer text-sm bg-blue-600 hover:bg-blue-700 text-white rounded px-3 py-1",
-                  onClick: E,
+                  onClick: M,
                   children: "Download"
                 }
               ),
@@ -23790,7 +23808,7 @@ function hfe({
                 "button",
                 {
                   className: "cursor-pointer text-gray-500 hover:text-black bg-gray-100 hover:bg-gray-200 rounded px-2 py-1 text-sm",
-                  onClick: N,
+                  onClick: E,
                   children: "✕"
                 }
               )
@@ -23799,7 +23817,7 @@ function hfe({
           /* @__PURE__ */ k.jsxs("div", { className: "p-4 min-h-[300px] flex items-center justify-center", children: [
             (l || A) && /* @__PURE__ */ k.jsx("div", { className: "text-sm text-gray-500", children: "Loading preview..." }),
             !l && !A && i && /* @__PURE__ */ k.jsxs(k.Fragment, { children: [
-              C && /* @__PURE__ */ k.jsx(
+              D && /* @__PURE__ */ k.jsx(
                 "img",
                 {
                   src: i,
@@ -23817,7 +23835,7 @@ function hfe({
                   className: "max-w-full max-h-[75vh] rounded"
                 }
               ),
-              D && /* @__PURE__ */ k.jsx(
+              T && /* @__PURE__ */ k.jsx(
                 "iframe",
                 {
                   src: i,
@@ -23835,8 +23853,8 @@ function hfe({
                   className: "w-full h-[75vh] border rounded"
                 }
               ),
-              T && /* @__PURE__ */ k.jsx("div", { className: "w-full overflow-auto max-h-[75vh] border rounded p-3 bg-gray-50", children: /* @__PURE__ */ k.jsx("pre", { className: "text-xs whitespace-pre-wrap", children: f }) }),
-              S && /* @__PURE__ */ k.jsxs(
+              N && /* @__PURE__ */ k.jsx("div", { className: "w-full overflow-auto max-h-[75vh] border rounded p-3 bg-gray-50", children: /* @__PURE__ */ k.jsx("pre", { className: "text-xs whitespace-pre-wrap", children: f }) }),
+              C && /* @__PURE__ */ k.jsxs(
                 "div",
                 {
                   className: `w-full min-h-[420px] flex flex-col items-center justify-center gap-5 border border-gray-200 rounded-xl bg-gradient-to-b ${b.bg}`,
@@ -23855,7 +23873,7 @@ function hfe({
                     /* @__PURE__ */ k.jsx(
                       "button",
                       {
-                        onClick: E,
+                        onClick: M,
                         className: `${b.button} text-white px-5 py-2.5 rounded-lg text-sm font-medium shadow`,
                         children: b.buttonText
                       }
@@ -23864,12 +23882,12 @@ function hfe({
                 }
               )
             ] }),
-            !l && !i && !S && /* @__PURE__ */ k.jsxs("div", { className: "text-sm text-red-500 flex flex-col items-center gap-2", children: [
+            !l && !i && !C && /* @__PURE__ */ k.jsxs("div", { className: "text-sm text-red-500 flex flex-col items-center gap-2", children: [
               /* @__PURE__ */ k.jsx("div", { children: "Preview not available" }),
               r && /* @__PURE__ */ k.jsx(
                 "button",
                 {
-                  onClick: E,
+                  onClick: M,
                   className: "text-blue-600 underline text-sm",
                   children: "Download File"
                 }
@@ -37789,7 +37807,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Xr.canvg ? Promise.resolve(Xr.canvg) : import("./index.es-CDZlqipI.js")).catch(function(f) {
+  return (Xr.canvg ? Promise.resolve(Xr.canvg) : import("./index.es-CTYwsFh8.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
