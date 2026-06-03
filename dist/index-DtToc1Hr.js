@@ -23711,9 +23711,9 @@ function hfe({
     ), d.current = null);
   }, E = async () => {
     try {
-      let M = r;
+      let M = r, P = null;
       if (!m && !y && w) {
-        const R = await fetch(
+        const H = await fetch(
           `${e?.endPoints?.preview}?uri=${encodeURIComponent(
             w
           )}`,
@@ -23721,24 +23721,19 @@ function hfe({
             headers: e?.endPoints?.headers || {}
           }
         );
-        if (!R.ok)
-          throw new Error(
-            "Download failed"
-          );
-        const H = await R.blob();
-        M = URL.createObjectURL(
-          H
-        );
+        if (!H.ok)
+          throw new Error("Download failed");
+        P = await H.blob(), M = URL.createObjectURL(P);
       }
-      if (e?.native?.downloadFile && typeof e.native.downloadFile == "function") {
+      if (e?.native?.downloadFile && typeof e.native.downloadFile == "function" && P) {
         await e.native.downloadFile(
-          blob,
+          P,
           g
         );
         return;
       }
-      const P = document.createElement("a");
-      P.href = M, P.download = g || "download", document.body.appendChild(P), P.click(), P.remove(), M?.startsWith(
+      const R = document.createElement("a");
+      R.href = M, R.download = g || "download", document.body.appendChild(R), R.click(), R.remove(), M?.startsWith(
         "blob:"
       ) && setTimeout(() => {
         URL.revokeObjectURL(
@@ -37794,7 +37789,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Xr.canvg ? Promise.resolve(Xr.canvg) : import("./index.es-CoIgT_C9.js")).catch(function(f) {
+  return (Xr.canvg ? Promise.resolve(Xr.canvg) : import("./index.es-DUNDKHdG.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;

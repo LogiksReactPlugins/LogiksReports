@@ -923,85 +923,81 @@ const isZipType =
     }
   };
 
-  const handleDownload =
-    async () => {
-      try {
-        let downloadUrl = url;
+const handleDownload = async () => {
+  try {
+    let downloadUrl = url;
+    let blob = null;
 
-        // internal/private file
-        if (
-          !isHttp &&
-          !isBase64 &&
+    if (
+      !isHttp &&
+      !isBase64 &&
+      cleanPath
+    ) {
+      const res = await fetch(
+        `${config?.endPoints?.preview}?uri=${encodeURIComponent(
           cleanPath
-        ) {
-          const res =
-            await fetch(
-              `${config?.endPoints?.preview}?uri=${encodeURIComponent(
-                cleanPath
-              )}`,
-              {
-                headers:
-                  config?.endPoints
-                    ?.headers || {},
-              }
-            );
-
-          if (!res.ok) {
-            throw new Error(
-              "Download failed"
-            );
-          }
-
-          const blob =
-            await res.blob();
-
-          downloadUrl =
-            URL.createObjectURL(
-              blob
-            );
+        )}`,
+        {
+          headers:
+            config?.endPoints?.headers || {},
         }
-if (
-  config?.native?.downloadFile &&
-  typeof config.native.downloadFile === "function"
-) {
-  await config.native.downloadFile(
-    blob,
-    fileName
-  );
+      );
 
-  return;
-}
-
-const a = document.createElement("a");
-
-a.href = downloadUrl;
-
-a.download = fileName || "download";
-
-document.body.appendChild(a);
-
-a.click();
-
-a.remove();
-
-        if (
-          downloadUrl?.startsWith(
-            "blob:"
-          )
-        ) {
-          setTimeout(() => {
-            URL.revokeObjectURL(
-              downloadUrl
-            );
-          }, 1000);
-        }
-      } catch (err) {
-        console.error(
-          "Download failed",
-          err
-        );
+      if (!res.ok) {
+        throw new Error("Download failed");
       }
-    };
+
+      blob = await res.blob();
+
+      downloadUrl =
+        URL.createObjectURL(blob);
+    }
+
+    if (
+      config?.native?.downloadFile &&
+      typeof config.native.downloadFile ===
+        "function" &&
+      blob
+    ) {
+      await config.native.downloadFile(
+        blob,
+        fileName
+      );
+
+      return;
+    }
+
+    const a =
+      document.createElement("a");
+
+    a.href = downloadUrl;
+    a.download =
+      fileName || "download";
+
+    document.body.appendChild(a);
+
+    a.click();
+
+    a.remove();
+
+    if (
+      downloadUrl?.startsWith(
+        "blob:"
+      )
+    ) {
+      setTimeout(() => {
+        URL.revokeObjectURL(
+          downloadUrl
+        );
+      }, 1000);
+    }
+  } catch (err) {
+    console.error(
+      "Download failed",
+      err
+    );
+  }
+};
 
   return (
     <>
