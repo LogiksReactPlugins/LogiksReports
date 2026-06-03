@@ -960,15 +960,14 @@ const isZipType =
               blob
             );
         }
-
-       if (window.Capacitor?.isNativePlatform?.()) {
-  window.location.href = downloadUrl;
-
-  if (downloadUrl?.startsWith("blob:")) {
-    setTimeout(() => {
-      URL.revokeObjectURL(downloadUrl);
-    }, 5000);
-  }
+if (
+  config?.native?.downloadFile &&
+  typeof config.native.downloadFile === "function"
+) {
+  await config.native.downloadFile(
+    blob,
+    fileName
+  );
 
   return;
 }
