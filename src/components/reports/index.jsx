@@ -1228,15 +1228,25 @@ obj[col.label] = value;
       type: "array",
     });
 
-    saveAs(
-      new Blob([buffer], {
-        type:
-          type === "csv"
-            ? "text/csv;charset=utf-8"
-            : "application/octet-stream",
-      }),
-      `${config?.title || "export"}.${type === "csv" ? "csv" : "xlsx"}`
-    );
+    const blob = new Blob([buffer], {
+  type:
+    type === "csv"
+      ? "text/csv;charset=utf-8"
+      : "application/octet-stream",
+});
+
+const fileName = `${config?.title || "export"}.${
+  type === "csv" ? "csv" : "xlsx"
+}`;
+
+if (
+  config?.native?.downloadFile &&
+  typeof config.native.downloadFile === "function"
+) {
+  await config.native.downloadFile(blob, fileName);
+} else {
+  saveAs(blob, fileName);
+}
   } catch (err) {
     console.error("Export failed", err);
   }
