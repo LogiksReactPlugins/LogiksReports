@@ -1565,6 +1565,10 @@ const getRowValue = (row, key) => {
     if(type=="all"){
       handleExportAll("excel")
       return false
+    }else if(type=='csv'){
+
+     handleExportAll("csv")
+      return false
     }
     try {
       setLoading(type);
@@ -1945,6 +1949,9 @@ const displayTitle =
               </div>
               </div>
             )}
+            {
+               currentView === "table" &&
+            
             <div className=" flex w-full gap-2 report-date-range-container">
               {dateRangeColumns.length == 1 && (
                 <button
@@ -2035,6 +2042,7 @@ const displayTitle =
                 </>
               )}
             </div>
+}
           </div>
 
           <div className="flex flex-col self-end sm:flex-row sm:items-center gap-3 lg:gap-4">
