@@ -1713,7 +1713,9 @@ const displayTitle =
       : "cursor-pointer hover:bg-gray-100"
   }`}
 >
-  {CONSTANTS.EXPORT_LABELS[key]}
+ <span>
+   {CONSTANTS.EXPORT_LABELS[key]}
+ </span>
 
   {loading === key && (
     <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
