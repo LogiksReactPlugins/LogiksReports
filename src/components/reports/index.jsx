@@ -136,7 +136,7 @@ function Reports({
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [activeDateCol, setActiveDateCol] = useState(null);
   const [dateRange, setDateRange] = useState({ start: "", end: "" });
-  const [rowsPerPage, setRowsPerPage] = useState(20);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchColumnLabel, setSearchColumnLabel] = useState();
   const [dateOperator, setDateOperator] = useState("eq");
   const [filterTabs, setFilterTabs] = useState({});
@@ -1690,8 +1690,6 @@ const displayTitle =
                   </span>
                 </button>
               )}
-
-
 
               {open && (
                 <div className="absolute right-0 z-50 mt-2 w-48 rounded-md bg-white border border-gray-200 shadow-lg export-button-dropdown">
