@@ -1707,13 +1707,13 @@ const displayTitle =
                      <button
   disabled={loading===key}
   onClick={() => handleExport(key)}
-  className={`block flex justify-content-between w-full text-left px-4 py-1 ${
+  className={`block flex justify-between w-full text-left px-4 py-1 ${
     loading===key
       ? "opacity-50 cursor-not-allowed"
       : "cursor-pointer hover:bg-gray-100"
   }`}
 >
- <span>
+ <span className="">
    {CONSTANTS.EXPORT_LABELS[key]}
  </span>
 
