@@ -23589,7 +23589,9 @@ function hfe({
         }
       )
     }
-  }, b = x[o], S = window?.Capacitor?.isNativePlatform?.(), C = !!b;
+  }, b = x[o], S = window?.Capacitor?.isNativePlatform?.(), C = ["excel", "doc", "ppt", "zip"].includes(
+    o
+  );
   gn.useEffect(() => {
     if (!t) {
       a(null), s(""), h(""), u(!1), c(!1);
@@ -23816,7 +23818,7 @@ function hfe({
           ] }),
           /* @__PURE__ */ k.jsxs("div", { className: "p-4 min-h-[300px] flex items-center justify-center", children: [
             (l || A) && /* @__PURE__ */ k.jsx("div", { className: "text-sm text-gray-500", children: "Loading preview..." }),
-            !l && !A && i && /* @__PURE__ */ k.jsxs(k.Fragment, { children: [
+            !l && !A && (i || S && T) && /* @__PURE__ */ k.jsxs(k.Fragment, { children: [
               D && /* @__PURE__ */ k.jsx(
                 "img",
                 {
@@ -23840,15 +23842,9 @@ function hfe({
                 {
                   src: i,
                   title: g,
-                  onLoad: () => c(
-                    !1
-                  ),
+                  onLoad: () => c(!1),
                   onError: () => {
-                    c(
-                      !1
-                    ), a(
-                      null
-                    );
+                    c(!1), a(null);
                   },
                   className: "w-full h-[75vh] border rounded"
                 }
@@ -23867,7 +23863,7 @@ function hfe({
                     ),
                     /* @__PURE__ */ k.jsxs("div", { className: "text-center", children: [
                       /* @__PURE__ */ k.jsx("div", { className: "text-lg font-semibold text-gray-800", children: x.pdf.title }),
-                      /* @__PURE__ */ k.jsx("div", { className: "text-sm text-gray-500", children: g })
+                      /* @__PURE__ */ k.jsx("div", { className: "text-sm text-gray-500 break-all px-4", children: g })
                     ] }),
                     /* @__PURE__ */ k.jsx(
                       "button",
@@ -23909,7 +23905,7 @@ function hfe({
                 }
               )
             ] }),
-            !l && !i && !C && /* @__PURE__ */ k.jsxs("div", { className: "text-sm text-red-500 flex flex-col items-center gap-2", children: [
+            !l && !i && !C && !(T && S) && /* @__PURE__ */ k.jsxs("div", { className: "text-sm text-red-500 flex flex-col items-center gap-2", children: [
               /* @__PURE__ */ k.jsx("div", { children: "Preview not available" }),
               r && /* @__PURE__ */ k.jsx(
                 "button",
@@ -37834,7 +37830,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Xr.canvg ? Promise.resolve(Xr.canvg) : import("./index.es-Dmt734vb.js")).catch(function(f) {
+  return (Xr.canvg ? Promise.resolve(Xr.canvg) : import("./index.es-oUrEuZ0r.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;

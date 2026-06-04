@@ -607,9 +607,11 @@ const unsupportedPreview =
 
 const isNative =
   window?.Capacitor?.isNativePlatform?.();
-const showUnsupportedPreview =
-  Boolean(unsupportedPreview);
 
+  const showUnsupportedPreview =
+  ["excel", "doc", "ppt", "zip"].includes(
+    previewType
+  );
 
   React.useEffect(() => {
     if (!open) {
@@ -1084,9 +1086,10 @@ const handleDownload = async () => {
                 </div>
               )}
 
-              {!loading &&
-                !frameLoading &&
-                previewUrl && (
+            {!loading &&
+  !frameLoading &&
+  (previewUrl ||
+    (isNative && isPdf)) && (
                   <>
                     {/* image */}
                     {isImage && (
@@ -1113,33 +1116,23 @@ const handleDownload = async () => {
                       />
                     )}
 
-                    {/* pdf */}
-                    {isPdf && !isNative && (
+   {/* PDF - Web */}
+{isPdf && !isNative && (
   <iframe
-    src={
-      previewUrl
-    }
-    title={
-      fileName
-    }
+    src={previewUrl}
+    title={fileName}
     onLoad={() =>
-      setFrameLoading(
-        false
-      )
+      setFrameLoading(false)
     }
     onError={() => {
-      setFrameLoading(
-        false
-      );
-
-      setPreviewUrl(
-        null
-      );
+      setFrameLoading(false);
+      setPreviewUrl(null);
     }}
     className="w-full h-[75vh] border rounded"
   />
 )}
 
+{/* PDF - Capacitor */}
 {isPdf && isNative && (
   <div
     className={`w-full min-h-[420px] flex flex-col items-center justify-center gap-5 border border-gray-200 rounded-xl bg-gradient-to-b ${unsupportedPreviewConfig.pdf.bg}`}
@@ -1155,7 +1148,7 @@ const handleDownload = async () => {
         {unsupportedPreviewConfig.pdf.title}
       </div>
 
-      <div className="text-sm text-gray-500">
+      <div className="text-sm text-gray-500 break-all px-4">
         {fileName}
       </div>
     </div>
@@ -1168,7 +1161,6 @@ const handleDownload = async () => {
     </button>
   </div>
 )}
-
                     {/* csv */}
                     {isCsv && (
                       <div className="w-full overflow-auto max-h-[75vh] border rounded p-3 bg-gray-50">
@@ -1183,8 +1175,7 @@ const handleDownload = async () => {
                     {/* excel */}
                 {/* excel */}
 {/* unsupported preview */}
-{showUnsupportedPreview && (
-  <div
+{showUnsupportedPreview &&  (  <div
     className={`w-full min-h-[420px] flex flex-col items-center justify-center gap-5 border border-gray-200 rounded-xl bg-gradient-to-b ${unsupportedPreview.bg}`}
   >
     {/* icon */}
@@ -1225,9 +1216,10 @@ const handleDownload = async () => {
 )}
                   </>
                 )}
-
-              {!loading &&
-                !previewUrl &&  !showUnsupportedPreview && (
+{!loading &&
+ !previewUrl &&
+ !showUnsupportedPreview &&
+ !(isPdf && isNative) && (
                   <div className="text-sm text-red-500 flex flex-col items-center gap-2">
                     <div>
                       Preview not
