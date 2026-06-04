@@ -23730,41 +23730,46 @@ function hfe({
       g.current
     ), g.current = null);
   }, R = async () => {
-    try {
-      let H = r, W = null;
-      if (!w && !_ && b) {
-        const G = await fetch(
-          `${e?.endPoints?.preview}?uri=${encodeURIComponent(
-            b
-          )}`,
-          {
-            headers: e?.endPoints?.headers || {}
-          }
-        );
-        if (!G.ok)
-          throw new Error("Download failed");
-        W = await G.blob(), H = URL.createObjectURL(W);
-      }
-      if (e?.native?.downloadFile && typeof e.native.downloadFile == "function" && W) {
-        await e.native.downloadFile(
-          W,
-          y
-        );
-        return;
-      }
-      const Z = document.createElement("a");
-      Z.href = H, Z.download = y || "download", document.body.appendChild(Z), Z.click(), Z.remove(), H?.startsWith(
-        "blob:"
-      ) && setTimeout(() => {
-        URL.revokeObjectURL(
+    if (!d) {
+      p(!0);
+      try {
+        let H = r, W = null;
+        if (!w && !_ && b) {
+          const G = await fetch(
+            `${e?.endPoints?.preview}?uri=${encodeURIComponent(
+              b
+            )}`,
+            {
+              headers: e?.endPoints?.headers || {}
+            }
+          );
+          if (!G.ok)
+            throw new Error("Download failed");
+          W = await G.blob(), H = URL.createObjectURL(W);
+        }
+        if (e?.native?.downloadFile && typeof e.native.downloadFile == "function" && W) {
+          await e.native.downloadFile(
+            W,
+            y
+          );
+          return;
+        }
+        const Z = document.createElement("a");
+        Z.href = H, Z.download = y || "download", document.body.appendChild(Z), Z.click(), Z.remove(), H?.startsWith(
+          "blob:"
+        ) && setTimeout(() => {
+          URL.revokeObjectURL(
+            H
+          );
+        }, 1e3);
+      } catch (H) {
+        console.error(
+          "Download failed",
           H
         );
-      }, 1e3);
-    } catch (H) {
-      console.error(
-        "Download failed",
-        H
-      );
+      } finally {
+        p(!1);
+      }
     }
   };
   return /* @__PURE__ */ k.jsxs(k.Fragment, { children: [
@@ -37842,7 +37847,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Xr.canvg ? Promise.resolve(Xr.canvg) : import("./index.es-BI0M-cC5.js")).catch(function(f) {
+  return (Xr.canvg ? Promise.resolve(Xr.canvg) : import("./index.es-BNi3Y_51.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;

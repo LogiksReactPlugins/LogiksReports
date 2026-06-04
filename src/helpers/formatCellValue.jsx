@@ -949,6 +949,10 @@ const isZipType =
   };
 
 const handleDownload = async () => {
+  if (downloading) return;
+
+setDownloading(true);
+
   try {
     let downloadUrl = url;
     let blob = null;
@@ -1021,6 +1025,8 @@ const handleDownload = async () => {
       "Download failed",
       err
     );
+  }finally {
+    setDownloading(false);
   }
 };
 
@@ -1248,22 +1254,22 @@ const handleDownload = async () => {
 
                     {url && (
                    <button
-                                  onClick={handleDownload}
-                                  disabled={downloading}
-                                  className={`text-sm flex items-center gap-2 ${
-                                    downloading
-                                      ? "text-gray-400 cursor-not-allowed"
-                                      : "text-blue-600 underline"
-                                  }`}
-                                >
-                                  {downloading && (
-                                    <span className="inline-block w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                                  )}
+                                onClick={handleDownload}
+                                disabled={downloading}
+                                className={`text-sm flex items-center gap-2 ${
+                                  downloading
+                                    ? "text-gray-400 cursor-not-allowed"
+                                    : "text-blue-600 underline"
+                                }`}
+                              >
+                                {downloading && (
+                                  <span className="inline-block w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                                )}
 
-                                  {downloading
-                                    ? "Downloading..."
-                                    : "Download File"}
-                                </button>
+                                {downloading
+                                  ? "Downloading..."
+                                  : "Download File"}
+                              </button>
                     )}
                   </div>
                 )}
