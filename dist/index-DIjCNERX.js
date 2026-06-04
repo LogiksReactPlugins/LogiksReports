@@ -23498,7 +23498,7 @@ function hfe({
     } catch {
       return "Preview";
     }
-  })(), m = typeof r == "string" && /^https?:\/\//i.test(r), y = typeof r == "string" && r.startsWith("data:"), w = typeof r == "string" && r.includes("&") ? r.split("&").slice(1).join("&") : r, b = {
+  })(), m = typeof r == "string" && /^https?:\/\//i.test(r), y = typeof r == "string" && r.startsWith("data:"), w = typeof r == "string" && r.includes("&") ? r.split("&").slice(1).join("&") : r, x = {
     excel: {
       title: "Excel File",
       description: "Excel preview is not supported in browser",
@@ -23589,7 +23589,7 @@ function hfe({
         }
       )
     }
-  }[o], S = window?.Capacitor?.isNativePlatform?.(), C = !!b || S && o === "pdf";
+  }, b = x[o], S = window?.Capacitor?.isNativePlatform?.(), C = !!b;
   gn.useEffect(() => {
     if (!t) {
       a(null), s(""), h(""), u(!1), c(!1);
@@ -23835,7 +23835,7 @@ function hfe({
                   className: "max-w-full max-h-[75vh] rounded"
                 }
               ),
-              T && /* @__PURE__ */ k.jsx(
+              T && !S && /* @__PURE__ */ k.jsx(
                 "iframe",
                 {
                   src: i,
@@ -23851,6 +23851,33 @@ function hfe({
                     );
                   },
                   className: "w-full h-[75vh] border rounded"
+                }
+              ),
+              T && S && /* @__PURE__ */ k.jsxs(
+                "div",
+                {
+                  className: `w-full min-h-[420px] flex flex-col items-center justify-center gap-5 border border-gray-200 rounded-xl bg-gradient-to-b ${x.pdf.bg}`,
+                  children: [
+                    /* @__PURE__ */ k.jsx(
+                      "div",
+                      {
+                        className: `w-24 h-24 rounded-2xl text-white flex items-center justify-center shadow-lg ${x.pdf.iconBg}`,
+                        children: x.pdf.icon
+                      }
+                    ),
+                    /* @__PURE__ */ k.jsxs("div", { className: "text-center", children: [
+                      /* @__PURE__ */ k.jsx("div", { className: "text-lg font-semibold text-gray-800", children: x.pdf.title }),
+                      /* @__PURE__ */ k.jsx("div", { className: "text-sm text-gray-500", children: g })
+                    ] }),
+                    /* @__PURE__ */ k.jsx(
+                      "button",
+                      {
+                        onClick: M,
+                        className: `${x.pdf.button} text-white px-5 py-2.5 rounded-lg`,
+                        children: x.pdf.buttonText
+                      }
+                    )
+                  ]
                 }
               ),
               N && /* @__PURE__ */ k.jsx("div", { className: "w-full overflow-auto max-h-[75vh] border rounded p-3 bg-gray-50", children: /* @__PURE__ */ k.jsx("pre", { className: "text-xs whitespace-pre-wrap", children: f }) }),
@@ -37807,7 +37834,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Xr.canvg ? Promise.resolve(Xr.canvg) : import("./index.es-DnSe2ufe.js")).catch(function(f) {
+  return (Xr.canvg ? Promise.resolve(Xr.canvg) : import("./index.es-Dmt734vb.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;

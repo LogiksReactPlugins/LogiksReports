@@ -607,10 +607,8 @@ const unsupportedPreview =
 
 const isNative =
   window?.Capacitor?.isNativePlatform?.();
-
 const showUnsupportedPreview =
-  Boolean(unsupportedPreview) ||
-  (isNative && previewType === "pdf");
+  Boolean(unsupportedPreview);
 
 
   React.useEffect(() => {
@@ -1116,31 +1114,60 @@ const handleDownload = async () => {
                     )}
 
                     {/* pdf */}
-                    {isPdf && (
-                      <iframe
-                        src={
-                          previewUrl
-                        }
-                        title={
-                          fileName
-                        }
-                        onLoad={() =>
-                          setFrameLoading(
-                            false
-                          )
-                        }
-                        onError={() => {
-                          setFrameLoading(
-                            false
-                          );
+                    {isPdf && !isNative && (
+  <iframe
+    src={
+      previewUrl
+    }
+    title={
+      fileName
+    }
+    onLoad={() =>
+      setFrameLoading(
+        false
+      )
+    }
+    onError={() => {
+      setFrameLoading(
+        false
+      );
 
-                          setPreviewUrl(
-                            null
-                          );
-                        }}
-                        className="w-full h-[75vh] border rounded"
-                      />
-                    )}
+      setPreviewUrl(
+        null
+      );
+    }}
+    className="w-full h-[75vh] border rounded"
+  />
+)}
+
+{isPdf && isNative && (
+  <div
+    className={`w-full min-h-[420px] flex flex-col items-center justify-center gap-5 border border-gray-200 rounded-xl bg-gradient-to-b ${unsupportedPreviewConfig.pdf.bg}`}
+  >
+    <div
+      className={`w-24 h-24 rounded-2xl text-white flex items-center justify-center shadow-lg ${unsupportedPreviewConfig.pdf.iconBg}`}
+    >
+      {unsupportedPreviewConfig.pdf.icon}
+    </div>
+
+    <div className="text-center">
+      <div className="text-lg font-semibold text-gray-800">
+        {unsupportedPreviewConfig.pdf.title}
+      </div>
+
+      <div className="text-sm text-gray-500">
+        {fileName}
+      </div>
+    </div>
+
+    <button
+      onClick={handleDownload}
+      className={`${unsupportedPreviewConfig.pdf.button} text-white px-5 py-2.5 rounded-lg`}
+    >
+      {unsupportedPreviewConfig.pdf.buttonText}
+    </button>
+  </div>
+)}
 
                     {/* csv */}
                     {isCsv && (
