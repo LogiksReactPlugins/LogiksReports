@@ -1705,10 +1705,10 @@ const displayTitle =
                     ).map((key) => (
                       <li key={key}>
                      <button
-  disabled={!!loading}
+  disabled={loading===key}
   onClick={() => handleExport(key)}
   className={`block w-full text-left px-4 py-1 ${
-    loading
+    loading===key
       ? "opacity-50 cursor-not-allowed"
       : "cursor-pointer hover:bg-gray-100"
   }`}
