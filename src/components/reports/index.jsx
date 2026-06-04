@@ -1562,16 +1562,18 @@ const getRowValue = (row, key) => {
 
   const handleExport = async (type) => {
     // console.log("Exporting as:", type);
+        setLoading(type)
+         try {
+
     if(type=="all"){
-      handleExportAll("excel")
+      await handleExportAll("excel")
       return false
     }else if(type=='csv'){
 
-     handleExportAll("csv")
+    await handleExportAll("csv")
       return false
     }
-    try {
-      setLoading(type);
+   
       await exportTable(type,`${config?.title || "export"}`);
     } finally {
       setOpen(false);
@@ -1702,15 +1704,21 @@ const displayTitle =
                           : CONSTANTS.DEFAULT_EXPORTS.includes(key),
                     ).map((key) => (
                       <li key={key}>
-                        <button
-                          onClick={() => handleExport(key)}
-                          className="block w-full text-left px-4 py-1 cursor-pointer hover:bg-gray-100"
-                        >
-                          {CONSTANTS.EXPORT_LABELS[key]}
-                          {loading == key && (
-                            <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
-                          )}
-                        </button>
+                     <button
+  disabled={!!loading}
+  onClick={() => handleExport(key)}
+  className={`block w-full text-left px-4 py-1 ${
+    loading
+      ? "opacity-50 cursor-not-allowed"
+      : "cursor-pointer hover:bg-gray-100"
+  }`}
+>
+  {CONSTANTS.EXPORT_LABELS[key]}
+
+  {loading === key && (
+    <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
+  )}
+</button>
                       </li>
                     ))}
 

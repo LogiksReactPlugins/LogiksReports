@@ -37847,7 +37847,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Xr.canvg ? Promise.resolve(Xr.canvg) : import("./index.es-BNi3Y_51.js")).catch(function(f) {
+  return (Xr.canvg ? Promise.resolve(Xr.canvg) : import("./index.es-BoQphvmm.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
@@ -96451,12 +96451,13 @@ function _6e({
   }, ki = (Be) => {
     M(E === Be ? null : Be);
   }, _u = Object.entries(Pr).filter(([Be, et]) => et.groupable && !et.hidden).map(([Be, et]) => ({ key: Be, label: et.label })), Ka = u?.showExtraColumn, uo = La ? Object.entries(La).filter(([Be]) => Be !== "more") : [], nl = La?.more ? Object.entries(La.more) : [], St = uo.length > 0 || nl.length > 0, No = async (Be) => {
-    if (Be == "all")
-      return Ds("excel"), !1;
-    if (Be == "csv")
-      return Ds("csv"), !1;
+    j(Be);
     try {
-      j(Be), await xye(Be, `${u?.title || "export"}`);
+      if (Be == "all")
+        return await Ds("excel"), !1;
+      if (Be == "csv")
+        return await Ds("csv"), !1;
+      await xye(Be, `${u?.title || "export"}`);
     } finally {
       R(!1), j(null);
     }
@@ -96547,11 +96548,12 @@ function _6e({
                   ).map((Be) => /* @__PURE__ */ k.jsx("li", { children: /* @__PURE__ */ k.jsxs(
                     "button",
                     {
+                      disabled: !!V,
                       onClick: () => No(Be),
-                      className: "block w-full text-left px-4 py-1 cursor-pointer hover:bg-gray-100",
+                      className: `block w-full text-left px-4 py-1 ${V ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:bg-gray-100"}`,
                       children: [
                         NA.EXPORT_LABELS[Be],
-                        V == Be && /* @__PURE__ */ k.jsx(mw, { className: "w-4 h-4 animate-spin text-blue-500" })
+                        V === Be && /* @__PURE__ */ k.jsx(mw, { className: "w-4 h-4 animate-spin text-blue-500" })
                       ]
                     }
                   ) }, Be)),
