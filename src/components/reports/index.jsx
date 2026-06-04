@@ -1707,7 +1707,7 @@ const displayTitle =
                      <button
   disabled={loading===key}
   onClick={() => handleExport(key)}
-  className={`block w-full text-left px-4 py-1 ${
+  className={`block flex justify-content-between w-full text-left px-4 py-1 ${
     loading===key
       ? "opacity-50 cursor-not-allowed"
       : "cursor-pointer hover:bg-gray-100"
@@ -1721,19 +1721,6 @@ const displayTitle =
 </button>
                       </li>
                     ))}
-
-                    {loading && (
-                      <li className="border-t border-gray-100 bg-gray-50 rounded-b-lg">
-                        <div className="px-4 py-2 flex items-center justify-center">
-                          <div className="flex items-center space-x-2">
-                            <Loader2 className="w-3 h-3 animate-spin text-blue-500" />
-                            <span className="text-xs font-medium text-gray-600">
-                              Processing export...
-                            </span>
-                          </div>
-                        </div>
-                      </li>
-                    )}
                   </ul>
                 </div>
               )}
