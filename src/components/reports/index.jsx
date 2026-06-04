@@ -1921,7 +1921,7 @@ const displayTitle =
               <div className="flex">
 
                 {
-                showFilterIcon &&
+                (showFilterIcon &&  currentView === "table") &&
               <button
               onClick={() => setShowTableFilters((prev) => !prev)}
               className={`ml-1 inline-flex md:hidden items-center px-3 py-1.5 text-sm font-medium rounded-md transition-colors  bg-action cursor-pointer`}
@@ -2143,7 +2143,7 @@ const displayTitle =
                 </button>
               )}
               {
-                showFilterIcon &&
+                (showFilterIcon &&  currentView === "table") &&
               <button
               onClick={() => setShowTableFilters((prev) => !prev)}
               className={`hidden md:inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md transition-colors  bg-action cursor-pointer`}

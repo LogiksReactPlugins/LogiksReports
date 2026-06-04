@@ -37807,7 +37807,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Xr.canvg ? Promise.resolve(Xr.canvg) : import("./index.es-CTYwsFh8.js")).catch(function(f) {
+  return (Xr.canvg ? Promise.resolve(Xr.canvg) : import("./index.es-bILp6wpa.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
@@ -96672,7 +96672,7 @@ function x6e({
                       )
                     ] }),
                     /* @__PURE__ */ k.jsxs("div", { className: "flex", children: [
-                      he && /* @__PURE__ */ k.jsx(
+                      he && c === "table" && /* @__PURE__ */ k.jsx(
                         "button",
                         {
                           onClick: () => Br((Be) => !Be),
@@ -96856,7 +96856,7 @@ function x6e({
                         children: /* @__PURE__ */ k.jsx(hM, { className: "w-4 h-4" })
                       }
                     ),
-                    he && /* @__PURE__ */ k.jsx(
+                    he && c === "table" && /* @__PURE__ */ k.jsx(
                       "button",
                       {
                         onClick: () => Br((Be) => !Be),
