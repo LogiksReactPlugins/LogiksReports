@@ -37847,7 +37847,7 @@ endobj\r
   var u = l.getContext("2d");
   u.fillStyle = "#fff", u.fillRect(0, 0, l.width, l.height);
   var A = { ignoreMouse: !0, ignoreAnimation: !0, ignoreDimensions: !0 }, c = this;
-  return (Xr.canvg ? Promise.resolve(Xr.canvg) : import("./index.es-Du4Q-90_.js")).catch(function(f) {
+  return (Xr.canvg ? Promise.resolve(Xr.canvg) : import("./index.es-D4z7YEbl.js")).catch(function(f) {
     return Promise.reject(new Error("Could not load canvg: " + f));
   }).then(function(f) {
     return f.default ? f.default : f;
@@ -96549,9 +96549,9 @@ function x6e({
                   {
                     disabled: V === Be,
                     onClick: () => No(Be),
-                    className: `block flex justify-between w-full text-left px-4 py-1 ${V === Be ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:bg-gray-100"}`,
+                    className: `block w-full text-left px-4 py-1 ${V === Be ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:bg-gray-100"}`,
                     children: [
-                      /* @__PURE__ */ k.jsx("span", { className: "", children: NA.EXPORT_LABELS[Be] }),
+                      NA.EXPORT_LABELS[Be],
                       V === Be && /* @__PURE__ */ k.jsx(OC, { className: "w-4 h-4 animate-spin text-blue-500" })
                     ]
                   }
