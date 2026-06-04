@@ -420,6 +420,10 @@ function AttachmentPopup({
 
   const [csvText, setCsvText] =
     React.useState("");
+  
+    const [downloading, setDownloading] =
+  React.useState(false);
+
 
   const objectUrlRef =
     React.useRef(null);
@@ -1057,12 +1061,21 @@ const handleDownload = async () => {
 
               <div className="flex items-center gap-2">
                 <button
-                  className="cursor-pointer text-sm bg-blue-600 hover:bg-blue-700 text-white rounded px-3 py-1"
-                  onClick={
-                    handleDownload
-                  }
+                  className={`cursor-pointer text-sm text-white rounded px-3 py-1 flex items-center gap-2 ${
+                    downloading
+                      ? "bg-blue-400 cursor-not-allowed"
+                      : "bg-blue-600 hover:bg-blue-700"
+                  }`}
+                  onClick={handleDownload}
+                  disabled={downloading}
                 >
-                  Download
+                  {downloading && (
+                    <span className="inline-block w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  )}
+
+                  {downloading
+                    ? "Downloading..."
+                    : "Download"}
                 </button>
 
                 <button
@@ -1202,16 +1215,23 @@ const handleDownload = async () => {
     </div>
 
     {/* action */}
-    <button
-      onClick={
-        handleDownload
-      }
-      className={`${unsupportedPreview.button} text-white px-5 py-2.5 rounded-lg text-sm font-medium shadow`}
-    >
-      {
-        unsupportedPreview.buttonText
-      }
-    </button>
+ <button
+  onClick={handleDownload}
+  disabled={downloading}
+  className={`${unsupportedPreview.button} text-white px-5 py-2.5 rounded-lg text-sm font-medium shadow flex items-center justify-center gap-2 ${
+    downloading
+      ? "opacity-70 cursor-not-allowed"
+      : ""
+  }`}
+>
+  {downloading && (
+    <span className="inline-block w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+  )}
+
+  {downloading
+    ? "Downloading..."
+    : unsupportedPreview.buttonText}
+</button>
   </div>
 )}
                   </>
@@ -1227,15 +1247,23 @@ const handleDownload = async () => {
                     </div>
 
                     {url && (
-                      <button
-                        onClick={
-                          handleDownload
-                        }
-                        className="text-blue-600 underline text-sm"
-                      >
-                        Download
-                        File
-                      </button>
+                   <button
+                                  onClick={handleDownload}
+                                  disabled={downloading}
+                                  className={`text-sm flex items-center gap-2 ${
+                                    downloading
+                                      ? "text-gray-400 cursor-not-allowed"
+                                      : "text-blue-600 underline"
+                                  }`}
+                                >
+                                  {downloading && (
+                                    <span className="inline-block w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                                  )}
+
+                                  {downloading
+                                    ? "Downloading..."
+                                    : "Download File"}
+                                </button>
                     )}
                   </div>
                 )}
