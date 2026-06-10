@@ -1,4 +1,11 @@
 import React from "react";
+import { Document, Page, pdfjs } from "react-pdf";
+import "react-pdf/dist/Page/TextLayer.css";
+import "react-pdf/dist/Page/AnnotationLayer.css";
+
+pdfjs.GlobalWorkerOptions.workerSrc =
+  `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+
 
 export default function formatCellValue(
   value,
@@ -427,6 +434,15 @@ function AttachmentPopup({
 
   const objectUrlRef =
     React.useRef(null);
+const [numPages, setNumPages] =
+  React.useState(null);
+
+  const onDocumentLoadSuccess = ({
+  numPages,
+}) => {
+  setNumPages(numPages);
+};
+
 
   const getFileName = () => {
     if (!url) {
@@ -472,6 +488,65 @@ function AttachmentPopup({
       return "Preview";
     }
   };
+  const getShortFileName = (name) => {
+  if (!name) return "File";
+
+  const lastDot = name.lastIndexOf(".");
+
+  if (lastDot === -1) {
+    return name.length > 8
+      ? `${name.slice(0, 5)}...`
+      : name;
+  }
+
+  const ext = name.slice(lastDot);
+  const base = name.slice(0, lastDot);
+
+  return base.length > 8
+    ? `${base.slice(0, 5)}...${ext}`
+    : name;
+};
+
+const getFileIconClass = (name) => {
+  const ext =
+    name?.split(".")?.pop()?.toLowerCase() || "";
+
+  switch (ext) {
+    case "pdf":
+      return "fas fa-file-pdf text-red-600";
+
+    case "doc":
+    case "docx":
+      return "fas fa-file-word text-blue-600";
+
+    case "xls":
+    case "xlsx":
+      return "fas fa-file-excel text-green-600";
+
+    case "ppt":
+    case "pptx":
+      return "fas fa-file-powerpoint text-orange-600";
+
+    case "zip":
+    case "rar":
+    case "7z":
+      return "fas fa-file-archive text-gray-600";
+
+    case "jpg":
+    case "jpeg":
+    case "png":
+    case "gif":
+    case "webp":
+    case "svg":
+      return "fas fa-file-image text-purple-600";
+
+    case "csv":
+      return "fas fa-file-csv text-green-600";
+
+    default:
+      return "fas fa-file text-gray-600";
+  }
+};
 
   const fileName =
     getFileName();
@@ -657,6 +732,7 @@ const isNative =
         /\.pdf$/i.test(url)
       ) {
         setPreviewType("pdf");
+  setNumPages(null);
       }  else if (
   /\.(xlsx|xls)$/i.test(
     url
@@ -743,6 +819,21 @@ const isNative =
           const blob =
             await res.blob();
 
+            console.log(
+  "PDF Content-Type:",
+  contentType
+);
+
+console.log(
+  "Blob Type:",
+  blob.type
+);
+
+console.log(
+  "Blob Size:",
+  blob.size
+);
+
           const isExcelType =
             contentType.includes(
               "spreadsheet"
@@ -819,6 +910,11 @@ const isZipType =
               blob
             );
 
+            console.log(
+              "Blob URL:",
+              blobUrl
+            );
+
           objectUrlRef.current =
             blobUrl;
 
@@ -838,27 +934,28 @@ const isZipType =
             )
           ) {
             setPreviewType("pdf");
+            setNumPages(null);
          } else if (
-  isExcelType
-) {
-  setPreviewType(
-    "excel"
-  );
-} else if (
-  isDocType
-) {
-  setPreviewType("doc");
-} else if (
-  isPptType
-) {
-  setPreviewType("ppt");
-} else if (
-  isZipType
-) {
-  setPreviewType("zip");
-} else if (
-  isCsvType
-) {
+          isExcelType
+        ) {
+          setPreviewType(
+            "excel"
+          );
+        } else if (
+          isDocType
+        ) {
+          setPreviewType("doc");
+        } else if (
+          isPptType
+        ) {
+          setPreviewType("ppt");
+        } else if (
+          isZipType
+        ) {
+          setPreviewType("zip");
+        } else if (
+          isCsvType
+        ) {
             const text =
               await blob.text();
 
@@ -1032,14 +1129,20 @@ setDownloading(true);
 
   return (
     <>
-      <span
-        className="text-blue-600 underline cursor-pointer text-sm"
-        onClick={() => {
-          setOpen(true);
-        }}
-      >
-        LINK
+    <span
+      className="inline-flex items-center gap-2 cursor-pointer text-sm text-blue-600 hover:text-blue-700"
+      onClick={() => setOpen(true)}
+      title={fileName}
+    >
+      <i
+        className={getFileIconClass(fileName)}
+        aria-hidden="true"
+      />
+
+      <span>
+        {getShortFileName(fileName)}
       </span>
+    </span>
 
       {open && (
         <div
@@ -1152,34 +1255,55 @@ setDownloading(true);
 )}
 
 {/* PDF - Capacitor */}
-{isPdf && isNative && (
-  <div
-    className={`w-full min-h-[420px] flex flex-col items-center justify-center gap-5 border border-gray-200 rounded-xl bg-gradient-to-b ${unsupportedPreviewConfig.pdf.bg}`}
-  >
-    <div
-      className={`w-24 h-24 rounded-2xl text-white flex items-center justify-center shadow-lg ${unsupportedPreviewConfig.pdf.iconBg}`}
-    >
-      {unsupportedPreviewConfig.pdf.icon}
+
+{isPdf &&
+  isNative &&
+  previewUrl && (
+    <div className="w-full h-[75vh] overflow-auto">
+    <Document
+  file={previewUrl}
+  loading="Loading PDF..."
+  onLoadSuccess={(pdf) => {
+    console.log("PDF SUCCESS", pdf);
+    onDocumentLoadSuccess(pdf);
+  }}
+  onLoadError={(err) => {
+    console.error(
+      "PDF LOAD ERROR",
+      err
+    );
+  }}
+  onSourceError={(err) => {
+    console.error(
+      "PDF SOURCE ERROR",
+      err
+    );
+  }}
+>
+  {Array.from(
+    new Array(numPages || 0),
+    (_, index) => (
+      <Page
+        key={`page_${index + 1}`}
+        pageNumber={
+          index + 1
+        }
+        width={
+          Math.min(
+            window.innerWidth -
+              40,
+            900
+          )
+        }
+      />
+    )
+  )}
+</Document>
+
     </div>
-
-    <div className="text-center">
-      <div className="text-lg font-semibold text-gray-800">
-        {unsupportedPreviewConfig.pdf.title}
-      </div>
-
-      <div className="text-sm text-gray-500 break-all px-4">
-        {fileName}
-      </div>
-    </div>
-
-    <button
-      onClick={handleDownload}
-      className={`${unsupportedPreviewConfig.pdf.button} text-white px-5 py-2.5 rounded-lg`}
-    >
-      {unsupportedPreviewConfig.pdf.buttonText}
-    </button>
-  </div>
 )}
+
+
                     {/* csv */}
                     {isCsv && (
                       <div className="w-full overflow-auto max-h-[75vh] border rounded p-3 bg-gray-50">
@@ -1192,7 +1316,6 @@ setDownloading(true);
                     )}
 
                     {/* excel */}
-                {/* excel */}
 {/* unsupported preview */}
 {showUnsupportedPreview &&  (  <div
     className={`w-full min-h-[420px] flex flex-col items-center justify-center gap-5 border border-gray-200 rounded-xl bg-gradient-to-b ${unsupportedPreview.bg}`}
@@ -1214,7 +1337,8 @@ setDownloading(true);
         }
       </div>
 
-      <div className="text-sm text-gray-500 max-w-md break-all px-4">
+      <div 
+      className="text-sm text-gray-500 w-full max-w-xs sm:max-w-md px-4 text-center break-words overflow-hidden">
         {fileName}
       </div>
 
