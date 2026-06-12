@@ -610,7 +610,7 @@ className={`${compactRowHeight} ${style?.tr || "hover:bg-secondary"}
                                 <td
                                 className={
   style?.td ||
-  `${compactCellClass} whitespace-nowrap ${compactRowClass} text-gray-900`
+  `${compactCellClass} whitespace-nowrap ${compactRowClass} text-gray-900 w-[100px] max-w-[280px]`
 }
                                 >
                                   <div className="flex items-center">
@@ -715,7 +715,7 @@ className={`${compactRowHeight} ${style?.tr || "hover:bg-secondary"}
                                 <td
                                className={
   style?.td ||
-  `${compactCellClass} whitespace-nowrap ${compactRowClass} text-gray-900`
+  `${compactCellClass} whitespace-nowrap ${compactRowClass} text-gray-900  w-[80px] max-w-[80px]`
 }
                                 >
                                   <input
@@ -771,7 +771,7 @@ className={`${compactRowHeight} ${style?.tr || "hover:bg-secondary"}
                                  style={col.style ? parseStyle(col.style) : {}}
 
                                   >
-                                    <div className="relative group flex items-center"
+                                    <div className="relative group/cell-copy flex items-center"
                                      style={
   config?.tree_type && parent_column_name && colIndex === 0
                     ? { paddingLeft: `${level * 16}px` }
@@ -902,7 +902,7 @@ className={`${compactRowHeight} ${style?.tr || "hover:bg-secondary"}
                                             setCopiedCell,
                                           );
                                         }}
-                                        className="absolute -right-4 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity ml-2 p-1 rounded bg-gray-50 hover:bg-gray-100 cursor-pointer"
+                                        className="absolute right-0 flex items-center gap-1 opacity-0 group-hover/cell-copy:opacity-100 transition-opacity ml-2 p-1 rounded bg-gray-50 hover:bg-gray-100 cursor-pointer"
                                         title="Copy"
                                       >
                                         {copiedCell ===

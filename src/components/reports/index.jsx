@@ -1096,6 +1096,69 @@ const extractTextFromReactNode = (node) => {
   return "";
 };
 
+const handleExportCurrentDataCSV = async () => {
+  const exportData = currentData.map((raw) => {
+    const obj = {};
+
+    visibleColumns.forEach(([key, col]) => {
+      let value = getRowValue(raw, key);
+
+      if (col?.exportRaw !== true) {
+        const formatted = formatCellValue(
+          value,
+          col.formatter,
+          raw,
+          col,
+          config,
+          methods
+        );
+
+        if (React.isValidElement(formatted)) {
+          value = extractTextFromReactNode(formatted);
+        } else if (typeof formatted === "string") {
+          value = formatted.replace(/<[^>]*>/g, "");
+        } else if (
+          typeof formatted === "number" ||
+          typeof formatted === "boolean"
+        ) {
+          value = formatted;
+        } else {
+          value = formatted != null ? String(formatted) : "";
+        }
+      }
+
+      obj[col.label] = value;
+    });
+
+    return obj;
+  });
+
+  const ws = XLSX.utils.json_to_sheet(exportData);
+  const wb = XLSX.utils.book_new();
+
+  XLSX.utils.book_append_sheet(wb, ws, "Report");
+
+  const buffer = XLSX.write(wb, {
+    bookType: "csv",
+    type: "array",
+  });
+
+  const blob = new Blob([buffer], {
+    type: "text/csv;charset=utf-8",
+  });
+
+  const fileName = `${config?.title || "export"}.csv`;
+
+  if (
+    config?.native?.downloadFile &&
+    typeof config.native.downloadFile === "function"
+  ) {
+    await config.native.downloadFile(blob, fileName);
+  } else {
+    saveAs(blob, fileName);
+  }
+};
+
 const handleExportAll = async (type = "excel") => {
   try {
     if (!config?.source?.queryid) {
@@ -1568,12 +1631,12 @@ const getRowValue = (row, key) => {
     if(type=="all"){
       await handleExportAll("excel")
       return false
-    }else if(type=='csv'){
-
-    await handleExportAll("csv")
-      return false
     }
-   
+    
+    if (type === "csv") {
+      await handleExportCurrentDataCSV(); 
+      return;
+    }
       await exportTable(type,`${config?.title || "export"}`);
     } finally {
       setOpen(false);
